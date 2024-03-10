@@ -1,35 +1,23 @@
+import 'package:blur/blur.dart';
 import 'package:flutter/material.dart';
-import 'package:huflix_movie_app/views/home/movie_carousel/carousel_animated.dart';
 
-class CarouselBackdrop extends StatefulWidget {
-  const CarouselBackdrop({super.key});
+class CarouselBackdrop extends StatelessWidget {
+  const CarouselBackdrop({super.key, required this.src});
+  final String src;
 
-  @override
-  State<CarouselBackdrop> createState() => _CarouselBackdropState();
-}
 
-class _CarouselBackdropState extends State<CarouselBackdrop> {
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-      flex: 3,
-      child: Stack(
-        children: [
-          // blur background image
-          Container(
-            height: 320,
-            color: Colors.green,
-          ),
-          // ignore: prefer_const_constructors
-          Positioned(
-            bottom: -100,
-            right: -50,
-            left: -50,
-            // movie card 
-            child: CarouselAnimated()
-          ),
-        ],
-      ),
-    );
+    return ClipRRect(
+      borderRadius: const BorderRadius.all(Radius.circular(30)),
+      child: Blur(
+        blur: 8,
+        colorOpacity: 0.1,
+        child: Image.network(
+          fit: BoxFit.fitHeight,
+          height: 400,
+          src,
+        ),
+      ));
   }
 }

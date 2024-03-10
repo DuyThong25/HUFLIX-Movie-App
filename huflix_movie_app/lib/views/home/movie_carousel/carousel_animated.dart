@@ -1,7 +1,8 @@
+import 'dart:ui';
+import 'package:blur/blur.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:huflix_movie_app/views/home/movie_carousel/carousel_card.dart';
-
 import 'carousel_backdrop.dart';
 
 class CarouselAnimated extends StatefulWidget {
@@ -45,29 +46,28 @@ class _CarouselAnimatedState extends State<CarouselAnimated> {
   Widget slide(List<String> listData) {
     return CarouselSlider(
         options: CarouselOptions(
-          autoPlay: false,
+          autoPlay: true,
           height: 500,
+          disableCenter: false,
+          enlargeCenterPage: true,
+          viewportFraction: 1,
         ),
         items: listData
             .map((item) => Container(
-                  child: Stack(
-                  children: <Widget>[
-                    // Backdrop Background
-                    Container(
-                      height: 350,
-                      color: Colors.red,
-                    ),
-                    // image card
-                    Positioned(
-                      bottom: 0,
-                      right: -50,
-                      left: -50,
-                      child: CarouselCard(
-                        src: item,
-                      )
-                    ),                
-                  ],
-                )))
+                      child: Stack(
+                        children: <Widget>[
+                          // Backdrop Background
+                          Container(
+                            child: CarouselBackdrop(src: item)
+                          ),
+                          // image card data
+                          Positioned(
+                              bottom: 0,
+                              right: -50,
+                              left: -50,
+                              child: CarouselCard(src: item)),
+                        ],
+                      )))
             .toList());
   }
 }
