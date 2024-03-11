@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:huflix_movie_app/api/api_clients.dart';
-import 'package:huflix_movie_app/api/data_sources/movie_remote_data_source.dart';
 import 'package:huflix_movie_app/model/videotest.dart';
 import 'package:huflix_movie_app/views/home/movie_tab/tab_view_data.dart';
-import 'package:http/http.dart' as http;
 
 class MyTabView extends StatefulWidget {
   const MyTabView({super.key});
@@ -13,16 +10,17 @@ class MyTabView extends StatefulWidget {
 }
 
 class _MyTabViewState extends State<MyTabView> {
+  List<String> listTrending = [];
+  List<String> listNew = [];
   List<String> listPopular = [];
-  List<String> listNow = [];
-  List<String> listSoon = [];
 
   @override
   void initState() {
+    // TODO: implement initState
     super.initState();
+    listNew = createDataTest();
+    listTrending = createDataTest();
     listPopular = createDataTest();
-    listNow = createDataTest();
-    listSoon = createDataTest();
   }
 
   @override
@@ -33,11 +31,11 @@ class _MyTabViewState extends State<MyTabView> {
         child: TabBarView(
           children: [
             // New
-            TabViewData(listData: listPopular),
+            TabViewData(listData: listNew),
             // Trending
-            TabViewData(listData: listNow),
+            TabViewData(listData: listTrending),
             //Poppular
-            TabViewData(listData: listSoon),
+            TabViewData(listData: listPopular),
           ],
         ),
       ),
