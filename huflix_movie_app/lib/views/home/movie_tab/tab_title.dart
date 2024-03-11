@@ -16,14 +16,14 @@ class TabTitle extends StatelessWidget {
         unselectedLabelColor: Colors.grey,
         unselectedLabelStyle:
             TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-        labelStyle: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+        labelStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
         padding: EdgeInsets.only(left: 30, right: 30),
         indicatorWeight: 4,
         // Data title
         tabs: [
-          Tab(text: "New"),
-          Tab(text: "Trending"),
-          Tab(text: "Popular"),
+          Tab(text: "Phổ biến"),
+          Tab(text: "Đang chiếu"),
+          Tab(text: "Sắp chiếu"),
         ],
       ),
     );
