@@ -1,6 +1,8 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
-import 'package:huflix_movie_app/model/videotest.dart';
+import 'package:huflix_movie_app/api/api.dart';
+import 'package:huflix_movie_app/models/movie.dart';
+import 'package:huflix_movie_app/models/videotest.dart';
 import 'package:huflix_movie_app/views/home/movie_carousel/carousel_card.dart';
 import 'carousel_backdrop.dart';
 
@@ -13,11 +15,14 @@ class CarouselAnimated extends StatefulWidget {
 
 class _CarouselAnimatedState extends State<CarouselAnimated> {
   List<String> listData = [];
+  
+  late Future<List<Movie>> trendingMovies;
 
   @override
   void initState() {
     super.initState();
     listData = createDataTest();
+    trendingMovies = Api().getTrendingMovies();
   }
 
   @override
