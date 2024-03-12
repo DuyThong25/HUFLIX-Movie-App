@@ -34,7 +34,7 @@ class HomePage extends StatelessWidget {
             IconButton(onPressed: () {}, icon: const Icon(Icons.search))
           ],
         ),
-        drawer: MyDrawer(),
+        drawer: const MyDrawer(),
         body: const Column(
           children: [
             CarouselAnimated(),
