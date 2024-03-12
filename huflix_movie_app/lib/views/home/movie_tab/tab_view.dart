@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:huflix_movie_app/model/videotest.dart';
+import 'package:huflix_movie_app/models/videotest.dart';
 import 'package:huflix_movie_app/views/home/movie_tab/tab_view_data.dart';
 
 class MyTabView extends StatefulWidget {
