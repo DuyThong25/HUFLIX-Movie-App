@@ -13,8 +13,9 @@ class MainApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      // Màn hình splash screen
       home: AnimatedSplashScreen(
-          duration: 3000,
+          duration: 4000,
           splash: Container(
             padding: EdgeInsets.all(10),
             color: const Color.fromRGBO(35, 31, 32, 1),

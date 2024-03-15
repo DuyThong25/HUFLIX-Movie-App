@@ -7,25 +7,33 @@ class CarouselCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-        child: Column(
+    return Column(
       children: [
-        ClipRRect(
-          borderRadius: BorderRadius.circular(28),
-          child: Image.network(
-            fit: BoxFit.fitHeight,
-            width: 260,
-            height: 300,
-            src,
+        Container(
+          decoration: const BoxDecoration(
+              borderRadius: BorderRadius.all(Radius.circular(28.0)),
+              boxShadow: [
+                BoxShadow(
+                    blurRadius: 16, color: Colors.black54, offset: Offset(2, 2))
+              ]),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(28.0),
+            child: Image.network(
+              fit: BoxFit.fill,
+              width: 240,
+              height: 300,
+              src,
+            ),
           ),
         ),
+
         const SizedBox(
           height: 20,
         ),
         // Data movie
         Text(
-          "${movieTitle}",
-          style: TextStyle(
+          movieTitle,
+          style: const TextStyle(
               fontSize: 20, color: Colors.white, fontWeight: FontWeight.bold),
         ),
         Container(
@@ -37,9 +45,11 @@ class CarouselCard extends StatelessWidget {
                 borderRadius: BorderRadius.all(Radius.circular(10.0)),
                 boxShadow: [
                   BoxShadow(
-                      blurRadius: 10, color: Colors.white38, offset: Offset(2, 2))
+                      blurRadius: 10,
+                      color: Colors.white38,
+                      offset: Offset(2, 2))
                 ]))
       ],
-    ));
+    );
   }
 }

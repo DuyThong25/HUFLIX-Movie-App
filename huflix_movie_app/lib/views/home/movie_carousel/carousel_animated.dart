@@ -35,7 +35,7 @@ class _CarouselAnimatedState extends State<CarouselAnimated> {
           return Text("Error: ${snapshot.error}");
         }
         // By default, show a loading spinner
-        return CircularProgressIndicator();
+        return const CircularProgressIndicator();
       },
     );
   }
@@ -58,7 +58,7 @@ class _CarouselAnimatedState extends State<CarouselAnimated> {
             ),
             // image card data
             Positioned(
-              bottom: 5,
+              bottom: 0,
               right: -50,
               left: -50,
               child: CarouselCard(
