@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 
 class CarouselCard extends StatelessWidget {
-  const CarouselCard({super.key, required this.src});
+  const CarouselCard({super.key, required this.src, required this.movieTitle});
   final String src;
+  final String movieTitle;
 
   @override
   Widget build(BuildContext context) {
@@ -22,8 +23,8 @@ class CarouselCard extends StatelessWidget {
           height: 20,
         ),
         // Data movie
-        const Text(
-          'TOM AND JERRY 2024',
+        Text(
+          "${movieTitle}",
           style: TextStyle(
               fontSize: 20, color: Colors.white, fontWeight: FontWeight.bold),
         ),

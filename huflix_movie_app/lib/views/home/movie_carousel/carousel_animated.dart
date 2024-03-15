@@ -1,8 +1,8 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:huflix_movie_app/api/api.dart';
+import 'package:huflix_movie_app/api/api_constants.dart';
 import 'package:huflix_movie_app/models/movie.dart';
-import 'package:huflix_movie_app/models/videotest.dart';
 import 'package:huflix_movie_app/views/home/movie_carousel/carousel_card.dart';
 import 'carousel_backdrop.dart';
 
@@ -14,46 +14,61 @@ class CarouselAnimated extends StatefulWidget {
 }
 
 class _CarouselAnimatedState extends State<CarouselAnimated> {
-  List<String> listData = [];
-  
   late Future<List<Movie>> trendingMovies;
 
   @override
   void initState() {
     super.initState();
-    listData = createDataTest();
     trendingMovies = Api().getTrendingMovies();
   }
 
-  @override
+ @override
   Widget build(BuildContext context) {
-    return Container(
-      child: slide(listData),
+    return FutureBuilder<List<Movie>>(
+      future: trendingMovies,
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          return Container(
+            child: slide(snapshot.data!),
+          );
+        } else if (snapshot.hasError) {
+          return Text("Error: ${snapshot.error}");
+        }
+        // By default, show a loading spinner
+        return CircularProgressIndicator();
+      },
     );
   }
 
-  Widget slide(List<String> listData) {
+  Widget slide(List<Movie> trendingMovies) {
     return CarouselSlider(
-        options: CarouselOptions(
-          autoPlay: true,
-          height: 500,
-          disableCenter: false,
-          enlargeCenterPage: true,
-          viewportFraction: 1,
-        ),
-        items: listData
-            .map((item) => Stack(
-              children: <Widget>[
-                // Backdrop Background
-                CarouselBackdrop(src: item),
-                // image card data
-                Positioned(
-                    bottom: 5,
-                    right: -50,
-                    left: -50,
-                    child: CarouselCard(src: item)),
-              ],
-            ))
-            .toList());
+      options: CarouselOptions(
+        autoPlay: true,
+        height: 500,
+        disableCenter: false,
+        enlargeCenterPage: true,
+        viewportFraction: 1,
+      ),
+      items: trendingMovies.map((movie) {
+        return Stack(
+          children: <Widget>[
+            // Backdrop Background
+            CarouselBackdrop(
+              src: Constants.BASE_IMAGE_URL + movie.backdropPath!
+            ),
+            // image card data
+            Positioned(
+              bottom: 5,
+              right: -50,
+              left: -50,
+              child: CarouselCard(
+                src: Constants.BASE_IMAGE_URL+ movie.posterPath!,
+                movieTitle: movie.title!,
+              ),
+            ),
+          ],
+        );
+      }).toList(),
+    );
   }
 }
