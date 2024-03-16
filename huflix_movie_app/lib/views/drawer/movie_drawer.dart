@@ -51,6 +51,12 @@ class _MyDrawerState extends State<MyDrawer> {
                   Navigator.of(context).pop();
                 },
               ),
+              ListTile(
+                title: const Text('Logout', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+                onTap: () {
+                  Navigator.of(context).pop();
+                },
+              ),
             ],
           ),
         ));
