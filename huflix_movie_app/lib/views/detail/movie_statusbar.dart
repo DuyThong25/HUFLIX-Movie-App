@@ -18,8 +18,8 @@ class StatusBarDetail extends StatelessWidget {
                 children: [
                   // button
                   Container(
-                      width: 45,
-                      height: 45,
+                      width: 40,
+                      height: 40,
                       decoration: BoxDecoration(
                         border: Border.all(
                             width: 4,
@@ -41,8 +41,8 @@ class StatusBarDetail extends StatelessWidget {
                       )),
                   // button
                   Container(
-                      width: 45,
-                      height: 45,
+                      width: 40,
+                      height: 40,
                       // margin: EdgeInsets.zero,
                       decoration: BoxDecoration(
                         border: Border.all(
@@ -55,8 +55,8 @@ class StatusBarDetail extends StatelessWidget {
                           padding: EdgeInsets.zero,
                           icon: const Icon(
                             Icons.thumb_up_alt_outlined,
+                            size: 20,
                             color: Colors.white,
-                            // size: 32,
                           ),
                           onPressed: () {
                             // Your event handler
@@ -65,8 +65,8 @@ class StatusBarDetail extends StatelessWidget {
                       )),
                   // button 3
                   Container(
-                      width: 45,
-                      height: 45,
+                      width: 40,
+                      height: 40,
                       // margin: EdgeInsets.zero,
                       decoration: BoxDecoration(
                         border: Border.all(
@@ -79,6 +79,7 @@ class StatusBarDetail extends StatelessWidget {
                           padding: EdgeInsets.zero,
                           icon: const Icon(
                             Icons.share,
+                            size: 20,
                             color: Colors.white,
                           ),
                           onPressed: () {
@@ -88,8 +89,8 @@ class StatusBarDetail extends StatelessWidget {
                       )),
                   // button 4
                   Container(
-                      width: 45,
-                      height: 45,
+                      width: 40,
+                      height: 40,
                       // margin: EdgeInsets.zero,
                       decoration: BoxDecoration(
                         border: Border.all(

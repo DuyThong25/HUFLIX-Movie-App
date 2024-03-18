@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+
 class Common {
   static String shortenTitleCardCarousel(String title) {
     if (title.length <= 36) {
@@ -14,4 +16,15 @@ class Common {
       return "${title.substring(0, 15)}...";
     }
   }
+
+  static TextStyle styleDescriptionMovieDetail() {
+    TextStyle style = const TextStyle(
+      fontSize: 14,
+      color: Colors.white,
+      fontWeight: FontWeight.w400
+    );
+    return style;
+  }
+
+
 }

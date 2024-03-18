@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:huflix_movie_app/common/common.dart';
+import 'package:huflix_movie_app/views/detail/movie_detail_description.dart';
 
 import 'movie_statusbar.dart';
 
@@ -54,12 +56,37 @@ class MovieDetail extends StatelessWidget {
                         fit: BoxFit.cover,
                       ),
                     )),
+                // status bar
                 const Positioned(
                     bottom: 8, left: 65, right: 65, child: StatusBarDetail())
               ],
             ),
-            // button play
+            // Container chứa Nội dung của movie detail
+            Container(
+                width: MediaQuery.of(context).size.width,
+                margin: const EdgeInsets.all(10),
+                padding: const EdgeInsets.all(6),
+                // color: Colors.red,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // voting - time
+                    // const Text(
+                    //   "2018 - 1h30m"
+                    // ),
+                    // Description of the movie
+                    Container(
+                      color: Colors.transparent,
+                      child:  const MovieDetalDescription(description: "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Can sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibus. Vivamus elementum semper nisi. Aenean vulputate eleifend tellus. Aenean leo ligula, porttitor eu, consequat vitae, eleifend ac, enim. Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus. Phasellus viverra nulla ut metus varius laoreet. Quisque rutrum. Aenean imperdiet. Etiam ultricies nisi vel augue. Curabitur ullamcorper ultricies nisi. Nam eget dui.",)
+                    ),
 
+                    Container(
+                      width: MediaQuery.of(context).size.width,
+                      // height: MediaQuery.of(context).size.height,
+                      color: Colors.green,
+                    ),
+                  ],
+                )),
             Container(
               width: MediaQuery.of(context).size.width,
               height: MediaQuery.of(context).size.height,
