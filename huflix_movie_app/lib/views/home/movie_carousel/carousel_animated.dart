@@ -1,9 +1,11 @@
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:huflix_movie_app/api/api.dart';
 import 'package:huflix_movie_app/api/api_constants.dart';
 import 'package:huflix_movie_app/models/movie.dart';
 import 'package:huflix_movie_app/views/home/movie_carousel/carousel_card.dart';
+import '../../detail/movie_detail.dart';
 import 'carousel_backdrop.dart';
 
 class CarouselAnimated extends StatefulWidget {
@@ -50,24 +52,39 @@ class _CarouselAnimatedState extends State<CarouselAnimated> {
         viewportFraction: 1,
       ),
       items: trendingMovies.map((movie) {
-        return Stack(
-          children: <Widget>[
-            // Backdrop Background
-            CarouselBackdrop(
-              src: Constants.BASE_IMAGE_URL + movie.backdropPath!
-            ),
-            // image card data
-            Positioned(
-              bottom: 0,
-              right: -50,
-              left: -50,
-              child: CarouselCard(
-                src: Constants.BASE_IMAGE_URL+ movie.posterPath!,
-                movieTitle: movie.title!,
+        return GestureDetector(
+            // ignore: avoid_print
+            onTap: () 
+            {
+              Navigator.push(
+                context,
+
+                CupertinoPageRoute(
+                    builder: (context) => const MovieDetail(), 
+                  
+                  )
+               );
+            },
+            child: Stack(
+            children: <Widget>[
+              // Backdrop Background
+              CarouselBackdrop(
+                src: Constants.BASE_IMAGE_URL + movie.backdropPath!
               ),
-            ),
-          ],
-        );
+              // image card data
+              Positioned(
+                bottom: 0,
+                right: -50,
+                left: -50,
+                child: CarouselCard(
+                  src: Constants.BASE_IMAGE_URL+ movie.posterPath!,
+                  movieTitle: movie.title!,
+                ),
+              ),
+            ],
+          ),
+        ) ;
+        
       }).toList(),
     );
   }

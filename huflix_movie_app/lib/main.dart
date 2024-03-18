@@ -10,19 +10,19 @@ import 'package:huflix_movie_app/views/login/register.dart';
 import 'package:page_transition/page_transition.dart';
 
 Future main() async {
-WidgetsFlutterBinding.ensureInitialized();
-Platform.isAndroid
-? await Firebase.initializeApp(
-options: const FirebaseOptions(
-apiKey: "AIzaSyAuQNOCmDWpDb7qCqg9sucdIA8tjFDvksk",
-appId: "1:851079373356:android:f2bb7e5dccc85f8de72789",
-messagingSenderId: "851079373356",
-projectId: "huflix-movie-app",
-storageBucket: "huflix-movie-app.appspot.com",
-))
-: await Firebase.initializeApp();
+  WidgetsFlutterBinding.ensureInitialized();
+  Platform.isAndroid
+      ? await Firebase.initializeApp(
+          options: const FirebaseOptions(
+          apiKey: "AIzaSyAuQNOCmDWpDb7qCqg9sucdIA8tjFDvksk",
+          appId: "1:851079373356:android:f2bb7e5dccc85f8de72789",
+          messagingSenderId: "851079373356",
+          projectId: "huflix-movie-app",
+          storageBucket: "huflix-movie-app.appspot.com",
+        ))
+      : await Firebase.initializeApp();
 
-runApp(const MainApp());
+  runApp(const MainApp());
 }
 
 class MainApp extends StatelessWidget {
@@ -33,17 +33,16 @@ class MainApp extends StatelessWidget {
     return MaterialApp(
       // Màn hình splash screen
       home: AnimatedSplashScreen(
-          duration: 4000,
+          duration: 3000,
           splash: Container(
-            padding: EdgeInsets.all(10),
-            color: const Color.fromRGBO(35, 31, 32, 1),
-            child: Expanded(child: 
-            Image.asset(
-                'assets/images/logo1.jpg', 
-                fit: BoxFit.cover,
-              ),
-            )
-          ),
+              padding: const EdgeInsets.all(10),
+              color: const Color.fromRGBO(35, 31, 32, 1),
+              child: Expanded(
+                child: Image.asset(
+                  'assets/images/logo1.jpg',
+                  fit: BoxFit.cover,
+                ),
+              )),
           splashIconSize: 500,
           nextScreen: const LoginPage(),
           splashTransition: SplashTransition.slideTransition,

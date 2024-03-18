@@ -13,7 +13,8 @@ class CarouselBackdrop extends StatelessWidget {
           blur: 8,
           colorOpacity: 0.1,
           child: Image.network(
-            fit: BoxFit.fitHeight,
+            fit: BoxFit.fill,
+            width: double.infinity,
             height: 400,
             src,
           ),

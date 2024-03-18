@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../../common/common.dart';
+
 class CarouselCard extends StatelessWidget {
   const CarouselCard({super.key, required this.src, required this.movieTitle});
   final String src;
@@ -32,7 +34,8 @@ class CarouselCard extends StatelessWidget {
         ),
         // Data movie
         Text(
-          movieTitle,
+          Common.shortenTitleCardCarousel(movieTitle),
+          // movieTitle,
           style: const TextStyle(
               fontSize: 20, color: Colors.white, fontWeight: FontWeight.bold),
         ),
