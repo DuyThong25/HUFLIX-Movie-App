@@ -23,13 +23,13 @@ class _MovieDetalDescriptionState extends State<MovieDetalDescription> {
           child: ConstrainedBox(
             constraints: isExpanded
                 ? const BoxConstraints()
-                : const BoxConstraints(maxHeight: 200),
+                : const BoxConstraints(maxHeight: 100),
             child: Text(
               widget.description,
               style: Common.styleDescriptionMovieDetail(),
               softWrap: true,
               overflow: isExpanded ? TextOverflow.visible : TextOverflow.ellipsis,
-              maxLines: isExpanded ? null : 4,
+              maxLines: isExpanded ? null : 3,
             ),
           ),
         ),
