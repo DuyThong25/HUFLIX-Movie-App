@@ -87,7 +87,7 @@ class MovieDetail extends StatelessWidget {
                         movie.overview!
                     ),
                     Divider(
-                      color: Colors.grey[800],
+                      color: Colors.grey[900],
                       height: 22,
                     ),
                     // Actor và Crew
@@ -97,8 +97,8 @@ class MovieDetail extends StatelessWidget {
                           fontSize: 26,
                           color: Colors.white,
                           fontWeight: FontWeight.bold),
-                    ),
-                    const SizedBox(height: 4,),
+                    ),             
+                    const SizedBox(height: 6,),
                     MovieDetailActor(actorOfMovieByID: actorOfMovieByID),
                     Container(
                       width: MediaQuery.of(context).size.width,
