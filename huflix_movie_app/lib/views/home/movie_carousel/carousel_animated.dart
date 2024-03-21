@@ -1,9 +1,13 @@
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:huflix_movie_app/api/api.dart';
 import 'package:huflix_movie_app/api/api_constants.dart';
+import 'package:huflix_movie_app/models/actor.dart';
 import 'package:huflix_movie_app/models/movie.dart';
 import 'package:huflix_movie_app/views/home/movie_carousel/carousel_card.dart';
+import '../../detail/movie_detail.dart';
+import 'package:huflix_movie_app/models/moviedetail.dart';
 import 'carousel_backdrop.dart';
 
 class CarouselAnimated extends StatefulWidget {
@@ -15,6 +19,8 @@ class CarouselAnimated extends StatefulWidget {
 
 class _CarouselAnimatedState extends State<CarouselAnimated> {
   late Future<List<Movie>> trendingMovies;
+  late Future<List<Actor>> actorOfMovie;
+  late Future<MovieDetailModel> detailMovies;
 
   @override
   void initState() {
@@ -22,7 +28,7 @@ class _CarouselAnimatedState extends State<CarouselAnimated> {
     trendingMovies = Api().getTrendingMovies();
   }
 
- @override
+  @override
   Widget build(BuildContext context) {
     return FutureBuilder<List<Movie>>(
       future: trendingMovies,
@@ -50,23 +56,40 @@ class _CarouselAnimatedState extends State<CarouselAnimated> {
         viewportFraction: 1,
       ),
       items: trendingMovies.map((movie) {
-        return Stack(
-          children: <Widget>[
-            // Backdrop Background
-            CarouselBackdrop(
-              src: Constants.BASE_IMAGE_URL + movie.backdropPath!
-            ),
-            // image card data
-            Positioned(
-              bottom: 0,
-              right: -50,
-              left: -50,
-              child: CarouselCard(
-                src: Constants.BASE_IMAGE_URL+ movie.posterPath!,
-                movieTitle: movie.title!,
+        return GestureDetector(
+          onTap: () {
+            setState(() {
+              print(movie.id);
+              actorOfMovie = Api().actorFindByIdMovie(movie.id!);
+              detailMovies = Api().movieFindById(movie.id!) ;
+              Navigator.push(
+                context,
+                CupertinoPageRoute(
+                  builder: (context) => MovieDetail(
+                    movie: movie,
+                    detailMovie: detailMovies,
+                    actorOfMovieByID: actorOfMovie,
+                  ),
+                ));
+            });      
+          },
+          child: Stack(
+            children: <Widget>[
+              // Backdrop Background
+              CarouselBackdrop(
+                  src: Constants.BASE_IMAGE_URL + movie.backdropPath!),
+              // image card data
+              Positioned(
+                bottom: 0,
+                right: -50,
+                left: -50,
+                child: CarouselCard(
+                  src: Constants.BASE_IMAGE_URL + movie.posterPath!,
+                  movieTitle: movie.title!,
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         );
       }).toList(),
     );
