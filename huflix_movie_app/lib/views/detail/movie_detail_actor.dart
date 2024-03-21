@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:huflix_movie_app/api/api.dart';
 import 'package:huflix_movie_app/models/actor.dart';
 import '../../api/api_constants.dart';
-import '../../models/actorprofile.dart';
+import '../../models/actordetail.dart';
 
 class MovieDetailActor extends StatelessWidget {
   const MovieDetailActor({super.key, required this.actorOfMovieByID});
@@ -84,7 +84,7 @@ class MovieDetailActor extends StatelessWidget {
          const SizedBox(
           height: 10,
         ),
-        // List of directions
+        // List of CREWS
         SizedBox(
             height: _heigtActorImage,
             child: FutureBuilder<List<ActorProfile>>(

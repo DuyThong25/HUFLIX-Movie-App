@@ -1,9 +1,12 @@
 import 'dart:convert';
 import 'package:huflix_movie_app/api/api_constants.dart';
 import 'package:huflix_movie_app/models/actor.dart';
-import 'package:huflix_movie_app/models/actorprofile.dart';
+import 'package:huflix_movie_app/models/actordetail.dart';
 import 'package:huflix_movie_app/models/movie.dart';
 import 'package:http/http.dart' as http;
+import 'package:huflix_movie_app/models/moviedetail.dart';
+
+import '../models/genres.dart';
 
 class Api {
   static const _trendingUrl =
@@ -83,11 +86,13 @@ class Api {
   }
 
   // Lấy danh sách diễn viên theo id phim
-  Future<List<ActorProfile>> actorInforFindByIdActor( List<Actor> crewList) async {
-    List<dynamic> combineList =   []; 
+  Future<List<ActorProfile>> actorInforFindByIdActor(
+      List<Actor> crewList) async {
+    List<dynamic> combineList = [];
     // Tạo một danh sách các Future để chờ tất cả các yêu cầu hoàn thành
     List<Future> requests = crewList.map((actor) async {
-      String personUrl = "${Constants.BASE_URL}person/${actor.id}?api_key=${Constants.API_KEY}&language=vi";
+      String personUrl =
+          "${Constants.BASE_URL}person/${actor.id}?api_key=${Constants.API_KEY}&language=vi";
       final response = await http.get(Uri.parse(personUrl));
       if (response.statusCode == 200) {
         return json.decode(response.body);
@@ -103,4 +108,42 @@ class Api {
     return combineList.map((person) => ActorProfile.fromJson(person)).toList();
   }
 
+  // Lấy thông tin chi tiết của phim
+  Future<MovieDetailModel> movieFindById(int idMovie) async {
+    String movieDetailUrl =
+        "${Constants.BASE_URL}movie/$idMovie?api_key=${Constants.API_KEY}&language=vi";
+    final response = await http.get(Uri.parse(movieDetailUrl));
+    if (response.statusCode == 200) {
+      final movieDetailData = json.decode(response.body);
+
+      final List<dynamic> genresData = movieDetailData['genres'];
+      final List<Genre> genres =
+          genresData.map((genreJson) => Genre.fromJson(genreJson)).toList();
+
+      return MovieDetailModel(
+        id: movieDetailData['id'],
+        time: movieDetailData['runtime'],
+        status: movieDetailData['status'],
+        genres: genres,    
+      );
+    } else {
+      throw Exception("Có lỗi đang xảy ra");
+    }
+  }
+  // Future<List<MovieDetail>> movieFindById(int idMovie) async {
+  //   String movieDetailUrl =
+  //       "${Constants.BASE_URL}movie/$idMovie?api_key=${Constants.API_KEY}&language=vi";
+  //   final response = await http.get(Uri.parse(movieDetailUrl));
+  //   if (response.statusCode == 200) {
+  //     final tempData = json.decode(response.body);
+  //     // print();
+  //     final List<dynamic> genresData = tempData['genres'] as List;
+  //     final List<Genre> genres = genresData.map((genreJson) => Genre.fromJson(genreJson)).toList();
+  //     final movieDetailData = json.decode(response.body) as List;
+
+  //     return movieDetailData.map((movie) => MovieDetail.fromJson(movie, genres)).toList();
+  //   } else {
+  //     throw Exception("Có lỗi đang xảy ra");
+  //   }
+  // }
 }

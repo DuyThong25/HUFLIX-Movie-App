@@ -7,6 +7,7 @@ import 'package:huflix_movie_app/models/actor.dart';
 import 'package:huflix_movie_app/models/movie.dart';
 import 'package:huflix_movie_app/views/home/movie_carousel/carousel_card.dart';
 import '../../detail/movie_detail.dart';
+import 'package:huflix_movie_app/models/moviedetail.dart';
 import 'carousel_backdrop.dart';
 
 class CarouselAnimated extends StatefulWidget {
@@ -19,6 +20,7 @@ class CarouselAnimated extends StatefulWidget {
 class _CarouselAnimatedState extends State<CarouselAnimated> {
   late Future<List<Movie>> trendingMovies;
   late Future<List<Actor>> actorOfMovie;
+  late Future<MovieDetailModel> detailMovies;
 
   @override
   void initState() {
@@ -59,11 +61,14 @@ class _CarouselAnimatedState extends State<CarouselAnimated> {
             setState(() {
               print(movie.id);
               actorOfMovie = Api().actorFindByIdMovie(movie.id!);
+              detailMovies = Api().movieFindById(movie.id!) ;
+              print(detailMovies);
               Navigator.push(
                 context,
                 CupertinoPageRoute(
                   builder: (context) => MovieDetail(
                     movie: movie,
+                    detailMovie: detailMovies,
                     actorOfMovieByID: actorOfMovie,
                   ),
                 ));
