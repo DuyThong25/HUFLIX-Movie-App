@@ -12,11 +12,16 @@ class CarouselBackdrop extends StatelessWidget {
         child: Blur(
           blur: 8,
           colorOpacity: 0.1,
-          child: Image.network(
-            fit: BoxFit.fitHeight,
+          child: 
+          Image.network(
+            fit: BoxFit.fill,
+            width: double.infinity,
             height: 400,
             src,
-          ),
+            errorBuilder: (context, error, stackTrace) {
+              return Image.asset('assets/images/logo2.jpg', fit: BoxFit.fill, width: double.infinity, height: 400,);
+            },
+          ) ,
         ));
   }
 }

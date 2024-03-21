@@ -17,21 +17,22 @@ class HomePage extends StatelessWidget {
           title: const Text("HUFLIX",
               style: TextStyle(
                   fontWeight: FontWeight.bold,
-                  fontSize: 25,
-                  color: Colors.white)),
+                  fontSize: 30,
+                  color: Color.fromARGB(255, 255, 255, 255))),
           leading: Builder(
             builder: (BuildContext context) {
-            return IconButton(
-              icon: const Icon(Icons.menu),
-              onPressed: () {
-                Scaffold.of(context).openDrawer();
-              },
-            );
-          },
+              return IconButton(
+                iconSize: 30,
+                icon: const Icon(Icons.menu),
+                onPressed: () {
+                  Scaffold.of(context).openDrawer();
+                },
+              );
+            },
           ),
           centerTitle: true,
           actions: [
-            IconButton(onPressed: () {}, icon: const Icon(Icons.search))
+            IconButton(onPressed: () {}, iconSize: 30, icon: const Icon(Icons.search))
           ],
         ),
         drawer: const MyDrawer(),
@@ -41,7 +42,6 @@ class HomePage extends StatelessWidget {
             SizedBox(height: 20),
             Expanded(child: TabMain()),
           ],
-        )
-      );
+        ));
   }
 }

@@ -8,6 +8,8 @@ class Movie {
     String? releaseDate;
     double? voteAverage;
     int? voteCount;
+    int? time;
+    String? status;
 
     Movie({
       required this.id,
@@ -18,7 +20,8 @@ class Movie {
       required this.overview,
       required this.releaseDate,
       required this.voteAverage,
-      required this.voteCount
+      required this.voteCount,
+
     });
 
 
@@ -32,7 +35,8 @@ class Movie {
         overview: json["overview"], 
         releaseDate: json["release_date"], 
         voteAverage: json["vote_average"], 
-        voteCount: json["vote_count"]
+        voteCount: json["vote_count"],
+       
       );
     }
 }
