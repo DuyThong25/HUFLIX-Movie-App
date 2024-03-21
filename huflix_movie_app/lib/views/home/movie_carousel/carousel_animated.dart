@@ -62,7 +62,6 @@ class _CarouselAnimatedState extends State<CarouselAnimated> {
               print(movie.id);
               actorOfMovie = Api().actorFindByIdMovie(movie.id!);
               detailMovies = Api().movieFindById(movie.id!) ;
-              print(detailMovies);
               Navigator.push(
                 context,
                 CupertinoPageRoute(

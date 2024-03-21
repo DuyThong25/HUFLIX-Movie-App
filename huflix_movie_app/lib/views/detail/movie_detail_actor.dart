@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:huflix_movie_app/api/api.dart';
 import 'package:huflix_movie_app/models/actor.dart';
+import 'package:intl/intl.dart';
 import '../../api/api_constants.dart';
 import '../../models/actordetail.dart';
 
@@ -207,81 +208,20 @@ class MovieDetailActor extends StatelessWidget {
                       const SizedBox(height: 4,),
                       Text(directionList.name ?? "Đang cập nhật..", style: const TextStyle(fontSize: 20, color: Colors.white70, fontWeight: FontWeight.bold), overflow: TextOverflow.ellipsis, maxLines: 1,),
                       const SizedBox(height: 4,),
-                      Text(directionList.birthday ?? "Đang cập nhật..", style: const TextStyle(fontSize: 16, color: Colors.white70, fontWeight: FontWeight.bold), overflow: TextOverflow.ellipsis, maxLines: 1,),
+                      Text(
+                        directionList.birthday != null ? 
+                        DateFormat('dd-MM-yyyy').format(DateTime.parse(directionList.birthday!))
+                        : "Đang cập nhật..", 
+                        style: const TextStyle(fontSize: 16, color: Colors.white70, fontWeight: FontWeight.bold),
+                         overflow: TextOverflow.ellipsis, maxLines: 1,),
                       const SizedBox(height: 4,),
                       Text(directionList.placeOfBirth ?? "Đang cập nhật..", style: const TextStyle(fontSize: 14, color: Colors.white70, fontWeight: FontWeight.bold)),
 
                     ],
                   ) 
                    )
-
               ],
             )
-             
-        
-           
-      
     );
-    
-    //  Stack(
-    //   children: [
-    //     Container(
-            // padding: EdgeInsets.zero,
-            // margin: const EdgeInsets.fromLTRB(0, 6, 50, 6),
-            // child: ClipRRect(
-            //     borderRadius: const BorderRadius.only(
-            //         topLeft: Radius.circular(26),
-            //         topRight: Radius.circular(26)),
-            //     child: directionList.profilePath != null
-            //         ? (Image.network(
-            //             Constants.BASE_IMAGE_URL + directionList.profilePath!,
-            //             width: 180,
-            //             height: double.infinity,
-            //             fit: BoxFit.cover,
-            //           ))
-            //         : Image.asset(
-            //             'assets/images/logo2.jpg',
-            //             width: 180,
-            //             height: double.infinity,
-            //             fit: BoxFit.cover,
-            //           ))),
-    //     Positioned(
-    //       bottom: -10,
-    //       left: 0,
-    //       right: 0,
-    //       child: Container(
-    //           alignment: Alignment.center,
-    //           padding:
-    //               const EdgeInsets.only(left: 6, right: 6, top: 10, bottom: 16),
-    //           color: Colors.black54,
-    //           margin: const EdgeInsets.only(right: 50),
-    //           child: Column(
-    //             children: [
-    //               Text(
-    //                 directionList.name ?? 'Chưa cập nhật..',
-    //                 style: const TextStyle(
-    //                     color: Colors.white,
-    //                     fontWeight: FontWeight.bold,
-    //                     overflow: TextOverflow.ellipsis,
-    //                     fontSize: 18),
-    //                 maxLines: 1,
-    //               ),
-    //               const SizedBox(
-    //                 height: 4,
-    //               ),
-    //               Text(
-    //                 directionList.department ?? 'Chưa cập nhật..',
-    //                 style: const TextStyle(
-    //                     color: Colors.grey,
-    //                     fontWeight: FontWeight.bold,
-    //                     overflow: TextOverflow.ellipsis,
-    //                     fontSize: 15),
-    //                 maxLines: 1,
-    //               ),
-    //             ],
-    //           )),
-    //     )
-    //   ],
-    // );
   }
 }
