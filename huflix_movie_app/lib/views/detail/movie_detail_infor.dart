@@ -5,13 +5,11 @@ import 'package:huflix_movie_app/models/genres.dart';
 import 'package:huflix_movie_app/models/moviedetail.dart';
 import 'package:intl/intl.dart';
 
-import '../../models/movie.dart';
-
 class InforMovie extends StatelessWidget {
   const InforMovie({super.key, required this.movie, required this.movieDetail});
 
   final Movie movie;
-  final Future<MovieDetailModel> movieDetail;
+  final Future<Movie> movieDetail;
 
   @override
   Widget build(BuildContext context) {

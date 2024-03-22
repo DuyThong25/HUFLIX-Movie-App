@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:huflix_movie_app/api/api.dart';
 import 'package:huflix_movie_app/api/api_constants.dart';
 import 'package:huflix_movie_app/models/actor.dart';
-import 'package:huflix_movie_app/models/movie.dart';
 import 'package:huflix_movie_app/views/home/movie_carousel/carousel_card.dart';
 import '../../detail/movie_detail.dart';
 import 'package:huflix_movie_app/models/moviedetail.dart';
@@ -20,7 +19,7 @@ class CarouselAnimated extends StatefulWidget {
 class _CarouselAnimatedState extends State<CarouselAnimated> {
   late Future<List<Movie>> trendingMovies;
   late Future<List<Actor>> actorOfMovie;
-  late Future<MovieDetailModel> detailMovies;
+  late Future<Movie> detailMovies;
 
   @override
   void initState() {
@@ -65,7 +64,7 @@ class _CarouselAnimatedState extends State<CarouselAnimated> {
               Navigator.push(
                 context,
                 CupertinoPageRoute(
-                  builder: (context) => MovieDetail(
+                  builder: (context) => MovieDetailMain(
                     movie: movie,
                     detailMovie: detailMovies,
                     actorOfMovieByID: actorOfMovie,

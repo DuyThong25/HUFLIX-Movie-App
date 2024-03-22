@@ -4,20 +4,20 @@ import 'package:huflix_movie_app/views/detail/movie_detail_description.dart';
 import 'package:huflix_movie_app/views/detail/movie_detail_infor.dart';
 import '../../api/api_constants.dart';
 import '../../models/actor.dart';
-import '../../models/movie.dart';
 import 'movie_detail_actor.dart';
 import 'movie_statusbar.dart';
 
-class MovieDetail extends StatelessWidget {
-  const MovieDetail(
+class MovieDetailMain extends StatelessWidget {
+  const MovieDetailMain(
       {super.key,
       required this.movie,
       required this.actorOfMovieByID,
-      required this.detailMovie});
+      required this.detailMovie
+      });
       
   final Movie movie;
   final Future<List<Actor>> actorOfMovieByID;
-  final Future<MovieDetailModel> detailMovie;
+  final Future<Movie> detailMovie;
 
   @override
   Widget build(BuildContext context) {
@@ -59,12 +59,16 @@ class MovieDetail extends StatelessWidget {
                     height: MediaQuery.of(context).size.height - 400,
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(30),
-                      child: Image.network(
-                        // 'https://img.freepik.com/free-photo/forest-landscape_71767-127.jpg?size=626&ext=jpg&ga=GA1.1.8332681.1703272078&semt=ais',
+                      child: movie.posterPath != null ?
+                      Image.network(
                         Constants.BASE_IMAGE_URL + movie.posterPath!,
                         fit: BoxFit.cover,
                         alignment: Alignment.topCenter,
-                      ),
+                      ) : Image.asset(
+                          "assets/images/logo1.jpg",
+                          fit: BoxFit.cover,
+                          alignment: Alignment.topCenter,
+                        ),
                     )),
                 // status bar - Fuunction Bar
                 const Positioned(

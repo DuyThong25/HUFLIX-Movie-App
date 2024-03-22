@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:huflix_movie_app/api/api.dart';
 import 'package:huflix_movie_app/api/api_constants.dart';
 import 'package:huflix_movie_app/common/common.dart';
-import 'package:huflix_movie_app/models/movie.dart';
 
 import '../../../models/actor.dart';
 import '../../../models/moviedetail.dart';
@@ -35,12 +34,12 @@ class TabViewData extends StatelessWidget {
         onTap: () {
           late Future<List<Actor>> actorOfMovie =
               Api().actorFindByIdMovie(movie.id!);
-          late Future<MovieDetailModel> detailMovies =
+          late Future<Movie> detailMovies =
               Api().movieFindById(movie.id!);
           Navigator.push(
               context,
               CupertinoPageRoute(
-                builder: (context) => MovieDetail(
+                builder: (context) => MovieDetailMain(
                   movie: movie,
                   detailMovie: detailMovies,
                   actorOfMovieByID: actorOfMovie,

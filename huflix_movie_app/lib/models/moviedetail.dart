@@ -1,6 +1,6 @@
 import 'package:huflix_movie_app/models/genres.dart';
 
-class MovieDetailModel {
+class Movie {
   int? id;
   int? time;
   String? status;
@@ -14,7 +14,7 @@ class MovieDetailModel {
   double? voteAverage;
   int? voteCount;
 
-  MovieDetailModel(
+  Movie(
       {this.id,
       this.time,
       this.status,
@@ -28,7 +28,7 @@ class MovieDetailModel {
       this.voteAverage,
       this.voteCount});
 
-  MovieDetailModel.fromJson(Map<String, dynamic> json, List<Genre>? genres) {
+  Movie.fromJson(Map<String, dynamic> json, List<Genre>? genres) {
     id = json["id"];
     time = json["runtime"];
     status = json["status"];
@@ -43,7 +43,7 @@ class MovieDetailModel {
     voteCount = json["vote_count"];
   }
 
-  MovieDetailModel.fromJsonSearch(Map<String, dynamic> json) {
+  Movie.fromJsonNotGenres(Map<String, dynamic> json) {
     id = json["id"];
     time = json["runtime"];
     status = json["status"];
