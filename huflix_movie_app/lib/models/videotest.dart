@@ -17,3 +17,10 @@ createDataTest() {
   ];
   return listData;
 }
+class TestUser {
+  String? name;
+  int? age;
+  String? lastName;
+
+  TestUser({this.name, this.age, this.lastName});
+}

@@ -24,7 +24,7 @@ class Api {
       final movieData = json.decode(response.body)['results'] as List;
       // print("Phim Trending");
       // print(movieData);
-      return movieData.map((movie) => Movie.fromJson(movie)).toList();
+      return movieData.map((movie) => Movie.fromJsonNotGenres(movie)).toList();
     } else {
       throw Exception("Có lỗi đang xảy ra");
     }
@@ -36,7 +36,7 @@ class Api {
       final movieData = json.decode(response.body)['results'] as List;
       // print("Phim Phổ biến");
       // print(movieData);
-      return movieData.map((movie) => Movie.fromJson(movie)).toList();
+      return movieData.map((movie) => Movie.fromJsonNotGenres(movie)).toList();
     } else {
       throw Exception("Có lỗi đang xảy ra");
     }
@@ -48,7 +48,7 @@ class Api {
       final movieData = json.decode(response.body)['results'] as List;
       // print("Phim sắp chiếu");
       // print(movieData);
-      return movieData.map((movie) => Movie.fromJson(movie)).toList();
+      return movieData.map((movie) => Movie.fromJsonNotGenres(movie)).toList();
     } else {
       throw Exception("Có lỗi đang xảy ra");
     }
@@ -60,7 +60,7 @@ class Api {
       final movieData = json.decode(response.body)['results'] as List;
       // print("Phim đang chiếu");
       // print(movieData);
-      return movieData.map((movie) => Movie.fromJson(movie)).toList();
+      return movieData.map((movie) => Movie.fromJsonNotGenres(movie)).toList();
     } else {
       throw Exception("Có lỗi đang xảy ra");
     }
@@ -109,7 +109,7 @@ class Api {
   }
 
   // Lấy thông tin chi tiết của phim
-  Future<MovieDetailModel> movieFindById(int idMovie) async {
+  Future<Movie> movieFindById(int idMovie) async {
     String movieDetailUrl =
         "${Constants.BASE_URL}movie/$idMovie?api_key=${Constants.API_KEY}&language=vi";
     final response = await http.get(Uri.parse(movieDetailUrl));
@@ -120,7 +120,7 @@ class Api {
       final List<Genre> genres =
           genresData.map((genreJson) => Genre.fromJson(genreJson)).toList();
 
-      return MovieDetailModel(
+      return Movie(
         id: movieDetailData['id'],
         time: movieDetailData['runtime'],
         status: movieDetailData['status'],
@@ -130,20 +130,19 @@ class Api {
       throw Exception("Có lỗi đang xảy ra");
     }
   }
-  // Future<List<MovieDetail>> movieFindById(int idMovie) async {
-  //   String movieDetailUrl =
-  //       "${Constants.BASE_URL}movie/$idMovie?api_key=${Constants.API_KEY}&language=vi";
-  //   final response = await http.get(Uri.parse(movieDetailUrl));
-  //   if (response.statusCode == 200) {
-  //     final tempData = json.decode(response.body);
-  //     // print();
-  //     final List<dynamic> genresData = tempData['genres'] as List;
-  //     final List<Genre> genres = genresData.map((genreJson) => Genre.fromJson(genreJson)).toList();
-  //     final movieDetailData = json.decode(response.body) as List;
+  
+  // Get list result for search string
+   Future<List<Movie>> searchListByName(String inputName) async {
+    String searchUrl =
+        "${Constants.BASE_URL}search/movie?query=$inputName&include_adult=false&api_key=${Constants.API_KEY}&language=vi&page=1";
 
-  //     return movieDetailData.map((movie) => MovieDetail.fromJson(movie, genres)).toList();
-  //   } else {
-  //     throw Exception("Có lỗi đang xảy ra");
-  //   }
-  // }
+    final response = await http.get(Uri.parse(searchUrl));
+    if (response.statusCode == 200) {
+      final searchData = json.decode(response.body)['results'] as List;
+
+      return searchData.map((movie) => Movie.fromJsonNotGenres(movie)).toList();
+    } else {
+      throw Exception("Có lỗi đang xảy ra");
+    }
+  }
 }

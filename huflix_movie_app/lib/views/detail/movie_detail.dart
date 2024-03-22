@@ -4,20 +4,20 @@ import 'package:huflix_movie_app/views/detail/movie_detail_description.dart';
 import 'package:huflix_movie_app/views/detail/movie_detail_infor.dart';
 import '../../api/api_constants.dart';
 import '../../models/actor.dart';
-import '../../models/movie.dart';
 import 'movie_detail_actor.dart';
 import 'movie_statusbar.dart';
 
-class MovieDetail extends StatelessWidget {
-  const MovieDetail(
+class MovieDetailMain extends StatelessWidget {
+  const MovieDetailMain(
       {super.key,
       required this.movie,
       required this.actorOfMovieByID,
-      required this.detailMovie});
+      required this.detailMovie
+      });
       
   final Movie movie;
   final Future<List<Actor>> actorOfMovieByID;
-  final Future<MovieDetailModel> detailMovie;
+  final Future<Movie> detailMovie;
 
   @override
   Widget build(BuildContext context) {
@@ -26,17 +26,12 @@ class MovieDetail extends StatelessWidget {
       backgroundColor: Colors.black,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
-        // backgroundColor: const Color(0x44000000),
-        // title: const Text("HUFLIX",
-        //     style: TextStyle(
-        //         fontWeight: FontWeight.bold,
-        //         fontSize: 30,
-        //         color: Color.fromARGB(255, 255, 255, 255))),
         leading: Builder(
           builder: (BuildContext context) {
             return IconButton(
+              color: Colors.black,
               icon: const Icon(Icons.keyboard_backspace_sharp),
-              iconSize: 30,
+              iconSize: 38,
               onPressed: () {
                 Navigator.pop(context);
               },
@@ -47,7 +42,8 @@ class MovieDetail extends StatelessWidget {
         actions: [
           IconButton(
               onPressed: () {},
-              iconSize: 30,
+              color: Colors.black,
+              iconSize: 38,
               icon: const Icon(Icons.favorite_border))
         ],
       ),
@@ -63,12 +59,16 @@ class MovieDetail extends StatelessWidget {
                     height: MediaQuery.of(context).size.height - 400,
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(30),
-                      child: Image.network(
-                        // 'https://img.freepik.com/free-photo/forest-landscape_71767-127.jpg?size=626&ext=jpg&ga=GA1.1.8332681.1703272078&semt=ais',
+                      child: movie.posterPath != null ?
+                      Image.network(
                         Constants.BASE_IMAGE_URL + movie.posterPath!,
                         fit: BoxFit.cover,
                         alignment: Alignment.topCenter,
-                      ),
+                      ) : Image.asset(
+                          "assets/images/logo1.jpg",
+                          fit: BoxFit.cover,
+                          alignment: Alignment.topCenter,
+                        ),
                     )),
                 // status bar - Fuunction Bar
                 const Positioned(
@@ -83,7 +83,7 @@ class MovieDetail extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // voting - time
+                  // Infor bar
                   InforMovie(
                     movie: movie,
                     movieDetail: detailMovie,
@@ -97,7 +97,7 @@ class MovieDetail extends StatelessWidget {
                     color: Colors.grey[900],
                     height: 22,
                   ),
-                  // Actor và Crew
+                  // List Actor và Crew
                   const Text(
                     "Diễn viên",
                     style: TextStyle(

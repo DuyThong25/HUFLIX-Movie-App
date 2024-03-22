@@ -25,7 +25,7 @@ class _MovieDetalDescriptionState extends State<MovieDetalDescription> {
                 ? const BoxConstraints()
                 : const BoxConstraints(maxHeight: 100),
             child: Text(
-              widget.description,
+              widget.description != "" ? widget.description :  "Đang cập nhật.." ,
               style: Common.styleDescriptionMovieDetail(),
               softWrap: true,
               overflow: isExpanded ? TextOverflow.visible : TextOverflow.ellipsis,

@@ -1,7 +1,9 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:huflix_movie_app/views/home/movie_carousel/carousel_animated.dart';
 import 'package:huflix_movie_app/views/home/movie_tab/Tab_Main.dart';
 import 'package:huflix_movie_app/views/drawer/movie_drawer.dart';
+import 'package:huflix_movie_app/views/search/search_main.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -22,7 +24,8 @@ class HomePage extends StatelessWidget {
           leading: Builder(
             builder: (BuildContext context) {
               return IconButton(
-                iconSize: 30,
+                color: Colors.black,
+                iconSize: 36,
                 icon: const Icon(Icons.menu),
                 onPressed: () {
                   Scaffold.of(context).openDrawer();
@@ -32,7 +35,20 @@ class HomePage extends StatelessWidget {
           ),
           centerTitle: true,
           actions: [
-            IconButton(onPressed: () {}, iconSize: 30, icon: const Icon(Icons.search))
+            IconButton(
+              onPressed: () {
+                Navigator.push(
+                    context,
+                    CupertinoPageRoute(
+                      builder: (context) {
+                        return SearchMain();
+                      },
+                    ) 
+                  );
+              },
+              color: Colors.black,
+              iconSize: 36, 
+              icon: const Icon(Icons.search))
           ],
         ),
         drawer: const MyDrawer(),
