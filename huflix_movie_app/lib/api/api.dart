@@ -130,20 +130,19 @@ class Api {
       throw Exception("Có lỗi đang xảy ra");
     }
   }
-  // Future<List<MovieDetail>> movieFindById(int idMovie) async {
-  //   String movieDetailUrl =
-  //       "${Constants.BASE_URL}movie/$idMovie?api_key=${Constants.API_KEY}&language=vi";
-  //   final response = await http.get(Uri.parse(movieDetailUrl));
-  //   if (response.statusCode == 200) {
-  //     final tempData = json.decode(response.body);
-  //     // print();
-  //     final List<dynamic> genresData = tempData['genres'] as List;
-  //     final List<Genre> genres = genresData.map((genreJson) => Genre.fromJson(genreJson)).toList();
-  //     final movieDetailData = json.decode(response.body) as List;
+  
+  // Get list result for search string
+   Future<List<MovieDetailModel>> searchListByName(String inputName) async {
+    String searchUrl =
+        "${Constants.BASE_URL}search/movie?query=$inputName&include_adult=false&api_key=${Constants.API_KEY}&language=vi&page=1";
 
-  //     return movieDetailData.map((movie) => MovieDetail.fromJson(movie, genres)).toList();
-  //   } else {
-  //     throw Exception("Có lỗi đang xảy ra");
-  //   }
-  // }
+    final response = await http.get(Uri.parse(searchUrl));
+    if (response.statusCode == 200) {
+      final searchData = json.decode(response.body)['results'] as List;
+
+      return searchData.map((movie) => MovieDetailModel.fromJsonSearch(movie)).toList();
+    } else {
+      throw Exception("Có lỗi đang xảy ra");
+    }
+  }
 }

@@ -31,6 +31,7 @@ class MainApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       // Màn hình splash screen
       home: AnimatedSplashScreen(
           duration: 3000,
@@ -46,7 +47,6 @@ class MainApp extends StatelessWidget {
           splashIconSize: 500,
           // nextScreen: const LoginPage(),
           nextScreen: const HomePage(),
-
           splashTransition: SplashTransition.slideTransition,
           // pageTransitionType: PageTransitionType.rightToLeft,
           backgroundColor: const Color.fromRGBO(35, 31, 32, 1)),

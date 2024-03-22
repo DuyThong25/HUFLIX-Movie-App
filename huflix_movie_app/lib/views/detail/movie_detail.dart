@@ -26,17 +26,12 @@ class MovieDetail extends StatelessWidget {
       backgroundColor: Colors.black,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
-        // backgroundColor: const Color(0x44000000),
-        // title: const Text("HUFLIX",
-        //     style: TextStyle(
-        //         fontWeight: FontWeight.bold,
-        //         fontSize: 30,
-        //         color: Color.fromARGB(255, 255, 255, 255))),
         leading: Builder(
           builder: (BuildContext context) {
             return IconButton(
+              color: Colors.black,
               icon: const Icon(Icons.keyboard_backspace_sharp),
-              iconSize: 30,
+              iconSize: 38,
               onPressed: () {
                 Navigator.pop(context);
               },
@@ -47,7 +42,8 @@ class MovieDetail extends StatelessWidget {
         actions: [
           IconButton(
               onPressed: () {},
-              iconSize: 30,
+              color: Colors.black,
+              iconSize: 38,
               icon: const Icon(Icons.favorite_border))
         ],
       ),
@@ -83,7 +79,7 @@ class MovieDetail extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // voting - time
+                  // Infor bar
                   InforMovie(
                     movie: movie,
                     movieDetail: detailMovie,
@@ -97,7 +93,7 @@ class MovieDetail extends StatelessWidget {
                     color: Colors.grey[900],
                     height: 22,
                   ),
-                  // Actor và Crew
+                  // List Actor và Crew
                   const Text(
                     "Diễn viên",
                     style: TextStyle(

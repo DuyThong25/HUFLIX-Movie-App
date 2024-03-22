@@ -8,8 +8,6 @@ class Movie {
     String? releaseDate;
     double? voteAverage;
     int? voteCount;
-    int? time;
-    String? status;
 
     Movie({
       required this.id,

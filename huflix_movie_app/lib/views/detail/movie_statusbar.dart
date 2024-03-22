@@ -132,7 +132,7 @@ class _MyWidgetState extends State<StatusBarDetail> {
             borderRadius: BorderRadius.circular(50),
             child: Container(
               padding: const EdgeInsets.all(8),
-              color: Color.fromARGB(255, 22, 18, 18),
+              color: const Color.fromARGB(255, 22, 18, 18),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
