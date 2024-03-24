@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'package:huflix_movie_app/api/api_constants.dart';
 import 'package:huflix_movie_app/models/actor.dart';
 import 'package:huflix_movie_app/models/actordetail.dart';
-import 'package:huflix_movie_app/models/movie.dart';
 import 'package:http/http.dart' as http;
 import 'package:huflix_movie_app/models/moviedetail.dart';
 

@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
+import 'package:huflix_movie_app/common/common.dart';
 import 'package:huflix_movie_app/models/genres.dart';
 import 'package:huflix_movie_app/models/moviedetail.dart';
 import 'package:intl/intl.dart';
@@ -18,6 +18,7 @@ class InforMovie extends StatelessWidget {
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           Duration duration = Duration(minutes: snapshot.data!.time!);
+          snapshot.data!.genres!.insert(0,Genre(id: movie.genres!.length + 2, name: "${movie.voteCount.toString()} votes"));
 
           return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -118,7 +119,7 @@ class InforMovie extends StatelessWidget {
                           borderRadius: BorderRadius.circular(6),
                           border: Border.all(color: Colors.white)),
                       child: Text(
-                        formatDuration(duration),
+                        Common.formatDuration(duration),
                         style: const TextStyle(
                             color: Colors.white,
                             fontSize: 15,
@@ -131,6 +132,7 @@ class InforMovie extends StatelessWidget {
               const SizedBox(
                 height: 20,
               ),
+              
               SizedBox(
                 height: 24,
                 child: ListView.builder(
@@ -138,7 +140,7 @@ class InforMovie extends StatelessWidget {
                   scrollDirection: Axis.horizontal,
                   itemCount: snapshot.data!.genres!.length,
                   itemBuilder: (context, index) {
-                    return itemGenres(snapshot.data!.genres![index]);
+                    return itemGenres(snapshot.data!.genres![index], index);
                   },
                 ),
               ),
@@ -153,7 +155,7 @@ class InforMovie extends StatelessWidget {
     );
   }
 
-  Widget itemGenres(Genre genre) {
+  Widget itemGenres(Genre genre, int index) {
     return 
     Container(
       margin: const EdgeInsets.only(right: 10),
@@ -172,10 +174,4 @@ class InforMovie extends StatelessWidget {
           )),
     );
   }
-}
-
-String formatDuration(Duration duration) {
-  String hours = duration.inHours.toString().padLeft(0, '2');
-  String minutes = duration.inMinutes.remainder(60).toString().padLeft(2, '0');
-  return "${hours}g${minutes}p";
 }

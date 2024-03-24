@@ -1,11 +1,13 @@
-import 'package:carousel_slider/carousel_slider.dart';
+import 'package:blur/blur.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:huflix_movie_app/api/api_constants.dart';
+import 'package:huflix_movie_app/common/common.dart';
 import 'package:huflix_movie_app/models/actor.dart';
+import 'package:huflix_movie_app/views/detail/movie_detail.dart';
+import 'package:intl/intl.dart';
 import '../../api/api.dart';
-import '../../api/api_constants.dart';
 import '../../models/moviedetail.dart';
-import '../detail/movie_detail.dart';
 
 class SearchMain extends StatefulWidget {
   const SearchMain({super.key});
@@ -18,7 +20,6 @@ class _SearchMainState extends State<SearchMain> {
   final _searchText = TextEditingController();
   // late List<Future<Movie>> listMovie;
   late Future<List<Movie>> _searchResults;
-  int _currentIndex = 0;
 
   @override
   void initState() {
@@ -109,7 +110,7 @@ class _SearchMainState extends State<SearchMain> {
                   );
                 } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
                   return SliverFillRemaining(
-                    hasScrollBody: false,
+                    // hasScrollBody: false,
                     child: Center(
                         child: Text(
                       "Thử tìm phim khác nhé..",
@@ -117,36 +118,23 @@ class _SearchMainState extends State<SearchMain> {
                     )),
                   );
                 } else {
-                  return SliverFillRemaining(
-                      // child: itemSearch(snapshot.data!),
-                      child: CarouselSlider(
-                    options: CarouselOptions(
-                      // height: 400,
-                      aspectRatio: 16 / 9,
-                      viewportFraction: 0.85,
-                      initialPage: 0,
-                      reverse: false,
-                      autoPlay: false,
-                      enlargeCenterPage: true,
-                      enlargeFactor: 0.2,
-                      scrollDirection: Axis.vertical,
-                      enableInfiniteScroll: false,
-                      onPageChanged: (index, reason) {
-                        setState(() {
-                          _currentIndex = index;
-                        });
-                      },
+                  return SliverGrid(
+                    gridDelegate:
+                        const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2, // Số cột trên mỗi hàng
+                      mainAxisSpacing: 26.0, // Khoảng cách giữa các hàng
+                      crossAxisSpacing: 26.0, // Khoảng cách giữa các cột
+                      childAspectRatio:
+                          0.7, // Tỷ lệ giữa chiều rộng và chiều cao của mỗi ô
                     ),
-                    items: snapshot.data!.map(
-                      (element) {
-                        bool isValid = false;
-                        if (_currentIndex == snapshot.data!.indexOf(element)) {
-                          isValid = true;
-                        }
-                        return itemSearch(element, isValid);
+                    delegate: SliverChildBuilderDelegate(
+                      (BuildContext context, int index) {
+                        Movie movieDetail = snapshot.data![index];
+                        return itemSearch(movieDetail);
                       },
-                    ).toList(),
-                  ));
+                      childCount: snapshot.data!.length, // Số lượng ô
+                    ),
+                  );
                 }
               },
             ),
@@ -154,66 +142,143 @@ class _SearchMainState extends State<SearchMain> {
         ));
   }
 
-  Widget itemSearch(Movie movieDetail, bool isValid) {
-    return GestureDetector(
+  Widget itemSearch(Movie movieDetail) {
+    return InkWell(
       onTap: () {
-        late Future<List<Actor>> actorOfMovie =
-              Api().actorFindByIdMovie(movieDetail.id!);
-          late Future<Movie> detailMovies =
-              Api().movieFindById(movieDetail.id!);
-        // Movie movie = Movie(id: movieDetail.id, title: movieDetail.title, originalTitle: movieDetail.originalTitle, backdropPath: movieDetail.backdropPath, posterPath: movieDetail.posterPath, overview: movieDetail.overview, releaseDate: movieDetail.releaseDate, voteAverage: movieDetail.voteAverage, voteCount: movieDetail.voteCount);
-
+        late Future<List<Actor>> actorOfMovie = Api().actorFindByIdMovie(movieDetail.id!);
+        late Future<Movie> detailMovies =  Api().movieFindById(movieDetail.id!);
         Navigator.push(
-          context,
-          CupertinoPageRoute(builder: (context) {
-            return MovieDetailMain(movie: movieDetail, detailMovie: detailMovies, actorOfMovieByID: actorOfMovie);
-          })
-        );
+            context,
+            CupertinoPageRoute(
+              builder: (context) => MovieDetailMain(
+                movie: movieDetail,
+                detailMovie: detailMovies,
+                actorOfMovieByID: actorOfMovie,
+              ),
+            ));
       },
-        child: Center(
-      child: Padding(
-        padding: const EdgeInsets.all(26.0),
-        child: Stack(children: [
-          ClipRRect(
-            borderRadius: BorderRadius.circular(36),
-            child: Container(
-                height: 550,
-                child: movieDetail.posterPath != null
-                    ? Image.network(
-                        Constants.BASE_IMAGE_URL + movieDetail.posterPath!,
-                        fit: BoxFit.cover,
-                        alignment: Alignment.center,
-                      )
-                    : Image.asset(
-                        "assets/images/logo1.jpg",
-                        fit: BoxFit.cover,
-                      )),
-          ),
-          // isValid ?
-          // Positioned(
-          //     bottom: 0,
-          //     right: 0,
-          //     left: 0,
-          //     child: Container(
-          //       height: 550,
-          //       color: Colors.black38,
-          //       child: Column(
-          //         children: [
-          //           Text(
-          //       movieDe.title!.toUpperCase(),
-          //       style: const TextStyle(
-          //         color: Colors.white,
-          //         fontSize: 30,
-          //         letterSpacing: 3,
-          //         fontWeight: FontWeight.bold,
-          //       ),
-          //     ),
-          //         ],
-          //       ),
-          //     )
-          //   ) : const SizedBox.shrink()
-        ]),
-      ),
-    ));
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(16),
+        child: Stack(
+          children: [
+            Blur(
+              blur: 2,
+              colorOpacity: 0.01,
+              borderRadius: BorderRadius.circular(16),
+              child: movieDetail.posterPath != null
+                  ? Image.network(
+                      Constants.BASE_IMAGE_URL + movieDetail.posterPath!,
+                      fit: BoxFit.cover,
+                      alignment: Alignment.center,
+                    )
+                  : Image.asset(
+                      'assets/images/logo1.png',
+                      fit: BoxFit.cover,
+                      alignment: Alignment.center,
+                    ),
+            ),
+            Positioned(
+              // bottom: 0,
+              left: 0,
+              right: 10,
+              child: Container(
+                padding: const EdgeInsets.only(top: 10, bottom: 8, left: 6, right: 6),
+                height: MediaQuery.of(context).size.height,
+                color: Colors.black54,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    SizedBox(
+                      height: 90,
+                      child: Text(
+                        movieDetail.title!.toUpperCase() ?? "Đang cập nhật..",
+                        style: const TextStyle(
+                          fontSize: 20,
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                          overflow: TextOverflow.ellipsis,
+                          letterSpacing: 2,
+                        ),
+                        maxLines: 3,
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 6,
+                    ),
+                    // Năm
+                    Row(
+                      children: [
+                        movieDetail.releaseDate != null ||
+                                movieDetail.releaseDate != ""
+                            ? ClipRRect(
+                                borderRadius: BorderRadius.circular(6),
+                                child: Container(
+                                  alignment: Alignment.center,
+                                  padding: const EdgeInsets.only(
+                                      left: 6, right: 6, top: 4, bottom: 4),
+                                  decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(6),
+                                      border: Border.all(color: Colors.white)),
+                                  child: Text(
+                                    DateFormat('yyyy').format(DateTime.parse(
+                                        movieDetail.releaseDate!)),
+                                    style: const TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                ),
+                              )
+                            : const SizedBox.shrink(),
+                          
+                        const Spacer(),
+                        movieDetail.voteAverage != null ||
+                                movieDetail.releaseDate != ""
+                            ? ClipRRect(
+                                borderRadius: BorderRadius.circular(6),
+                                child: Container(
+                                  width: 40,
+                                  alignment: Alignment.center,
+                                  padding: const EdgeInsets.only(
+                                      left: 6, right: 6, top: 4, bottom: 4),
+                                  color: movieDetail.voteAverage! > 6
+                                      ? Colors.green.shade500
+                                      : Colors.red.shade500,
+                                  child: Text(
+                                    // "${movie.voteAverage} ",
+                                    NumberFormat('##.#')
+                                        .format(movieDetail.voteAverage),
+                                    style: const TextStyle(
+                                        fontSize: 15,
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                ))
+                            : const SizedBox.shrink()
+                      ],
+                    ),
+                    const SizedBox(
+                      height: 6,
+                    ),
+                    Text(
+                      movieDetail.overview ?? "Đang cập nhật..",
+                      style: const TextStyle(
+                        fontSize: 16,
+                        color: Colors.white54,
+                        fontWeight: FontWeight.bold,
+                        overflow: TextOverflow.ellipsis,
+                        // letterSpacing: 2,
+                      ),
+                      maxLines: 5,
+                    )
+                  ],
+                ),
+              ),
+            )
+          ],
+        )),
+    );
+    
+    
   }
 }
