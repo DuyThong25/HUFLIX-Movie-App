@@ -56,17 +56,17 @@ class MovieDetailMain extends StatelessWidget {
                 Container(
                     padding: const EdgeInsets.fromLTRB(0, 0, 0, 40),
                     width: MediaQuery.of(context).size.width,
-                    height: MediaQuery.of(context).size.height - 400,
+                    height: MediaQuery.of(context).size.height - 320,
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(30),
                       child: movie.posterPath != null ?
                       Image.network(
                         Constants.BASE_IMAGE_URL + movie.posterPath!,
-                        fit: BoxFit.cover,
+                        fit: BoxFit.fill,
                         alignment: Alignment.topCenter,
                       ) : Image.asset(
                           "assets/images/logo1.jpg",
-                          fit: BoxFit.cover,
+                          fit: BoxFit.fill,
                           alignment: Alignment.topCenter,
                         ),
                     )),
