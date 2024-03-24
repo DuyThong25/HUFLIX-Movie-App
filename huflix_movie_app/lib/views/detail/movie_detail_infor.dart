@@ -86,6 +86,9 @@ class InforMovie extends StatelessWidget {
                   const SizedBox(
                     width: 10,
                   ),
+                   movie.releaseDate != null &&
+                                movie.releaseDate != ""
+                            ?
                   ClipRRect(
                     borderRadius: BorderRadius.circular(6),
                     child: Container(
@@ -104,7 +107,7 @@ class InforMovie extends StatelessWidget {
                             fontWeight: FontWeight.bold),
                       ),
                     ),
-                  ),
+                  ): const SizedBox.shrink(),
                   // Thời gian của phim
                   const SizedBox(
                     width: 10,

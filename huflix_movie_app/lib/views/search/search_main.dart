@@ -2,7 +2,6 @@ import 'package:blur/blur.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:huflix_movie_app/api/api_constants.dart';
-import 'package:huflix_movie_app/common/common.dart';
 import 'package:huflix_movie_app/models/actor.dart';
 import 'package:huflix_movie_app/views/detail/movie_detail.dart';
 import 'package:intl/intl.dart';
@@ -172,7 +171,7 @@ class _SearchMainState extends State<SearchMain> {
                       alignment: Alignment.center,
                     )
                   : Image.asset(
-                      'assets/images/logo1.png',
+                      'assets/images/logo2.jpg',
                       fit: BoxFit.cover,
                       alignment: Alignment.center,
                     ),
@@ -191,7 +190,8 @@ class _SearchMainState extends State<SearchMain> {
                     SizedBox(
                       height: 90,
                       child: Text(
-                        movieDetail.title!.toUpperCase() ?? "Đang cập nhật..",
+                        (movieDetail.title != "" && movieDetail.title != null) ?
+                        movieDetail.title!.toUpperCase() : "Đang cập nhật..",
                         style: const TextStyle(
                           fontSize: 20,
                           color: Colors.white,
@@ -208,7 +208,7 @@ class _SearchMainState extends State<SearchMain> {
                     // Năm
                     Row(
                       children: [
-                        movieDetail.releaseDate != null ||
+                        movieDetail.releaseDate != null &&
                                 movieDetail.releaseDate != ""
                             ? ClipRRect(
                                 borderRadius: BorderRadius.circular(6),
@@ -258,10 +258,10 @@ class _SearchMainState extends State<SearchMain> {
                       ],
                     ),
                     const SizedBox(
-                      height: 6,
+                      height: 10,
                     ),
                     Text(
-                      movieDetail.overview ?? "Đang cập nhật..",
+                      movieDetail.overview != "" ? movieDetail.overview! : "Đang cập nhật..",
                       style: const TextStyle(
                         fontSize: 16,
                         color: Colors.white54,
