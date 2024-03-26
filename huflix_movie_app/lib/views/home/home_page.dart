@@ -41,7 +41,7 @@ class HomePage extends StatelessWidget {
                     context,
                     CupertinoPageRoute(
                       builder: (context) {
-                        return SearchMain();
+                        return const SearchMain();
                       },
                     ) 
                   );

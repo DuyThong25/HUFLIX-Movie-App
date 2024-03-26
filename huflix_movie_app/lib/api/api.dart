@@ -84,7 +84,7 @@ class Api {
     }
   }
 
-  // Lấy danh sách diễn viên theo id phim
+  // Lấy thông tin diễn viên theo id diễn viên
   Future<List<ActorProfile>> actorInforFindByIdActor(
       List<Actor> crewList) async {
     List<dynamic> combineList = [];
@@ -130,7 +130,7 @@ class Api {
     }
   }
   
-  // Get list result for search string
+  // Lấy danh sách phim khi tìm kiếm theo tên
    Future<List<Movie>> searchListByName(String inputName) async {
     String searchUrl =
         "${Constants.BASE_URL}search/movie?query=$inputName&include_adult=false&api_key=${Constants.API_KEY}&language=vi&page=1";
@@ -140,6 +140,39 @@ class Api {
       final searchData = json.decode(response.body)['results'] as List;
 
       return searchData.map((movie) => Movie.fromJsonNotGenres(movie)).toList();
+    } else {
+      throw Exception("Có lỗi đang xảy ra");
+    }
+  }
+
+  // Lấy danh sách các phim có cùng thể loại
+  Future<List<Movie>> categotyByIDGenres(int idGenres, int currentPage) async {
+    String topRateUrl =
+        "${Constants.BASE_URL}discover/movie?api_key=${Constants.API_KEY}&language=vi&page=$currentPage&with_genres=$idGenres";
+        // https://api.themoviedb.org/3/discover/movie?api_key=2f9034d5190d3ecb1c5934d07598fe5c&language=vi&page=1&with_genres=18
+    final response = await http.get(Uri.parse(topRateUrl));
+    if (response.statusCode == 200) {
+      final resultListData = json.decode(response.body)['results'] as List;
+      // final genresData = json.decode(response.body)['results']['genre_ids'];
+      // final List<Genre> listGenres = genresData.map((genreJson) => Genre.fromJson(genreJson)).toList();
+      
+      return resultListData.map((movie) => Movie.fromJsonNotGenres(movie)).toList();
+    } else {
+      throw Exception("Có lỗi đang xảy ra");
+    }
+  }
+
+  // Lấy danh sách tên các thể loại phim
+  // Lấy danh sách các phim có cùng thể loại
+  Future<List<Genre>> getListGenres() async {
+    String getGenresUrl =
+        "${Constants.BASE_URL}genre/movie/list?api_key=${Constants.API_KEY}&language=vi";
+    //  --url 'https://api.themoviedb.org/3/genre/movie/list?language=vi' \
+    final response = await http.get(Uri.parse(getGenresUrl));
+    if (response.statusCode == 200) {
+      final genresData = json.decode(response.body)['genres'] as List;
+      
+      return genresData.map((genreJson) => Genre.fromJson(genreJson)).toList();
     } else {
       throw Exception("Có lỗi đang xảy ra");
     }
