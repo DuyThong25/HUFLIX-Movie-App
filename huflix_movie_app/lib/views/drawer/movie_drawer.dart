@@ -1,4 +1,7 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:huflix_movie_app/views/genres/movie_genres.dart';
+import 'package:huflix_movie_app/views/genres/movie_genres_list_name.dart';
 
 class MyDrawer extends StatefulWidget {
   const MyDrawer({super.key});
@@ -34,25 +37,35 @@ class _MyDrawerState extends State<MyDrawer> {
                 ),
               ),
               ListTile(
-                title: const Text('Favorite Movie', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+                title: const Text('Phim yêu thích', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+                onTap: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+               ListTile(
+                title: const Text('Thể loại', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+                onTap: () {
+                  Navigator.push(
+                context,
+                CupertinoPageRoute(
+                  builder: (context) => ListNameGenres()
+                ));   
+                },
+              ),
+              ListTile(
+                title: const Text('Liên hệ', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
                 onTap: () {
                   Navigator.of(context).pop();
                 },
               ),
               ListTile(
-                title: const Text('Contact', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+                title: const Text('Về chúng tôi', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
                 onTap: () {
                   Navigator.of(context).pop();
                 },
               ),
               ListTile(
-                title: const Text('About', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
-                onTap: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-              ListTile(
-                title: const Text('Logout', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+                title: const Text('Đăng xuất', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
                 onTap: () {
                   Navigator.of(context).pop();
                 },
