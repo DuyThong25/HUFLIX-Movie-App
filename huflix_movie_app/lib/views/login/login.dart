@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:huflix_movie_app/views/home/home_page.dart';
+import 'package:huflix_movie_app/views/login/forgot_passsword_page.dart';
 import 'package:huflix_movie_app/views/login/register.dart';
 import 'package:huflix_movie_app/utils/form_container.dart';
 import 'package:huflix_movie_app/utils/toast.dart';
@@ -127,12 +128,8 @@ class _LoginPageState extends State<LoginPage> {
               ),
 
               Row(
-                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  const Text("Chưa có tài khoản?"),
-                  const SizedBox(
-                    width: 5,
-                  ),
                   GestureDetector(
                     onTap: () {
                       Navigator.pushAndRemoveUntil(
@@ -142,13 +139,31 @@ class _LoginPageState extends State<LoginPage> {
                       );
                     },
                     child: const Text(
-                      "Dăng ký",
+                      "Đăng ký",
                       style: TextStyle(
                         color: Colors.blue,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
                   ),
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context, MaterialPageRoute(builder: (context) {
+                          return ForgotPassswordPage();
+                        }
+                        )
+                      );
+                    },
+                    child: const Text(
+                      "Quên mật khẩu?",
+                      style: TextStyle(
+                        color: Colors.blue,
+                        fontWeight: FontWeight.bold 
+                      ) ,
+                    ),
+                  )
+                  
                 ],
               ),
             ],
@@ -179,7 +194,7 @@ class _LoginPageState extends State<LoginPage> {
               context,
               MaterialPageRoute(builder: (context) => const HomePage()));
     } else {
-      showToast(message: "xuát hiện lỗi");
+      showToast(message: "Sai email hoặc mật khẩu, vui lòng thử lại");
     }
   }
 
@@ -212,9 +227,5 @@ class _LoginPageState extends State<LoginPage> {
     }catch(e) {
 showToast(message: "lỗi xảy ra $e");
     }
-
-
   }
-
-
 }
