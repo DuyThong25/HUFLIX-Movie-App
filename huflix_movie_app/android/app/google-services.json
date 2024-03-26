@@ -1,13 +1,13 @@
 {
   "project_info": {
-    "project_number": "851079373356",
-    "project_id": "huflix-movie-app",
-    "storage_bucket": "huflix-movie-app.appspot.com"
+    "project_number": "889562453557",
+    "project_id": "huflix-movie-app-61260",
+    "storage_bucket": "huflix-movie-app-61260.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:851079373356:android:f2bb7e5dccc85f8de72789",
+        "mobilesdk_app_id": "1:889562453557:android:5f6b048315f51e16e1837c",
         "android_client_info": {
           "package_name": "com.example.huflix_movie_app"
         }
@@ -15,7 +15,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyAuQNOCmDWpDb7qCqg9sucdIA8tjFDvksk"
+          "current_key": "AIzaSyChKuWMuJHoYxZU8-iGQKvZzfcRx_3mbsw"
         }
       ],
       "services": {
