@@ -11,14 +11,17 @@ import 'package:page_transition/page_transition.dart';
 
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  // await Firebase.initializeApp();
+
   Platform.isAndroid
       ? await Firebase.initializeApp(
           options: const FirebaseOptions(
-          apiKey: "AIzaSyAuQNOCmDWpDb7qCqg9sucdIA8tjFDvksk",
-          appId: "1:851079373356:android:f2bb7e5dccc85f8de72789",
-          messagingSenderId: "851079373356",
-          projectId: "huflix-movie-app",
-          storageBucket: "huflix-movie-app.appspot.com",
+          apiKey: "AIzaSyChKuWMuJHoYxZU8-iGQKvZzfcRx_3mbsw",
+          appId: "1:889562453557:android:5f6b048315f51e16e1837c",
+          messagingSenderId: "889562453557",
+          projectId: "huflix-movie-app-61260",
+          storageBucket: "huflix-movie-app-61260.appspot.com",
         ))
       : await Firebase.initializeApp();
 
