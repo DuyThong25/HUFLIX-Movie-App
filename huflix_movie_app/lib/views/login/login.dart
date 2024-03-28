@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:huflix_movie_app/views/home/home_page.dart';
@@ -198,24 +199,41 @@ class _LoginPageState extends State<LoginPage> {
     }
   }
 
+  Future addUserDetail(String uid,String hoVaTen, String email) async {
+    // thêm vào bảng users
+    await FirebaseFirestore.instance.collection("users").doc(uid).set({
+      'uid' : uid,
+      'name': hoVaTen,
+      'email' : email,
+      'address' : "Chưa có"
+    });
+  }
 
   _signInWithGoogle()async{
-
     // ignore: no_leading_underscores_for_local_identifiers
     final GoogleSignIn _googleSignIn = GoogleSignIn();
-
     try {
-
       final GoogleSignInAccount? googleSignInAccount = await _googleSignIn.signIn();
-
       if(googleSignInAccount != null ){
-        final GoogleSignInAuthentication googleSignInAuthentication = await
-        googleSignInAccount.authentication;
+        final GoogleSignInAuthentication googleSignInAuthentication = await googleSignInAccount.authentication;
 
         final AuthCredential credential = GoogleAuthProvider.credential(
           idToken: googleSignInAuthentication.idToken,
           accessToken: googleSignInAuthentication.accessToken,
         );
+
+        final UserCredential userCredential = await _firebaseAuth.signInWithCredential(credential);
+
+        final User? user = userCredential.user;
+
+        if(user != null) {
+          String userID = user.uid; // Lấy UID của người dùng từ Authentication
+          addUserDetail(
+            userID,
+            user.displayName!,
+            user.email!,
+          );
+        }
 
         await _firebaseAuth.signInWithCredential(credential);
         // ignore: use_build_context_synchronously
@@ -225,7 +243,8 @@ class _LoginPageState extends State<LoginPage> {
       }
 
     }catch(e) {
-showToast(message: "lỗi xảy ra $e");
+      showToast(message: "lỗi xảy ra $e");
+      print(e);
     }
   }
 }
