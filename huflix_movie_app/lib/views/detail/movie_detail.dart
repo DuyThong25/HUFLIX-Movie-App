@@ -29,7 +29,7 @@ class MovieDetailMain extends StatelessWidget {
         leading: Builder(
           builder: (BuildContext context) {
             return IconButton(
-              color: Colors.black,
+              color: Colors.white,
               icon: const Icon(Icons.keyboard_backspace_sharp),
               iconSize: 38,
               onPressed: () {
@@ -42,7 +42,7 @@ class MovieDetailMain extends StatelessWidget {
         actions: [
           IconButton(
               onPressed: () {},
-              color: Colors.black,
+              color: Colors.white,
               iconSize: 38,
               icon: const Icon(Icons.favorite_border))
         ],
@@ -71,8 +71,8 @@ class MovieDetailMain extends StatelessWidget {
                         ),
                     )),
                 // status bar - Fuunction Bar
-                const Positioned(
-                    bottom: 14, left: 65, right: 65, child: StatusBarDetail())
+                Positioned(
+                    bottom: 14, left: 65, right: 65, child: StatusBarDetail(idMovie: movie.id!,))
               ],
             ),
             // Container chứa Nội dung của movie detail

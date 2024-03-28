@@ -24,7 +24,7 @@ class HomePage extends StatelessWidget {
           leading: Builder(
             builder: (BuildContext context) {
               return IconButton(
-                color: Colors.black,
+                color: Colors.white,
                 iconSize: 36,
                 icon: const Icon(Icons.menu),
                 onPressed: () {
@@ -46,7 +46,7 @@ class HomePage extends StatelessWidget {
                     ) 
                   );
               },
-              color: Colors.black,
+              color: Colors.white,
               iconSize: 36, 
               icon: const Icon(Icons.search))
           ],

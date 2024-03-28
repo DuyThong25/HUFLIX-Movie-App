@@ -4,6 +4,7 @@ import 'package:huflix_movie_app/models/actor.dart';
 import 'package:huflix_movie_app/models/actordetail.dart';
 import 'package:http/http.dart' as http;
 import 'package:huflix_movie_app/models/moviedetail.dart';
+import 'package:huflix_movie_app/models/trailer.dart';
 
 import '../models/genres.dart';
 
@@ -129,7 +130,30 @@ class Api {
       throw Exception("Có lỗi đang xảy ra");
     }
   }
-  
+
+  // Lấy trailer của phim
+  Future<Trailer> trailerMovieById(int idMovie) async {
+    String trailerMovieUrl = "${Constants.BASE_URL}movie/$idMovie/videos?api_key=${Constants.API_KEY}";
+    final response = await http.get(Uri.parse(trailerMovieUrl));
+    if (response.statusCode == 200) {
+      final Map<String,dynamic> responseData = json.decode(response.body);
+      final movie = Trailer.fromJson(responseData);
+      for (final result in movie.results!) {
+        if (result.type == 'Trailer') { 
+          print('Name: ${result.name}');
+          print('Key: ${result.key}');
+          print('Published At: ${result.publishedAt}');
+          print('----------------------------------');
+        }
+      }
+      return Trailer.fromJson(responseData);
+    }
+    else
+    {
+      throw Exception('Có lỗi đang xảy ra');
+    }
+  }
+
   // Lấy danh sách phim khi tìm kiếm theo tên
    Future<List<Movie>> searchListByName(String inputName) async {
     String searchUrl =

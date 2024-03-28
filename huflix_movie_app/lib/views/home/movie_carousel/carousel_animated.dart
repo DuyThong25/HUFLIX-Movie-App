@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:huflix_movie_app/api/api.dart';
 import 'package:huflix_movie_app/api/api_constants.dart';
 import 'package:huflix_movie_app/models/actor.dart';
+import 'package:huflix_movie_app/models/trailer.dart';
 import 'package:huflix_movie_app/views/home/movie_carousel/carousel_card.dart';
 import '../../detail/movie_detail.dart';
 import 'package:huflix_movie_app/models/moviedetail.dart';
