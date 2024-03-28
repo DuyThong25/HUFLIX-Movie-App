@@ -14,6 +14,7 @@ class _MyWidgetState extends State<StatusBarDetail> {
 
   late YoutubePlayerController _youtubePlayerController;
   late String _trailerVideoId;
+  bool _trailerFound = false; // Thêm biến boolean để kiểm tra xem có trailer được tìm thấy không
 
   @override
   void initState(){
@@ -23,6 +24,7 @@ class _MyWidgetState extends State<StatusBarDetail> {
       for (final result in trailer.results!) {
         if (result.type == 'Trailer') {
           setState(() {
+            _trailerFound = true;
             _trailerVideoId = result.key;
             _youtubePlayerController = YoutubePlayerController(
               initialVideoId: _trailerVideoId,
@@ -45,19 +47,29 @@ class _MyWidgetState extends State<StatusBarDetail> {
   }
 
   void showVideoDialog() {
-    showDialog(
-      context: context, 
-      builder: (_) => AlertDialog(
-        content: Container(
-          // width: MediaQuery.of(context).size.width * 1,
-          child: YoutubePlayer(
-            controller: _youtubePlayerController,
-            showVideoProgressIndicator: true,
-            onReady: () {},
+    if (_trailerFound) {
+      // Chỉ hiển thị dialog nếu đã tìm thấy trailer
+      showDialog(
+        context: context, 
+        builder: (_) => AlertDialog(
+          content: Container(
+            child: YoutubePlayer(
+              controller: _youtubePlayerController,
+              showVideoProgressIndicator: true,
+              onReady: () {},
+            ),
           ),
-        ),
-      )
-    );
+        )
+      );
+    } else {
+      // Hiển thị AlertDialog thông báo rằng không có trailer
+      showDialog(
+        context: context, 
+        builder: (_) => AlertDialog(
+          content: Text("Phim này chưa có trailer"),
+        )
+      );
+    }
   }
 
   @override
