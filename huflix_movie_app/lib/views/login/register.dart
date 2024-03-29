@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:huflix_movie_app/views/home/home_page.dart';
 import 'package:huflix_movie_app/views/login/firebase_auth_implementation/firebase_auth_services.dart';
 import 'package:huflix_movie_app/views/login/login.dart';
 import 'package:huflix_movie_app/utils/form_container.dart';

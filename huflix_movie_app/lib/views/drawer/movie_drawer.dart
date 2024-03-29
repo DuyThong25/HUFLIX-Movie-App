@@ -3,7 +3,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:huflix_movie_app/views/login/login.dart';
-import 'package:huflix_movie_app/views/genres/movie_genres.dart';
 import 'package:huflix_movie_app/views/genres/movie_genres_list_name.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
