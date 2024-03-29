@@ -17,6 +17,16 @@ class Common {
     }
   }
 
+    static String shortenStringChar(String title, int numCharacter) {
+    if (title.length <= numCharacter) {
+      return title;
+    } else {
+      return "${title.substring(0, numCharacter)}...";
+    }
+  }
+
+
+
   static TextStyle styleDescriptionMovieDetail() {
     TextStyle style = const TextStyle(
       fontSize: 16,
