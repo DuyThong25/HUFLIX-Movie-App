@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:huflix_movie_app/views/login/login.dart';
 import 'package:huflix_movie_app/views/genres/movie_genres.dart';
 import 'package:huflix_movie_app/views/genres/movie_genres_list_name.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class MyDrawer extends StatefulWidget {
   const MyDrawer({super.key});
@@ -14,7 +15,6 @@ class MyDrawer extends StatefulWidget {
 }
 
 class _MyDrawerState extends State<MyDrawer> {
-
   final loginUser = FirebaseAuth.instance.currentUser!;
 
   late String name = "Đang tải...";
@@ -26,11 +26,15 @@ class _MyDrawerState extends State<MyDrawer> {
     getUserData();
   }
 
-   Future<void> getUserData() async {
+  Future<void> getUserData() async {
     final loginUser = FirebaseAuth.instance.currentUser;
     if (loginUser != null) {
-      DocumentSnapshot userSnapshot = await FirebaseFirestore.instance.collection("users").doc(loginUser.uid).get();
-      Map<String, dynamic> userData = userSnapshot.data() as Map<String, dynamic>;
+      DocumentSnapshot userSnapshot = await FirebaseFirestore.instance
+          .collection("users")
+          .doc(loginUser.uid)
+          .get();
+      Map<String, dynamic> userData =
+          userSnapshot.data() as Map<String, dynamic>;
       setState(() {
         name = userData['name'];
         address = userData['address'];
@@ -38,8 +42,7 @@ class _MyDrawerState extends State<MyDrawer> {
     }
   }
 
-
- @override
+  @override
   Widget build(BuildContext context) {
     return Opacity(
         opacity: 0.7,
@@ -59,52 +62,82 @@ class _MyDrawerState extends State<MyDrawer> {
                           "https://didongviet.vn/dchannel/wp-content/uploads/2023/08/hinh-nen-3d-hinh-nen-iphone-dep-3d-didongviet@2x.jpg"),
                     ),
                     const SizedBox(height: 10),
-                  Expanded(child: Text(name, style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold))),
-                  Expanded(child: Text(loginUser.email!, style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold))),
+                    Expanded(
+                        child: Text(name,
+                            style: const TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold))),
+                    Expanded(
+                        child: Text(loginUser.email!,
+                            style: const TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold))),
                   ],
                 ),
               ),
               ListTile(
-                title: const Text('Phim yêu thích', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+                title: const Text('Phim yêu thích',
+                    style: TextStyle(
+                        color: Colors.white, fontWeight: FontWeight.bold)),
                 onTap: () {
                   Navigator.of(context).pop();
                 },
               ),
               ListTile(
-                title: const Text('Thể loại', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+                title: const Text('Thể loại',
+                    style: TextStyle(
+                        color: Colors.white, fontWeight: FontWeight.bold)),
                 onTap: () {
                   Navigator.push(
-                context,
-                CupertinoPageRoute(
-                  builder: (context) => ListNameGenres()
-                ));   
+                      context,
+                      CupertinoPageRoute(
+                          builder: (context) => ListNameGenres()));
                 },
               ),
               ListTile(
-                title: const Text('Liên hệ', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+                title: const Text('Liên hệ',
+                    style: TextStyle(
+                        color: Colors.white, fontWeight: FontWeight.bold)),
                 onTap: () {
                   Navigator.of(context).pop();
                 },
               ),
-              
               ListTile(
-                title: const Text('Về chúng tôi', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+                title: const Text('Về chúng tôi',
+                    style: TextStyle(
+                        color: Colors.white, fontWeight: FontWeight.bold)),
                 onTap: () {
                   Navigator.of(context).pop();
                 },
               ),
-             ListTile(
-              title: const Text('Đăng xuất', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
-              onTap: () {
-                FirebaseAuth.instance.signOut();
-                 Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(builder: (context) => const LoginPage()),
-                );
-              },
-            ),
+              ListTile(
+                title: const Text('Đăng xuất',
+                    style: TextStyle(
+                        color: Colors.white, fontWeight: FontWeight.bold)),
+                onTap: () {
+                  FirebaseAuth.instance.signOut();
+                  _removeRememberLogin();
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(builder: (context) => const LoginPage()),
+                  );
+                },
+              ),
             ],
           ),
         ));
+  }
+
+  _removeRememberLogin() async {
+    // Sử dụng Share Referenced
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.remove("rememberLogin");
+    prefs.remove("emailUser");
+    prefs.remove("passwordUser");
+
+    // print("Dữ liệu Preference 1 ${prefs.getBool('rememberLogin').toString()} ");
+    // print("Dữ liệu Preference 2 ${prefs.getString('emailUser').toString()} ");
+    // print(
+    //     "Dữ liệu Preference 3 ${prefs.getString('passwordUser').toString()} ");
   }
 }
