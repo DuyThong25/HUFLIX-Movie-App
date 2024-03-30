@@ -2,17 +2,15 @@
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-import 'package:huflix_movie_app/views/home/home_page.dart';
-import 'package:huflix_movie_app/views/login/forgot_passsword_page.dart';
-import 'package:huflix_movie_app/views/login/register.dart';
-import 'package:huflix_movie_app/utils/form_container.dart';
-import 'package:huflix_movie_app/utils/toast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:huflix_movie_app/utils/form_container.dart';
+import 'package:huflix_movie_app/utils/toast.dart';
+import 'package:huflix_movie_app/views/home/home_page.dart';
 import 'package:huflix_movie_app/views/login/firebase_auth_implementation/firebase_auth_services.dart';
+import 'package:huflix_movie_app/views/login/forgot_passsword_page.dart';
+import 'package:huflix_movie_app/views/login/register.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginPage extends StatefulWidget {
@@ -214,7 +212,7 @@ class _LoginPageState extends State<LoginPage> {
                           width: 5,
                         ),
                         Text(
-                          "Đăng ký với Google",
+                          "Đăng nhập với Google",
                           style: TextStyle(
                             color: Colors.white,
                             fontWeight: FontWeight.bold,
