@@ -2,8 +2,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:huflix_movie_app/views/login/login.dart';
+import 'package:huflix_movie_app/views/drawer/about.dart';
 import 'package:huflix_movie_app/views/genres/movie_genres_list_name.dart';
+import 'package:huflix_movie_app/views/login/login.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class MyDrawer extends StatefulWidget {
@@ -106,7 +107,9 @@ class _MyDrawerState extends State<MyDrawer> {
                     style: TextStyle(
                         color: Colors.white, fontWeight: FontWeight.bold)),
                 onTap: () {
-                  Navigator.of(context).pop();
+                  Navigator.push(
+                    context, CupertinoPageRoute(
+                          builder: (context) => const AboutUs()));
                 },
               ),
               ListTile(

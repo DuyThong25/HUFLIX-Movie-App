@@ -1,10 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:huflix_movie_app/views/login/firebase_auth_implementation/firebase_auth_services.dart';
-import 'package:huflix_movie_app/views/login/login.dart';
 import 'package:huflix_movie_app/utils/form_container.dart';
 import 'package:huflix_movie_app/utils/toast.dart';
+import 'package:huflix_movie_app/views/login/firebase_auth_implementation/firebase_auth_services.dart';
+import 'package:huflix_movie_app/views/login/login.dart';
 
 class SignUpPage extends StatefulWidget {
   const SignUpPage({super.key});
@@ -105,7 +105,7 @@ class _SignUpPageState extends State<SignUpPage> {
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        title: const Text("Đăng nhập"),
+        
       ),
       body: Center(
         child: Padding(
