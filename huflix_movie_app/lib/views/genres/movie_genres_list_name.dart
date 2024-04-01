@@ -1,8 +1,5 @@
-import 'dart:math';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:huflix_movie_app/api/api.dart';
 import 'package:huflix_movie_app/models/genres.dart';
 import 'package:huflix_movie_app/views/genres/movie_genres.dart';
@@ -72,12 +69,12 @@ class ListNameGenres extends StatelessWidget {
             } else {
               return GridView.builder(
                   padding:
-                      const EdgeInsets.symmetric(vertical: 30, horizontal: 10),
+                      const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
                   gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: 2,
                       mainAxisSpacing: 20,
                       crossAxisSpacing: 8,
-                      mainAxisExtent: 150),
+                      mainAxisExtent: 90),
                   itemCount: snapshot.data!.length,
                   itemBuilder: (context, index) {
                     return InkWell(
@@ -90,32 +87,43 @@ class ListNameGenres extends StatelessWidget {
                                       nameGenres:
                                           snapshot.data![index].name!)));
                         },
-                        child: Card(
-                          // shadowColor: const Color.fromARGB(255, 128, 10, 2),
-                          // shadowColor: Colors.amber,
-                          // elevation: 6,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(14),
-                            side: const BorderSide(
-                              color: Colors.white,
-                              width: 4,
-                            ),
+                        child: Container(
+                          decoration: const BoxDecoration(
+                            boxShadow: [
+                              BoxShadow(
+                                  color: Color.fromARGB(255, 48, 1, 47),
+                                  blurRadius: 6,
+                                  spreadRadius: 1,
+                                  offset: Offset(1, 1)),
+                            ],
                           ),
-                          margin: const EdgeInsets.all(10),
-                          color: Colors.black,
-                          key: ValueKey(snapshot.data![index].id),
-                          child:
-                              // height: Random().nextInt(150) + 20,
-                              Center(
-                            child: Text(
-                              snapshot.data![index].name!
-                                  .replaceAll(RegExp(r'Phim'), ''),
-                              softWrap: true,
-                              style: const TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold),
-                              textAlign: TextAlign.center,
+                          child: Card(
+                            // shadowColor: const Color.fromARGB(255, 128, 10, 2),
+                            // shadowColor: Colors.amber,
+                            // elevation: 6,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(14),
+                              side: const BorderSide(
+                                color: Color.fromARGB(255, 84, 0, 79),
+                                width: 4,
+                              ),
+                            ),
+                            margin: const EdgeInsets.all(10),
+                            color: Color.fromARGB(255, 0, 0, 0),
+                            key: ValueKey(snapshot.data![index].id),
+                            child:
+                                // height: Random().nextInt(150) + 20,
+                                Center(
+                              child: Text(
+                                snapshot.data![index].name!
+                                    .replaceAll(RegExp(r'Phim'), ''),
+                                softWrap: true,
+                                style: const TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold),
+                                textAlign: TextAlign.center,
+                              ),
                             ),
                           ),
                         ));
