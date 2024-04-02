@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:huflix_movie_app/api/api.dart';
 import 'package:huflix_movie_app/models/moviedetail.dart';
 import 'package:huflix_movie_app/views/home/movie_tab/tab_view_data.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 
 class MyTabView extends StatefulWidget {
   const MyTabView({super.key});
@@ -37,7 +38,8 @@ class _MyTabViewState extends State<MyTabView> {
               future: nowMovies,
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
-                  return CircularProgressIndicator();
+                  return LoadingAnimationWidget.beat(
+                  color: const Color.fromARGB(255, 168, 2, 121), size: 50);
                 } else if (snapshot.hasError) {
                   return Text('Error: ${snapshot.error}');
                 } else {
@@ -50,7 +52,8 @@ class _MyTabViewState extends State<MyTabView> {
               future: upcomingMovies,
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
-                  return CircularProgressIndicator();
+                  return LoadingAnimationWidget.beat(
+                  color: const Color.fromARGB(255, 168, 2, 121), size: 50);
                 } else if (snapshot.hasError) {
                   return Text('Error: ${snapshot.error}');
                 } else {
@@ -63,7 +66,8 @@ class _MyTabViewState extends State<MyTabView> {
               future: popularMovies,
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
-                  return CircularProgressIndicator();
+                  return LoadingAnimationWidget.beat(
+                  color: const Color.fromARGB(255, 168, 2, 121), size: 50);
                 } else if (snapshot.hasError) {
                   return Text('Error: ${snapshot.error}');
                 } else {

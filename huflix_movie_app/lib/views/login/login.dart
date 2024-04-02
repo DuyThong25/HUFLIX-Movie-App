@@ -12,6 +12,7 @@ import 'package:huflix_movie_app/views/home/home_page.dart';
 import 'package:huflix_movie_app/views/login/firebase_auth_implementation/firebase_auth_services.dart';
 import 'package:huflix_movie_app/views/login/forgot_passsword_page.dart';
 import 'package:huflix_movie_app/views/login/register.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginPage extends StatefulWidget {
@@ -29,7 +30,6 @@ class _LoginPageState extends State<LoginPage> {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-
 
   @override
   void initState() {
@@ -135,9 +135,8 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                   child: Center(
                     child: _isSigning
-                        ? const CircularProgressIndicator(
-                            color: Colors.white,
-                          )
+                        ? LoadingAnimationWidget.beat(
+                  color: const Color.fromARGB(255, 168, 2, 121), size: 50)
                         : const Text(
                             "Đăng nhập",
                             style: TextStyle(
@@ -164,7 +163,7 @@ class _LoginPageState extends State<LoginPage> {
                   width: double.infinity,
                   height: 45,
                   decoration: BoxDecoration(
-                    color: Colors.black26,
+                    color: Color.fromARGB(195, 245, 152, 2),
                     borderRadius: BorderRadius.circular(10),
                   ),
                   child: const Center(
@@ -232,6 +231,7 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   void _signIn(email, password) async {
+    _loading();
     setState(() {
       _isSigning = true;
     });
@@ -268,6 +268,7 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   _signInWithGoogle() async {
+    _loading();
     // ignore: no_leading_underscores_for_local_identifiers
     final GoogleSignIn _googleSignIn = GoogleSignIn();
     try {
@@ -308,30 +309,47 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   // Kiểm tra có cần nhớ đăng nhập không
-  _checkRememberLogin(bool isRememberLogin, String email, String password) async {
-    if(isRememberLogin) {
+  _checkRememberLogin(
+      bool isRememberLogin, String email, String password) async {
+    if (isRememberLogin) {
       // Sử dụng Share Referenced
       final SharedPreferences prefs = await SharedPreferences.getInstance();
       prefs.setBool('rememberLogin', isRememberLogin);
       prefs.setString('emailUser', email);
       prefs.setString('passwordUser', password);
-      print("Dữ liệu Preference 1 ${prefs.getBool('rememberLogin').toString()} ");
+      print(
+          "Dữ liệu Preference 1 ${prefs.getBool('rememberLogin').toString()} ");
       print("Dữ liệu Preference 2 ${prefs.getString('emailUser').toString()} ");
-      print("Dữ liệu Preference 3 ${prefs.getString('passwordUser').toString()} ");
+      print(
+          "Dữ liệu Preference 3 ${prefs.getString('passwordUser').toString()} ");
     }
   }
 
-    _loadRememberLogin() async {
+  _loadRememberLogin() async {
     final prefs = await SharedPreferences.getInstance();
     setState(() {
       _isRememberLogin = prefs.getBool('rememberLogin') ?? false;
     });
-    if(_isRememberLogin) {
+    if (_isRememberLogin) {
       String? email = prefs.getString('emailUser');
       String? password = prefs.getString('passwordUser');
-      if(email != null && password != null) {
+      if (email != null && password != null) {
         _signIn(email, password);
       }
     }
+  }
+  
+  _loading() {
+//loading
+    showDialog(
+        context: context,
+        builder: (context) {
+          return Container(
+              color: Colors.black,
+              child: LoadingAnimationWidget.beat(
+                  color: const Color.fromARGB(255, 168, 2, 121), size: 50),
+              );
+        });
+
   }
 }
