@@ -1,13 +1,13 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 import 'package:huflix_movie_app/api/api.dart';
 import 'package:huflix_movie_app/api/api_constants.dart';
 import 'package:huflix_movie_app/models/actor.dart';
-import 'package:huflix_movie_app/models/trailer.dart';
-import 'package:huflix_movie_app/views/home/movie_carousel/carousel_card.dart';
-import '../../detail/movie_detail.dart';
 import 'package:huflix_movie_app/models/moviedetail.dart';
+import 'package:huflix_movie_app/views/home/movie_carousel/carousel_card.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
+
+import '../../detail/movie_detail.dart';
 import 'carousel_backdrop.dart';
 
 class CarouselAnimated extends StatefulWidget {
@@ -41,7 +41,8 @@ class _CarouselAnimatedState extends State<CarouselAnimated> {
           return Text("Error: ${snapshot.error}");
         }
         // By default, show a loading spinner
-        return const CircularProgressIndicator();
+        return LoadingAnimationWidget.beat(
+                  color: const Color.fromARGB(255, 168, 2, 121), size: 50);
       },
     );
   }
