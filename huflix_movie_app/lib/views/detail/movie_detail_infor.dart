@@ -16,10 +16,13 @@ class InforMovie extends StatelessWidget {
     return FutureBuilder(
       future: movieDetail,
       builder: (context, snapshot) {
-        if (snapshot.hasData) {
-          Duration duration = Duration(minutes: snapshot.data!.time!);
-          snapshot.data!.genres!.insert(0,Genre(id: movie.genres!.length + 2, name: "${movie.voteCount.toString()} votes"));
-
+          if (snapshot.hasData) {
+            Duration duration = Duration(minutes: snapshot.data!.time!);
+              // Kiểm tra xem genres list có chứa phần tử không movie.voteCount
+              // Nếu có rồi thì khi load lại thì không thêm vô nữa
+          if (snapshot.data!.genres!.isEmpty || !snapshot.data!.genres!.any((genre) => genre.name!.contains("votes"))) {
+            snapshot.data!.genres!.insert(0, Genre(id: movie.genres!.length + 2, name: "${movie.voteCount.toString()} votes"));
+          }
           return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [

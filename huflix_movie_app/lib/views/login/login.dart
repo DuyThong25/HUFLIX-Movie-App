@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:huflix_movie_app/models/moviedetail.dart';
 import 'package:huflix_movie_app/utils/form_container.dart';
 import 'package:huflix_movie_app/utils/toast.dart';
 import 'package:huflix_movie_app/views/home/home_page.dart';
@@ -246,6 +247,10 @@ class _LoginPageState extends State<LoginPage> {
 
     if (user != null) {
       showToast(message: "Đăng nhập thành công!!");
+      
+      // Load dữ liệu
+      // Movie().uploadMoviesToFirestore(); 
+
       // Nếu có user thì kiểm tra user có check lưu đăng nhập không và lưu vào Shared Referenced
       _checkRememberLogin(_isRememberLogin, email, password);
       // ignore: use_build_context_synchronously
@@ -297,8 +302,8 @@ class _LoginPageState extends State<LoginPage> {
             context, MaterialPageRoute(builder: (context) => const HomePage()));
       }
     } catch (e) {
-      showToast(message: "lỗi xảy ra $e");
-      print(e);
+      showToast(message: "Vui lòng thử lại..");
+      print("Lỗi xảy ra $e");
     }
   }
 
