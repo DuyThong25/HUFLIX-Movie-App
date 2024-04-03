@@ -13,6 +13,8 @@ class Movie {
   String? releaseDate;
   double? voteAverage;
   int? voteCount;
+  int? like;
+  int? dislike;
 
   Movie(
       {this.id,
@@ -26,7 +28,10 @@ class Movie {
       this.overview,
       this.releaseDate,
       this.voteAverage,
-      this.voteCount});
+      this.voteCount,
+      this.like,
+      this.dislike
+      });
 
   Movie.fromJson(Map<String, dynamic> json, List<Genre>? genres) {
     id = json["id"];
@@ -41,6 +46,8 @@ class Movie {
     releaseDate = json["release_date"];
     voteAverage = json["vote_average"];
     voteCount = json["vote_count"];
+    like = json["like"];
+    dislike = json["dislike"];
   }
 
   Movie.fromJsonNotGenres(Map<String, dynamic> json) {
@@ -56,5 +63,7 @@ class Movie {
     releaseDate = json["release_date"];
     voteAverage = json["vote_average"];
     voteCount = json["vote_count"];
+    like = json["like"];
+    dislike = json["dislike"];
   }
 }
