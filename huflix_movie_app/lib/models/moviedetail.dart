@@ -1,14 +1,12 @@
 // ignore_for_file: no_leading_underscores_for_local_identifiers, avoid_print
 
-import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:http/http.dart' as http;
 import 'package:huflix_movie_app/api/api.dart';
 import 'package:huflix_movie_app/api/api_constants.dart';
 import 'package:huflix_movie_app/models/genres.dart';
 import 'package:path/path.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:http/http.dart' as http;
 
 class Movie {
   int? id;
@@ -102,8 +100,8 @@ class Movie {
     // Cập nhật data cho phim
     List<Movie> movies = [];
 
-    for (int i = 1; i <= 20; i++) {
-      List<Movie> temps = await Api().getAllMovies(i);
+    for (int i = 1; i <= 2; i++) {
+      List<Movie> temps = await Api().updateUpcomingMovies(i);
       movies.addAll(temps);
     }
 

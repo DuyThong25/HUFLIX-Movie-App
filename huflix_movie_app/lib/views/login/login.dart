@@ -5,7 +5,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:huflix_movie_app/models/moviedetail.dart';
 import 'package:huflix_movie_app/utils/form_container.dart';
 import 'package:huflix_movie_app/utils/toast.dart';
 import 'package:huflix_movie_app/views/home/home_page.dart';

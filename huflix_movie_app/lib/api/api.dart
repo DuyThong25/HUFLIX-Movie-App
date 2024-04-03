@@ -1,10 +1,11 @@
 // ignore_for_file: no_leading_underscores_for_local_identifiers
 
 import 'dart:convert';
+
+import 'package:http/http.dart' as http;
 import 'package:huflix_movie_app/api/api_constants.dart';
 import 'package:huflix_movie_app/models/actor.dart';
 import 'package:huflix_movie_app/models/actordetail.dart';
-import 'package:http/http.dart' as http;
 import 'package:huflix_movie_app/models/moviedetail.dart';
 import 'package:huflix_movie_app/models/trailer.dart';
 
@@ -39,6 +40,18 @@ class Api {
     if (response.statusCode == 200) {
       final movieData = json.decode(response.body)['results'] as List;
       // print("Phim Phổ biến");
+      // print(movieData);
+      return movieData.map((movie) => Movie.fromJsonNotGenres(movie)).toList();
+    } else {
+      throw Exception("Có lỗi đang xảy ra");
+    }
+  }
+
+  Future<List<Movie>> updateUpcomingMovies(int i) async {
+    final response = await http.get(Uri.parse(_upComingUrl));
+    if (response.statusCode == 200) {
+      final movieData = json.decode(response.body)['results'] as List;
+      // print("Phim sắp chiếu");
       // print(movieData);
       return movieData.map((movie) => Movie.fromJsonNotGenres(movie)).toList();
     } else {

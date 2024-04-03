@@ -38,7 +38,7 @@ class MainApp extends StatelessWidget {
               padding: const EdgeInsets.all(10),
               color: const Color.fromRGBO(35, 31, 32, 1),
               child: Expanded(
-                child: Image.asset(
+                child: Image.asset( 
                   'assets/images/logo1.jpg',
                   fit: BoxFit.cover,
                 ),
