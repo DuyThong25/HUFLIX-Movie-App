@@ -8,19 +8,6 @@ class ListNameGenres extends StatelessWidget {
   final Future<List<Genre>> _listGenres;
   ListNameGenres({super.key}) : _listGenres = Api().getListGenres();
 
-  static const cellRed = Color(0xffc73232);
-  static const cellMustard = Color(0xffd7aa22);
-  static const cellGrey = Color(0xffcfd4e0);
-  static const cellBlue = Color(0xff1553be);
-  static const background = Color(0xff242830);
-  final List<Color> colors = [
-    cellRed,
-    cellMustard,
-    cellGrey,
-    cellBlue,
-    background
-  ];
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
