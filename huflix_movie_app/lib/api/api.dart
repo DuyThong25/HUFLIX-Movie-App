@@ -1,3 +1,5 @@
+// ignore_for_file: no_leading_underscores_for_local_identifiers
+
 import 'dart:convert';
 import 'package:huflix_movie_app/api/api_constants.dart';
 import 'package:huflix_movie_app/models/actor.dart';
@@ -24,7 +26,9 @@ class Api {
       final movieData = json.decode(response.body)['results'] as List;
       // print("Phim Trending");
       // print(movieData);
-      return movieData.map((movie) => Movie.fromJsonNotGenres(movie)).toList();
+      return movieData.map((movie) {           
+          return Movie.fromJsonNotGenres(movie);
+        }).toList();
     } else {
       throw Exception("Có lỗi đang xảy ra");
     }
@@ -61,6 +65,22 @@ class Api {
       // print("Phim đang chiếu");
       // print(movieData);
       return movieData.map((movie) => Movie.fromJsonNotGenres(movie)).toList();
+    } else {
+      throw Exception("Có lỗi đang xảy ra");
+    }
+  }
+    Future<List<Movie>> getAllMovies(int currentPage) async {
+        String _allMovieUrl =
+        "${Constants.BASE_URL}discover/movie?api_key=${Constants.API_KEY}&language=vi&page=$currentPage&sort_by=popularity.desc&primary_release_year.gte=2020&primary_release_year.lte=2024";
+    final response = await http.get(Uri.parse(_allMovieUrl));
+    //https://api.themoviedb.org/3/discover/movie?api_key=2f9034d5190d3ecb1c5934d07598fe5c&language=vi&page=20&sort_by=popularity.desc&primary_release_year.gte=2020&primary_release_year.lte=2024
+    if (response.statusCode == 200) {
+      final movieData = json.decode(response.body)['results'] as List;
+      // print("Phim Trending");
+      // print(movieData);
+      return movieData.map((movie) {           
+          return Movie.fromJsonNotGenres(movie);
+        }).toList();
     } else {
       throw Exception("Có lỗi đang xảy ra");
     }
