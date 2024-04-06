@@ -100,8 +100,8 @@ class Movie {
     // Cập nhật data cho phim
     List<Movie> movies = [];
 
-    for (int i = 1; i <= 2; i++) {
-      List<Movie> temps = await Api().updateUpcomingMovies(i);
+    for (int page = 1; page <= 2; page++) {
+      List<Movie> temps = await Api().updateUpcomingMovies(page);
       movies.addAll(temps);
     }
 

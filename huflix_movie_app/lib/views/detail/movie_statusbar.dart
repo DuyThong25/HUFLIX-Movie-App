@@ -109,33 +109,6 @@ class _MyWidgetState extends State<StatusBarDetail> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [ 
-                  GestureDetector(
-                    onTap: showVideoDialog,
-                    child: Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(8),
-                        border: Border.all(
-                          width: 4,
-                          color: const Color.fromARGB(255, 128, 10, 2)
-                        )
-                      ),
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(6),
-                        child: Container(
-                          alignment: Alignment.center,
-                          padding: const EdgeInsets.only(
-                              left: 10, right: 10, top: 4, bottom: 4),
-                          color:  const Color.fromARGB(255, 22, 18, 18),
-                          child: const Text(
-                            "TRAILER",
-                            style: TextStyle(
-                                fontSize: 15,
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold),
-                          ),
-                      )),
-                    ),
-                  ),
                   // button
                   Container(
                       width: 40,
@@ -156,12 +129,7 @@ class _MyWidgetState extends State<StatusBarDetail> {
                             color: Colors.white,
                           ),
                           onPressed: () {
-                            showDialog(
-                              context: context, 
-                              builder: (_) => const AlertDialog(
-                                content: Text("Tính năng này đang cập nhật") ,
-                              )
-                            );
+                            showVideoDialog();
                           },
                         ),
                       )),
@@ -180,7 +148,7 @@ class _MyWidgetState extends State<StatusBarDetail> {
                         child: IconButton(
                           padding: EdgeInsets.zero,
                           icon: const Icon(
-                            Icons.share,
+                            Icons.thumb_up_outlined,
                             size: 20,
                             color: Colors.white,
                           ),
@@ -209,6 +177,33 @@ class _MyWidgetState extends State<StatusBarDetail> {
                         child: IconButton(
                           padding: EdgeInsets.zero,
                           icon: const Icon(
+                            Icons.thumb_down_outlined,
+                            color: Colors.white,
+                          ),
+                          onPressed: () {
+                            showDialog(
+                              context: context, 
+                              builder: (_) => const AlertDialog(
+                                content: Text("Tính năng này đang cập nhật") ,
+                              )
+                            );
+                          },
+                        ),
+                      )),
+                      Container(
+                      width: 40,
+                      height: 40,
+                      // margin: EdgeInsets.zero,
+                      decoration: BoxDecoration(
+                        border: Border.all(
+                            width: 4,
+                            color: const Color.fromARGB(255, 128, 10, 2)),
+                        shape: BoxShape.circle,
+                      ),
+                      child: Center(
+                        child: IconButton(
+                          padding: EdgeInsets.zero,
+                          icon: const Icon(
                             Icons.download_outlined,
                             color: Colors.white,
                           ),
@@ -221,7 +216,8 @@ class _MyWidgetState extends State<StatusBarDetail> {
                             );
                           },
                         ),
-                      ))
+                      )),
+
                 ],
               ),
             )));

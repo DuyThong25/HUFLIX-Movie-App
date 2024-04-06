@@ -47,8 +47,10 @@ class Api {
     }
   }
 
-  Future<List<Movie>> updateUpcomingMovies(int i) async {
-    final response = await http.get(Uri.parse(_upComingUrl));
+  Future<List<Movie>> updateUpcomingMovies(int currentPage) async {
+    String _tempUrlComming ="${Constants.BASE_URL}movie/upcoming?api_key=${Constants.API_KEY}&page=$currentPage&language=vi";
+
+    final response = await http.get(Uri.parse(_tempUrlComming));
     if (response.statusCode == 200) {
       final movieData = json.decode(response.body)['results'] as List;
       // print("Phim sắp chiếu");
