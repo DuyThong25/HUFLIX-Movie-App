@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:huflix_movie_app/utils/form_container.dart';
 import 'package:huflix_movie_app/utils/toast.dart';
 import 'package:huflix_movie_app/views/login/firebase_auth_implementation/firebase_auth_services.dart';
-import 'package:huflix_movie_app/views/login/login.dart';
 
 class SignUpPage extends StatefulWidget {
   const SignUpPage({super.key});
@@ -65,7 +64,7 @@ class _SignUpPageState extends State<SignUpPage> {
           final user = userCredential.user;
           if (user != null ) {
             // Lấy id của người dùng được tạo
-            String userId = user.uid!;
+            String userId = user.uid;
             // Tạo thông tin người dùng
             addUserDetail(
               userId,
@@ -75,9 +74,8 @@ class _SignUpPageState extends State<SignUpPage> {
             );
           }
           // Nếu đăng ký thành công, quay lại trang LoginPage
-          Navigator.pushReplacement(
+          Navigator.pop(
             context,
-            MaterialPageRoute(builder: (context) => const LoginPage()),
           );
         }
         else {
@@ -194,11 +192,7 @@ class _SignUpPageState extends State<SignUpPage> {
                   ),
                   GestureDetector(
                       onTap: () {
-                        Navigator.pushAndRemoveUntil(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => const LoginPage()),
-                            (route) => false);
+                        Navigator.pop(context);
                       },
                       child: const Text(
                         "Đăng nhập",

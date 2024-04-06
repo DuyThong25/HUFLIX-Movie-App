@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:huflix_movie_app/models/moviedetail.dart';
 import 'package:huflix_movie_app/utils/form_container.dart';
 import 'package:huflix_movie_app/utils/toast.dart';
 import 'package:huflix_movie_app/views/home/home_page.dart';
@@ -15,7 +16,8 @@ import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginPage extends StatefulWidget {
-  const LoginPage({super.key});
+  const LoginPage({super.key, required this.upComingMovies});
+  final List<Movie> upComingMovies;
 
   @override
   State<LoginPage> createState() => _LoginPageState();
@@ -105,7 +107,7 @@ class _LoginPageState extends State<LoginPage> {
                     onTap: () {
                       Navigator.push(context,
                           MaterialPageRoute(builder: (context) {
-                        return ForgotPassswordPage();
+                        return const ForgotPassswordPage();
                       }));
                     },
                     child: const Text(
@@ -152,17 +154,16 @@ class _LoginPageState extends State<LoginPage> {
               ),
               GestureDetector(
                 onTap: () {
-                  Navigator.pushAndRemoveUntil(
+                  Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => const SignUpPage()),
-                    (route) => false,
+                    MaterialPageRoute(builder: (context) => const SignUpPage()),                
                   );
                 },
                 child: Container(
                   width: double.infinity,
                   height: 45,
                   decoration: BoxDecoration(
-                    color: Color.fromARGB(195, 245, 152, 2),
+                    color: const Color.fromARGB(195, 245, 152, 2),
                     borderRadius: BorderRadius.circular(10),
                   ),
                   child: const Center(
@@ -247,8 +248,8 @@ class _LoginPageState extends State<LoginPage> {
     if (user != null) {
       showToast(message: "Đăng nhập thành công!!");
       
-      // Load dữ liệu
-      // Movie().uploadMoviesToFirestore(); 
+      // Load dữ liệu từ API để lấy các phim mới và cập nhật lên FireStore 
+      Movie().uploadNewMoviesToFirestore(widget.upComingMovies); 
 
       // Nếu có user thì kiểm tra user có check lưu đăng nhập không và lưu vào Shared Referenced
       _checkRememberLogin(_isRememberLogin, email, password);

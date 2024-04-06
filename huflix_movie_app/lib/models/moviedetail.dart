@@ -1,5 +1,4 @@
 // ignore_for_file: no_leading_underscores_for_local_identifiers, avoid_print
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:http/http.dart' as http;
@@ -20,9 +19,10 @@ class Movie {
   String? overview;
   String? releaseDate;
   double? voteAverage;
+  double? popularity;
   int? voteCount;
-  int? like;
-  int? dislike;
+  int? likeCount;
+  int? dislikeCount;
 
   Movie(
       {this.id,
@@ -36,9 +36,10 @@ class Movie {
       this.overview,
       this.releaseDate,
       this.voteAverage,
+      this.popularity,
       this.voteCount,
-      this.like,
-      this.dislike
+      this.likeCount,
+      this.dislikeCount
       });
 
   Movie.fromJson(Map<String, dynamic> json, List<Genre>? genres) {
@@ -53,9 +54,10 @@ class Movie {
     overview = json["overview"];
     releaseDate = json["release_date"];
     voteAverage = json["vote_average"];
+    popularity = json["popularity"];
     voteCount = json["vote_count"];
-    like = json["like"];
-    dislike = json["dislike"];
+    likeCount = json["like"];
+    dislikeCount = json["dislike"];
   }
 
   Movie.fromJsonNotGenres(Map<String, dynamic> json) {
@@ -70,9 +72,10 @@ class Movie {
     overview = json["overview"];
     releaseDate = json["release_date"];
     voteAverage = json["vote_average"];
+    popularity = json["popularity"];
     voteCount = json["vote_count"];
-    like = json["like"];
-    dislike = json["dislike"];
+    likeCount = json["like"];
+    dislikeCount = json["dislike"];
   }
 
   // Phương thức toJson()
@@ -82,35 +85,35 @@ class Movie {
       'time': time,
       'status': status,
       'title': title,
-      'genres': genres,
+      'genres': genres!.map((genre) => genre.toJson()).toList(),
       'originalTitle': originalTitle,
       'backdropPath': backdropPath,
       'posterPath': posterPath,
       'overview': overview,
       'releaseDate': releaseDate,
       'voteAverage': voteAverage,
+      'popularity' : popularity,
       'voteCount': voteCount,
+      'likeCount': likeCount,
+      'dislikeCount': dislikeCount,
     };
   }
 
-  // Hàm để upload danh sách Movie lên Firestore
-  Future<void> uploadMoviesToFirestore() async {
-    // List<Movie> movies = await Api().getAllMovies(1);
+  // Hàm để cập nhật phim mới lên fireStore
+  Future<void> uploadNewMoviesToFirestore(List<Movie> upComingMovies ) async {
+    // Cập nhật data cho phim (DONE)
+    // List<Movie> upComingMovies = await Api().getAllMovies(1, 2024);
 
-    // Cập nhật data cho phim
-    List<Movie> movies = [];
-
-    for (int page = 1; page <= 2; page++) {
-      List<Movie> temps = await Api().updateUpcomingMovies(page);
-      movies.addAll(temps);
-    }
+    // Lấy danh sách phim mới cập nhật lên firestore
+    // List<Movie> upComingMovies = await Api().updateUpcomingMovies(page, currentYear, currentDate);
 
     // Upload từng Movie lên Firestore
-    for (Movie movie in movies) {
+    for (Movie movie in upComingMovies) {
       Movie movieDetail = await Api().movieFindById(movie.id!);
-      String _posterImagePath = Constants.BASE_IMAGE_URL + movie.posterPath!;
-      String _backdropImagePath = Constants.BASE_IMAGE_URL + movie.posterPath!;
+      String _posterImagePath = ( movie.posterPath == null || movie.posterPath == "") ? "" : Constants.BASE_IMAGE_URL + movie.posterPath!;
+      String _backdropImagePath = (movie.backdropPath == null || movie.backdropPath == "") ? "" : Constants.BASE_IMAGE_URL + movie.backdropPath!;
 
+      movie.genres = movieDetail.genres;
       movie.status = movieDetail.status;
       movie.time = movieDetail.time;
       movie.posterPath = await uploadImageAndGetDownloadUrl(
@@ -153,7 +156,7 @@ class Movie {
     final snapshot = await uploadTask.whenComplete(() => print("Upload thành công"));
 
     // Lấy và trả về URL tải xuống
-    String downloadUrl = await snapshot.ref.getDownloadURL();
+    String downloadUrl = (imageUrl == "" || imageUrl.isEmpty) ? "" : await snapshot.ref.getDownloadURL();
     return downloadUrl;
   }
 }
