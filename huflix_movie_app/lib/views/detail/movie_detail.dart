@@ -14,7 +14,7 @@ import 'movie_detail_actor.dart';
 import 'movie_statusbar.dart';
 
 class MovieDetailMain extends StatelessWidget {
-  const MovieDetailMain(
+  MovieDetailMain(
       {super.key,
       required this.movie,
       required this.actorOfMovieByID,
@@ -24,6 +24,10 @@ class MovieDetailMain extends StatelessWidget {
   final Movie movie;
   final Future<List<Actor>> actorOfMovieByID;
   final Future<Movie> detailMovie;
+
+   final ScrollController _scrollController = ScrollController();
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final TextEditingController _commentController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -54,6 +58,7 @@ class MovieDetailMain extends StatelessWidget {
         ],
       ),
       body: SingleChildScrollView(
+        controller: _scrollController,
         child: Column(
           children: [
             // Poster của phim
@@ -166,41 +171,34 @@ class MovieDetailMain extends StatelessWidget {
     );
   }
 
-  // Widget để hiển thị danh sách các comment
-  Widget _buildCommentList(BuildContext context) {
-    return StreamBuilder<QuerySnapshot>(
-      stream: FirebaseFirestore.instance
-          .collection('comments')
-          .where('movieId', isEqualTo: movie.id)
-          .snapshots(),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const CircularProgressIndicator();
-        }
 
-        if (snapshot.hasError) {
-          print("$snapshot.error");
-          return Text('Error: ${snapshot.error}', style: const TextStyle(color: Colors.white),);
-          
-        }
+Widget _buildCommentList(BuildContext context) {
+  return StreamBuilder<QuerySnapshot>(
+    stream: FirebaseFirestore.instance
+        .collection('comments')
+        .where('movieId', isEqualTo: movie.id)
+        .orderBy('timestamp', descending: true)
+        .snapshots(),
+    builder: (context, snapshot) {
+      if (snapshot.connectionState == ConnectionState.waiting) {
+        return const CircularProgressIndicator();
+      }
 
-        if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-          return const Text('Hiện tại chưa có bình luận nào', style: TextStyle(color: Colors.white));
-        }
+      if (snapshot.hasError) {
+        print("$snapshot.error");
+        return Text('Error: ${snapshot.error}', style: const TextStyle(color: Colors.white),);
+      }
 
-         // Sắp xếp các bình luận theo thời gian từ mới nhất đến cũ nhất
-        final sortedDocs = snapshot.data!.docs.where((doc) => doc['timestamp'] != null).toList()
-        ..sort((a, b) {
-          final aData = a.data() as Map<String, dynamic>;
-          final bData = b.data() as Map<String, dynamic>;
-          final aTimestamp = aData['timestamp'] as Timestamp;
-          final bTimestamp = bData['timestamp'] as Timestamp;
-          return bTimestamp.compareTo(aTimestamp);
-        });
+      if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+        return const Text('Hiện tại chưa có bình luận nào', style: TextStyle(color: Colors.white));
+      }
 
-        return Column(
-          children: sortedDocs.map((document) {
-            final commentData = document.data() as Map<String, dynamic>;
+      return Container(
+        height: 150, // Giới hạn chiều cao của danh sách bình luận
+        child: ListView.builder(
+          itemCount: snapshot.data!.docs.length,
+          itemBuilder: (context, index) {
+            final commentData = snapshot.data!.docs[index].data() as Map<String, dynamic>;
             if (commentData['timestamp'] != null) {
               String formattedDate = DateFormat('dd/MM/yyyy - HH:mm:ss').format(commentData['timestamp'].toDate());
               return ListTile(
@@ -212,34 +210,46 @@ class MovieDetailMain extends StatelessWidget {
             else {
               return Container(); 
             }
-          }).toList(),
-        );
-      },
-    );
-  }
+          },
+        ),
+      );
+    },
+  );
+}
 
-  // Widget để hiển thị form nhập comment
+
+ // Widget để hiển thị form nhập comment
   Widget _buildCommentForm(BuildContext context) {
-    final TextEditingController _commentController =
-        TextEditingController();
-
     return Padding(
       padding: const EdgeInsets.all(8.0),
-      child: TextFormField(
-        controller: _commentController,
-        decoration: InputDecoration(
-          hintText: 'Nhập bình luận của bạn...',
-          hintStyle: const TextStyle(color: Colors.white),
-          suffixIcon: IconButton(
-            icon: const Icon(Icons.send),
+      child: Form(
+        key: _formKey,
+        child: TextFormField(
+          controller: _commentController,
+          decoration: InputDecoration(
+            hintText: "Nhập bình luận",
+            hintStyle: TextStyle(color: Colors.white54),
+            suffixIcon: IconButton(
+            icon: Icon(Icons.send, color: Colors.redAccent[700],),
             onPressed: () {
               _submitComment(_commentController.text, context);
               _commentController.clear();
             },
           ),
-        ),
-        style: const TextStyle(color: Colors.white),
-      ),
+          ),
+          onTap: () {
+            _scrollToBottom();
+          } ,
+        )
+      )
+    );
+  }
+
+  void _scrollToBottom() {
+    _scrollController.animateTo(
+      _scrollController.position.maxScrollExtent,
+      duration: Duration(milliseconds: 100),
+      curve: Curves.easeOut,
     );
   }
 
