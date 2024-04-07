@@ -1,3 +1,5 @@
+// ignore_for_file: no_leading_underscores_for_local_identifiers, avoid_print
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -200,8 +202,8 @@ Widget _buildCommentList(BuildContext context) {
             if (commentData['timestamp'] != null) {
               String formattedDate = DateFormat('dd/MM/yyyy - HH:mm:ss').format(commentData['timestamp'].toDate());
               return ListTile(
-                title: Text(Common.shortenStringChar(commentData['email'],18), style: TextStyle(color: Color.fromARGB(255, 255, 123, 34), fontWeight: FontWeight.bold)),
-                subtitle: Text(commentData['text'].toString(), style: TextStyle(color: Colors.white)),
+                title: Text(Common.shortenStringChar(commentData['email'],18), style: const TextStyle(color: Color.fromARGB(255, 255, 123, 34), fontWeight: FontWeight.bold)),
+                subtitle: Text(commentData['text'].toString(), style: const TextStyle(color: Colors.white)),
                 trailing: Text(formattedDate, style: TextStyle(color: Colors.grey[500])),
               );
             } 
@@ -216,8 +218,7 @@ Widget _buildCommentList(BuildContext context) {
 }
 
 
-
-  // Widget để hiển thị form nhập comment
+ // Widget để hiển thị form nhập comment
   Widget _buildCommentForm(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(8.0),
@@ -258,12 +259,12 @@ Widget _buildCommentList(BuildContext context) {
     User? user = FirebaseAuth.instance.currentUser;
 
     if (user != null) {
-      final username = user!.displayName ?? user!.email ?? 'Unknown';
+      final username = user.displayName ?? user.email ?? 'Unknown';
       final commentData = {
         'text': commentText,
-        'userId': user!.uid,
+        'userId': user.uid,
         'username': username,
-        'email' : user!.email,
+        'email' : user.email,
         'movieId': movie.id,
         'movieName' : movie.title,
         'timestamp': FieldValue.serverTimestamp(),

@@ -1,10 +1,15 @@
+// ignore_for_file: avoid_print
+
 import 'dart:io';
 
 import 'package:animated_splash_screen/animated_splash_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:huflix_movie_app/api/api.dart';
+import 'package:huflix_movie_app/models/moviedetail.dart';
 import 'package:huflix_movie_app/views/login/login.dart';
+import 'package:intl/intl.dart';
 
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -21,22 +26,18 @@ Future main() async {
           storageBucket: "huflix-movie-app-61260.appspot.com",
         ))
       : await Firebase.initializeApp();
-
-
- await FirebaseFirestore.instance
-          .collection('teesst')
-          .doc(456.toString())
-          .set({"id":"453"});
   runApp(const MainApp());
 }
 
 class MainApp extends StatelessWidget {
   const MainApp({super.key});
-
-
-
   @override
   Widget build(BuildContext context) {
+    DateTime now = DateTime.now();
+    String currentDate = DateFormat('yyyy-MM-dd').format(now);
+    String currentYear = DateFormat('yyyy').format(now);
+    int page = 1; // chỉ lấy 20 phim mới ở trang đầu tiên
+  
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       // Màn hình splash screen
@@ -52,12 +53,25 @@ class MainApp extends StatelessWidget {
                 ),
               )),
           splashIconSize: 500,
-          nextScreen: const LoginPage(),
-          // nextScreen: const HomePage(),
-          splashTransition: SplashTransition.slideTransition,
-          // pageTransitionType: PageTransitionType.rightToLeft,
-          backgroundColor: const Color.fromRGBO(35, 31, 32, 1)),
-      // HomePage(),
+          nextScreen: FutureBuilder(
+            future: Api().updateUpcomingMovies(page, currentYear, currentDate), // Gọi API để lấy danh sách phim mới
+            builder: (context, AsyncSnapshot<List<Movie>> snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const CircularProgressIndicator();
+              } else if (snapshot.hasData) {
+                // Load dữ liệu từ API để lấy các phim mới và cập nhật lên FireStore 
+                Movie().uploadNewMoviesToFirestore(snapshot.data!); 
+                
+                return const LoginPage(); 
+              } else {
+                print("**Lỗi Error: ${snapshot.error}");
+                return const LoginPage();
+              }
+            },
+        ),
+        splashTransition: SplashTransition.slideTransition,
+        backgroundColor: const Color.fromRGBO(35, 31, 32, 1),
+      ),
     );
   }
 }
