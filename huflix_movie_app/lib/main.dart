@@ -3,6 +3,7 @@
 import 'dart:io';
 
 import 'package:animated_splash_screen/animated_splash_screen.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:huflix_movie_app/api/api.dart';
@@ -58,10 +59,13 @@ class MainApp extends StatelessWidget {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return const CircularProgressIndicator();
               } else if (snapshot.hasData) {
-                return LoginPage(upComingMovies: snapshot.data!); 
+                // Load dữ liệu từ API để lấy các phim mới và cập nhật lên FireStore 
+                Movie().uploadNewMoviesToFirestore(snapshot.data!); 
+                
+                return const LoginPage(); 
               } else {
                 print("**Lỗi Error: ${snapshot.error}");
-                return const LoginPage(upComingMovies: []);
+                return const LoginPage();
               }
             },
         ),

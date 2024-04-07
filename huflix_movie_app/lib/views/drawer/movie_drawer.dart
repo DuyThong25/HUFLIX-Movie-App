@@ -119,8 +119,10 @@ class _MyDrawerState extends State<MyDrawer> {
                 onTap: () {
                   FirebaseAuth.instance.signOut();
                   _removeRememberLogin();
-                  Navigator.pop(
+                  Navigator.pushAndRemoveUntil(
                     context,
+                    MaterialPageRoute(builder: (context) => const LoginPage()),
+                    (route) => route.isFirst,
                   );
                 },
               ),

@@ -16,8 +16,7 @@ import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginPage extends StatefulWidget {
-  const LoginPage({super.key, required this.upComingMovies});
-  final List<Movie> upComingMovies;
+  const LoginPage({super.key});
 
   @override
   State<LoginPage> createState() => _LoginPageState();
@@ -248,9 +247,6 @@ class _LoginPageState extends State<LoginPage> {
     if (user != null) {
       showToast(message: "Đăng nhập thành công!!");
       
-      // Load dữ liệu từ API để lấy các phim mới và cập nhật lên FireStore 
-      Movie().uploadNewMoviesToFirestore(widget.upComingMovies); 
-
       // Nếu có user thì kiểm tra user có check lưu đăng nhập không và lưu vào Shared Referenced
       _checkRememberLogin(_isRememberLogin, email, password);
       // ignore: use_build_context_synchronously
@@ -317,11 +313,9 @@ class _LoginPageState extends State<LoginPage> {
       prefs.setBool('rememberLogin', isRememberLogin);
       prefs.setString('emailUser', email);
       prefs.setString('passwordUser', password);
-      print(
-          "Dữ liệu Preference 1 ${prefs.getBool('rememberLogin').toString()} ");
+      print("Dữ liệu Preference 1 ${prefs.getBool('rememberLogin').toString()} ");
       print("Dữ liệu Preference 2 ${prefs.getString('emailUser').toString()} ");
-      print(
-          "Dữ liệu Preference 3 ${prefs.getString('passwordUser').toString()} ");
+      print("Dữ liệu Preference 3 ${prefs.getString('passwordUser').toString()} ");
     }
   }
 

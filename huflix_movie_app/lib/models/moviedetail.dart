@@ -39,9 +39,7 @@ class Movie {
       this.popularity,
       this.voteCount,
       this.likeCount,
-      this.dislikeCount
-      });
-
+      this.dislikeCount});
   Movie.fromJson(Map<String, dynamic> json, List<Genre>? genres) {
     id = json["id"];
     time = json["runtime"];
@@ -92,7 +90,7 @@ class Movie {
       'overview': overview,
       'releaseDate': releaseDate,
       'voteAverage': voteAverage,
-      'popularity' : popularity,
+      'popularity': popularity,
       'voteCount': voteCount,
       'likeCount': likeCount,
       'dislikeCount': dislikeCount,
@@ -100,7 +98,7 @@ class Movie {
   }
 
   // Hàm để cập nhật phim mới lên fireStore
-  Future<void> uploadNewMoviesToFirestore(List<Movie> upComingMovies ) async {
+  Future<void> uploadNewMoviesToFirestore(List<Movie> upComingMovies) async {
     // Cập nhật data cho phim (DONE)
     // List<Movie> upComingMovies = await Api().getAllMovies(1, 2024);
 
@@ -109,34 +107,67 @@ class Movie {
 
     // Upload từng Movie lên Firestore
     for (Movie movie in upComingMovies) {
+      // Kiểm tra xem bộ phim đã tồn tại trong Firestore chưa
+      DocumentSnapshot movieSnapshot = await FirebaseFirestore.instance
+          .collection('movies')
+          .doc(movie.id.toString())
+          .get();   
+      // Cập nhật các chi tiết phim
       Movie movieDetail = await Api().movieFindById(movie.id!);
-      String _posterImagePath = ( movie.posterPath == null || movie.posterPath == "") ? "" : Constants.BASE_IMAGE_URL + movie.posterPath!;
-      String _backdropImagePath = (movie.backdropPath == null || movie.backdropPath == "") ? "" : Constants.BASE_IMAGE_URL + movie.backdropPath!;
-
       movie.genres = movieDetail.genres;
       movie.status = movieDetail.status;
       movie.time = movieDetail.time;
-      movie.posterPath = await uploadImageAndGetDownloadUrl(
-          _posterImagePath, "poster_path", movie.id);
-      movie.backdropPath = await uploadImageAndGetDownloadUrl(
-          _backdropImagePath, "backdrop_path", movie.id);
 
-      // Tạo map với thông tin DateUpdate và Movie
-      // Map<String, dynamic> dataToUpload = {
-      //   'DateUpdate': DateTime.now(), // Thời gian hiện tại
-      //   'Movie': movie.toJson() // Dữ liệu của Movie
-      // };
-
-      // Upload dữ liệu lên Firestore
-      await FirebaseFirestore.instance
-          .collection('movies')
-          .doc(movie.id.toString())
-          .set(movie.toJson());
+      // Kiểm tra xem phim có tồn tại chưa nếu chưa thì set phim lên firestorage
+      // Nếu có rồi thì thực hiện lệnh update
+      if (!movieSnapshot.exists) {
+        // Kiểm tra hình ảnh của phim trong API có bị null hay không
+        if (movie.posterPath == null || movie.posterPath == "") {
+          movie.posterPath = "";
+        } else {
+          String _posterImagePath = Constants.BASE_IMAGE_URL + movie.posterPath!;
+          movie.posterPath = await uploadImageAndGetDownloadUrl(_posterImagePath, "poster_path", movie.id);
+        }
+        if (movie.backdropPath == null || movie.backdropPath == "") {
+          movie.backdropPath = "";
+        } else {
+          String _backdropImagePath =
+              Constants.BASE_IMAGE_URL + movie.backdropPath!;
+          movie.backdropPath = await uploadImageAndGetDownloadUrl(
+              _backdropImagePath, "backdrop_path", movie.id);
+        }
+        // Upload dữ liệu lên Firestore
+        await FirebaseFirestore.instance
+            .collection('movies')
+            .doc(movie.id.toString())
+            .set(movie.toJson());
+      } else {
+        print('Bộ phim đã tồn tại trong Firestore');
+        // Nếu phim đã tồn tại rồi thì kiểm tra xem dữ liệu trong hình ảnh trong fire store có bị null không
+        // Nếu NULL thì kiểm tra đối chiếu với link API
+        // Nếu link API cũng null thì tiếp tục trả về null nếu không thì cập nhật hình ảnh lên
+        Map<String, dynamic> data = movieSnapshot.data() as Map<String, dynamic>;
+        if(data['backdropPath'] == null || data['backdropPath'] == "") {
+          if (movie.backdropPath != null || movie.backdropPath != "") {
+            String _backdropImagePath = Constants.BASE_IMAGE_URL + movie.backdropPath!;
+            movie.backdropPath = await uploadImageAndGetDownloadUrl(_backdropImagePath, "backdrop_path", movie.id);
+          }
+        }
+        if(data['posterPath'] == null || data['posterPath'] == "") {
+          if (movie.posterPath != null || movie.posterPath != "") {
+            String _posterImagePath = Constants.BASE_IMAGE_URL + movie.posterPath!;
+            movie.posterPath = await uploadImageAndGetDownloadUrl(_posterImagePath, "poster_path", movie.id);
+          }
+        }
+        await FirebaseFirestore.instance
+            .collection('movies')
+            .doc(movie.id.toString())
+            .update(movie.toJson());
+      }
     }
   }
 
   Future<String> uploadImageAndGetDownloadUrl(String? imageUrl, String storagePath, idMovie) async {
-    
     String imageName = basename(imageUrl!);
     // Tạo một tham chiếu đến Firebase Storage
     Reference ref = FirebaseStorage.instance
@@ -146,17 +177,15 @@ class Movie {
         .child(storagePath)
         .child(imageName);
     // Bắt đầu tải lên file
-    UploadTask uploadTask;
-    if (imageUrl == "" || imageUrl.isEmpty) {
-      uploadTask = ref.putString("");
-    } else {
-      uploadTask = ref.putData(await http.readBytes(Uri.parse(imageUrl)));
-    }
+    UploadTask uploadTask = ref.putData(await http.readBytes(Uri.parse(imageUrl)));
+
     // Đợi cho đến khi tải lên hoàn tất
     final snapshot = await uploadTask.whenComplete(() => print("Upload thành công"));
 
     // Lấy và trả về URL tải xuống
-    String downloadUrl = (imageUrl == "" || imageUrl.isEmpty) ? "" : await snapshot.ref.getDownloadURL();
+    String downloadUrl = (imageUrl == "" || imageUrl.isEmpty)
+        ? ""
+        : await snapshot.ref.getDownloadURL();
     return downloadUrl;
   }
 }
