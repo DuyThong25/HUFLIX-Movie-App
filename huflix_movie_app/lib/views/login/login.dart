@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:huflix_movie_app/models/moviedetail.dart';
 import 'package:huflix_movie_app/utils/form_container.dart';
 import 'package:huflix_movie_app/utils/toast.dart';
 import 'package:huflix_movie_app/views/home/home_page.dart';
@@ -105,7 +106,7 @@ class _LoginPageState extends State<LoginPage> {
                     onTap: () {
                       Navigator.push(context,
                           MaterialPageRoute(builder: (context) {
-                        return ForgotPassswordPage();
+                        return const ForgotPassswordPage();
                       }));
                     },
                     child: const Text(
@@ -152,17 +153,16 @@ class _LoginPageState extends State<LoginPage> {
               ),
               GestureDetector(
                 onTap: () {
-                  Navigator.pushAndRemoveUntil(
+                  Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => const SignUpPage()),
-                    (route) => false,
+                    MaterialPageRoute(builder: (context) => const SignUpPage()),                
                   );
                 },
                 child: Container(
                   width: double.infinity,
                   height: 45,
                   decoration: BoxDecoration(
-                    color: Color.fromARGB(195, 245, 152, 2),
+                    color: const Color.fromARGB(195, 245, 152, 2),
                     borderRadius: BorderRadius.circular(10),
                   ),
                   child: const Center(
@@ -247,9 +247,6 @@ class _LoginPageState extends State<LoginPage> {
     if (user != null) {
       showToast(message: "Đăng nhập thành công!!");
       
-      // Load dữ liệu
-      // Movie().uploadMoviesToFirestore(); 
-
       // Nếu có user thì kiểm tra user có check lưu đăng nhập không và lưu vào Shared Referenced
       _checkRememberLogin(_isRememberLogin, email, password);
       // ignore: use_build_context_synchronously
@@ -316,11 +313,9 @@ class _LoginPageState extends State<LoginPage> {
       prefs.setBool('rememberLogin', isRememberLogin);
       prefs.setString('emailUser', email);
       prefs.setString('passwordUser', password);
-      print(
-          "Dữ liệu Preference 1 ${prefs.getBool('rememberLogin').toString()} ");
+      print("Dữ liệu Preference 1 ${prefs.getBool('rememberLogin').toString()} ");
       print("Dữ liệu Preference 2 ${prefs.getString('emailUser').toString()} ");
-      print(
-          "Dữ liệu Preference 3 ${prefs.getString('passwordUser').toString()} ");
+      print("Dữ liệu Preference 3 ${prefs.getString('passwordUser').toString()} ");
     }
   }
 

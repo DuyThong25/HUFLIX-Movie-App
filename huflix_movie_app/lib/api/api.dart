@@ -46,15 +46,15 @@ class Api {
       throw Exception("Có lỗi đang xảy ra");
     }
   }
-
-  Future<List<Movie>> updateUpcomingMovies(int currentPage) async {
-    String _tempUrlComming ="${Constants.BASE_URL}movie/upcoming?api_key=${Constants.API_KEY}&page=$currentPage&language=vi";
+  
+  // **currentDate có định dạng là {yyyy-mm-dd}
+  Future<List<Movie>> updateUpcomingMovies(int currentPage, String currentYear, String currentDate) async {
+    String _tempUrlComming =
+      "${Constants.BASE_URL}discover/movie?include_adult=false&include_video=false&api_key=${Constants.API_KEY}&language=vi&page=$currentPage&primary_release_year=$currentYear&primary_release_date.gte=$currentDate&region=VN&sort_by=popularity.desc";
 
     final response = await http.get(Uri.parse(_tempUrlComming));
     if (response.statusCode == 200) {
       final movieData = json.decode(response.body)['results'] as List;
-      // print("Phim sắp chiếu");
-      // print(movieData);
       return movieData.map((movie) => Movie.fromJsonNotGenres(movie)).toList();
     } else {
       throw Exception("Có lỗi đang xảy ra");
@@ -84,11 +84,12 @@ class Api {
       throw Exception("Có lỗi đang xảy ra");
     }
   }
-    Future<List<Movie>> getAllMovies(int currentPage) async {
+  // **currentDate có định dạng là {yyyy-mm-dd}
+    Future<List<Movie>> getAllMovies(int currentPage, String currentYear) async {
         String _allMovieUrl =
-        "${Constants.BASE_URL}discover/movie?api_key=${Constants.API_KEY}&language=vi&page=$currentPage&sort_by=popularity.desc&primary_release_year.gte=2020&primary_release_year.lte=2024";
+        "${Constants.BASE_URL}discover/movie?include_adult=false&include_video=false&api_key=${Constants.API_KEY}&language=vi&page=$currentPage&primary_release_year=$currentYear&region=VN&sort_by=popularity.desc";
     final response = await http.get(Uri.parse(_allMovieUrl));
-    //https://api.themoviedb.org/3/discover/movie?api_key=2f9034d5190d3ecb1c5934d07598fe5c&language=vi&page=20&sort_by=popularity.desc&primary_release_year.gte=2020&primary_release_year.lte=2024
+//https://api.themoviedb.org/3/discover/movie?include_adult=false&include_video=false&language=vi&page=1&primary_release_year=2024&primary_release_date.gte=2024-06-12&region=VN&sort_by=popularity.desc
     if (response.statusCode == 200) {
       final movieData = json.decode(response.body)['results'] as List;
       // print("Phim Trending");

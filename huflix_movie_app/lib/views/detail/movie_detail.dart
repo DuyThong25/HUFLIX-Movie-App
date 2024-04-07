@@ -1,3 +1,5 @@
+// ignore_for_file: no_leading_underscores_for_local_identifiers, avoid_print
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -202,8 +204,8 @@ class MovieDetailMain extends StatelessWidget {
             if (commentData['timestamp'] != null) {
               String formattedDate = DateFormat('dd/MM/yyyy - HH:mm:ss').format(commentData['timestamp'].toDate());
               return ListTile(
-                title: Text(Common.shortenStringChar(commentData['email'],18), style: TextStyle(color: Color.fromARGB(255, 255, 123, 34), fontWeight: FontWeight.bold)),
-                subtitle: Text(commentData['text'].toString(), style: TextStyle(color: Colors.white)),
+                title: Text(Common.shortenStringChar(commentData['email'],18), style: const TextStyle(color: Color.fromARGB(255, 255, 123, 34), fontWeight: FontWeight.bold)),
+                subtitle: Text(commentData['text'].toString(), style: const TextStyle(color: Colors.white)),
                 trailing: Text(formattedDate, style: TextStyle(color: Colors.grey[500])),
               );
             } 
@@ -227,16 +229,16 @@ class MovieDetailMain extends StatelessWidget {
         controller: _commentController,
         decoration: InputDecoration(
           hintText: 'Nhập bình luận của bạn...',
-          hintStyle: TextStyle(color: Colors.white),
+          hintStyle: const TextStyle(color: Colors.white),
           suffixIcon: IconButton(
-            icon: Icon(Icons.send),
+            icon: const Icon(Icons.send),
             onPressed: () {
               _submitComment(_commentController.text, context);
               _commentController.clear();
             },
           ),
         ),
-        style: TextStyle(color: Colors.white),
+        style: const TextStyle(color: Colors.white),
       ),
     );
   }
@@ -247,12 +249,12 @@ class MovieDetailMain extends StatelessWidget {
     User? user = FirebaseAuth.instance.currentUser;
 
     if (user != null) {
-      final username = user!.displayName ?? user!.email ?? 'Unknown';
+      final username = user.displayName ?? user.email ?? 'Unknown';
       final commentData = {
         'text': commentText,
-        'userId': user!.uid,
+        'userId': user.uid,
         'username': username,
-        'email' : user!.email,
+        'email' : user.email,
         'movieId': movie.id,
         'movieName' : movie.title,
         'timestamp': FieldValue.serverTimestamp(),
