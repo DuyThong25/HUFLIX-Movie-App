@@ -120,13 +120,27 @@ class Api {
       throw Exception("Có lỗi đang xảy ra");
     }
   }
+  // Lấy thông tin diễn viên theo id diễn viên
+  Future<Actor> actorDetailFindByIdActor(int idActor) async {
+      String personUrl =
+          "${Constants.BASE_URL}person/$idActor?api_key=${Constants.API_KEY}&language=en-US";
+      final response = await http.get(Uri.parse(personUrl));
+      if (response.statusCode == 200) {
+      final actorData = json.decode(response.body);
+
+      return Actor.fromJson(actorData);
+      // return actorData.map((actor) => Actor.fromJson(actor)).toList();
+    } else {
+      throw Exception("Có lỗi đang xảy ra");
+    }
+  }
+  
 
   // Lấy thông tin diễn viên theo id diễn viên
-  Future<List<ActorProfile>> actorInforFindByIdActor(
-      List<Actor> crewList) async {
+  Future<List<ActorProfile>> actorInforFindByIdActor(List<Actor> actorList) async {
     List<dynamic> combineList = [];
     // Tạo một danh sách các Future để chờ tất cả các yêu cầu hoàn thành
-    List<Future> requests = crewList.map((actor) async {
+    List<Future> requests = actorList.map((actor) async {
       String personUrl =
           "${Constants.BASE_URL}person/${actor.id}?api_key=${Constants.API_KEY}&language=vi";
       final response = await http.get(Uri.parse(personUrl));
