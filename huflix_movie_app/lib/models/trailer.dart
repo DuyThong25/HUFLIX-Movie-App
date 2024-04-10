@@ -10,6 +10,12 @@ class Trailer {
       results: List<TrailerResult>.from(json['results'].map((result) => TrailerResult.fromJson(result))),
     );
   }
+   Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'results': results!.map((result) => result.toJson()).toList(),  
+    };
+  }
 }
 
 class TrailerResult {
@@ -50,5 +56,19 @@ class TrailerResult {
       official: json['official'],
       resultId: json['id'],
     );
+  }
+  Map<String, dynamic> toJson() {
+    return {
+      'iso6391': iso6391,
+      'iso31661': iso31661,
+      'name': name,
+      'key': key,
+      'publishedAt': publishedAt,
+      'site': site,
+      'size': size,
+      'type': type,
+      'official': official,
+      'resultId': resultId
+    };
   }
 }
