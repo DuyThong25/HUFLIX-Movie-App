@@ -20,8 +20,8 @@ class _MyWidgetState extends State<StatusBarDetail> {
 
   bool _trailerFound =
       false; // Thêm biến boolean để kiểm tra xem có trailer được tìm thấy không
-  bool _isliked = false;
-  bool _isdisliked = false;
+  late bool _isliked ;
+  late bool _isdisliked;
 
   @override
   void initState() {
@@ -101,7 +101,7 @@ class _MyWidgetState extends State<StatusBarDetail> {
       // Hiển thị AlertDialog thông báo rằng không có trailer
       showDialog(
           context: context,
-          builder: (_) => AlertDialog(
+          builder: (_) => const AlertDialog(
                 content: Text("Phim này chưa có trailer"),
               ));
     }
