@@ -20,8 +20,8 @@ class _MyWidgetState extends State<StatusBarDetail> {
 
   bool _trailerFound =
       false; // Thêm biến boolean để kiểm tra xem có trailer được tìm thấy không
-  var _isliked;
-  var _isdisliked;
+  bool _isliked = false;
+  bool _isdisliked = false;
 
   @override
   void initState() {
@@ -136,6 +136,14 @@ class _MyWidgetState extends State<StatusBarDetail> {
       Map<String, dynamic> data = docSnapshot.data()!;
         _isliked = data['isLiked'];
         _isdisliked = data['isDisliked'];
+    }else{
+      addInteractDetail(
+                                  userId,
+                                  widget.idMovie.toString(),
+                                  false,
+                                  false);
+      _isliked = false;
+      _isdisliked = false;
     }
   }
 
