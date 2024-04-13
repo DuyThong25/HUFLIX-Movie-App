@@ -31,7 +31,18 @@ class Actor {
     biography = json["biography"];
     birthday = json["birthday"];
     placeOfBirth = json["place_of_birth"];
+  }
 
+  Actor.fromJsonForFirebase(Map<String, dynamic> json) {
+    id = json["id"];
+    name = json["name"];
+    department = json["department"];
+    characterName = json["characterName"];
+    profilePath = json["profilePath"];
+    job = json["job"];
+    biography = json["biography"];
+    birthday = json["birthday"];
+    placeOfBirth = json["placeOfBirth"];
   }
 
   Map<String, dynamic> toJson() {

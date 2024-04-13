@@ -57,6 +57,21 @@ class TrailerResult {
       resultId: json['id'],
     );
   }
+
+  factory TrailerResult.fromJsonForFirebase(Map<String, dynamic> json) {
+    return TrailerResult(
+      iso6391: json['iso6391'],
+      iso31661: json['iso31661'],
+      name: json['name'],
+      key: json['key'],
+      publishedAt: json['publishedAt'],
+      site: json['site'],
+      size: json['size'],
+      type: json['type'],
+      official: json['official'],
+      resultId: json['resultId'],
+    );
+  }
   Map<String, dynamic> toJson() {
     return {
       'iso6391': iso6391,
