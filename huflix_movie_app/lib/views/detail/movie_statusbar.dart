@@ -55,13 +55,15 @@ class _MyWidgetState extends State<StatusBarDetail> {
   }
 
   void showVideoDialog() {
+    double scrwidth = MediaQuery.of(context).size.width;
     if (_trailerFound) {
       // Chỉ hiển thị dialog nếu đã tìm thấy trailer
       showModalBottomSheet(
           backgroundColor: Colors.black,
           isScrollControlled: true,
           context: context,
-          builder: (BuildContext context) {
+          builder: scrwidth < 700
+          ? (BuildContext context) {
             return Container(
               // height: 500,
               // color: Colors.black,
@@ -90,13 +92,46 @@ class _MyWidgetState extends State<StatusBarDetail> {
                         ),
                       ),
                       onPressed: () => Navigator.pop(context),
-                      child: Text('Đóng'),
+                      child: const Text('Đóng'),
                     ),
                   ],
                 ),
               ),
             );
-          });
+          } : (BuildContext context) {
+            return Container(
+              height: 500,
+              // color: Colors.black,
+              child: Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    YoutubePlayer(
+                      controller: _youtubePlayerController,
+                      showVideoProgressIndicator: true,
+                      onReady: () {},
+                    ),
+                    // ElevatedButton(
+                    //   style: ElevatedButton.styleFrom(
+                    //     foregroundColor: Colors.white,
+                    //     backgroundColor: Colors.black, // Màu chữ
+                    //     shape: RoundedRectangleBorder(
+                    //       side: const BorderSide(
+                    //           color: Colors.white), // Viền màu trắng
+                    //       borderRadius:
+                    //           BorderRadius.circular(8), // Độ cong viền
+                    //     ),
+                    //   ),
+                    //   onPressed: () => Navigator.pop(context),
+                    //   child: const Text('Đóng'),
+                    // ),
+                  ],
+                ),
+              ),
+            );
+          }
+          );
     } else {
       // Hiển thị AlertDialog thông báo rằng không có trailer
       showDialog(

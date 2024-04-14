@@ -7,7 +7,9 @@ import 'package:huflix_movie_app/common/common.dart';
 import 'package:huflix_movie_app/models/moviedetail.dart';
 import 'package:huflix_movie_app/views/detail/movie_detail_description.dart';
 import 'package:huflix_movie_app/views/detail/movie_detail_infor.dart';
+import 'package:huflix_movie_app/views/home/movie_carousel/carousel_backdrop.dart';
 import 'package:intl/intl.dart';
+
 import '../../api/api_constants.dart';
 import '../../models/actor.dart';
 import 'movie_detail_actor.dart';
@@ -18,19 +20,19 @@ class MovieDetailMain extends StatelessWidget {
       {super.key,
       required this.movie,
       required this.actorOfMovieByID,
-      required this.detailMovie
-      });
-      
+      required this.detailMovie});
+
   final Movie movie;
   final Future<List<Actor>> actorOfMovieByID;
   final Future<Movie> detailMovie;
 
-   final ScrollController _scrollController = ScrollController();
+  final ScrollController _scrollController = ScrollController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _commentController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
+    double scrwidth = MediaQuery.of(context).size.width;
     return Scaffold(
       extendBodyBehindAppBar: true,
       backgroundColor: Colors.black,
@@ -62,30 +64,76 @@ class MovieDetailMain extends StatelessWidget {
         child: Column(
           children: [
             // Poster của phim
-            Stack(
-              children: [
-                Container(
-                    padding: const EdgeInsets.fromLTRB(0, 0, 0, 40),
-                    width: MediaQuery.of(context).size.width,
-                    height: MediaQuery.of(context).size.height - 320,
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(30),
-                      child: movie.posterPath != null ?
-                      Image.network(
-                        Constants.BASE_IMAGE_URL + movie.posterPath!,
-                        fit: BoxFit.fill,
-                        alignment: Alignment.topCenter,
-                      ) : Image.asset(
-                          "assets/images/logo1.jpg",
-                          fit: BoxFit.fill,
-                          alignment: Alignment.topCenter,
+            scrwidth < 700
+                ? // giao diện màn hình dọc
+                 Stack(
+                    children: [
+                      Container(
+                          padding: const EdgeInsets.fromLTRB(0, 0, 0, 40),
+                          width: MediaQuery.of(context).size.width,
+                          height: MediaQuery.of(context).size.height - 320,
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(30),
+                            child: movie.posterPath != null
+                                ? Image.network(
+                                    Constants.BASE_IMAGE_URL +
+                                        movie.posterPath!,
+                                    fit: BoxFit.fill,
+                                    alignment: Alignment.topCenter,
+                                  )
+                                : Image.asset(
+                                    "assets/images/logo1.jpg",
+                                    fit: BoxFit.fill,
+                                    alignment: Alignment.topCenter,
+                                  ),
+                          )),
+                      // status bar - Fuunction Bar
+                      Positioned(
+                          bottom: 14,
+                          left: 65,
+                          right: 65,
+                          child: StatusBarDetail(
+                            idMovie: movie.id!,
+                          ))
+                    ],
+                  )
+                : //giao diện màn hình ngang
+                Stack(
+                    children: [
+                      CarouselBackdrop(
+                        src: Constants.BASE_IMAGE_URL + movie.backdropPath!,
+                      ),
+                      Center(
+                        child: Container(
+                          padding: const EdgeInsets.fromLTRB(0, 0, 0, 40),
+                          width: MediaQuery.of(context).size.width - 600,
+                          height: MediaQuery.of(context).size.height,
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(30),
+                            child: movie.posterPath != null
+                                ? Image.network(
+                                    Constants.BASE_IMAGE_URL +
+                                        movie.posterPath!,
+                                    fit: BoxFit.fill,
+                                    alignment: Alignment.topCenter,
+                                  )
+                                : Image.asset(
+                                    "assets/images/logo1.jpg",
+                                    fit: BoxFit.fill,
+                                    alignment: Alignment.topCenter,
+                                  ),
+                          ),
                         ),
-                    )),
-                // status bar - Fuunction Bar
-                Positioned(
-                    bottom: 14, left: 65, right: 65, child: StatusBarDetail(idMovie: movie.id!,))
-              ],
-            ),
+                      ),
+                      // status bar - Fuunction Bar
+                      Positioned(
+                        bottom: 30,
+                        left: 65,
+                        right: 65,
+                        child: StatusBarDetail(idMovie: movie.id!),
+                      ),
+                    ],
+                  ),
             // Container chứa Nội dung của movie detail
             Container(
               width: MediaQuery.of(context).size.width,
@@ -121,12 +169,12 @@ class MovieDetailMain extends StatelessWidget {
                   ),
                   MovieDetailActor(actorOfMovieByID: actorOfMovieByID),
                   _buildCommentSection(context),
-                //   Container(
-                // height: MediaQuery.of(context).size.height,
-                //     width: MediaQuery.of(context).size.width,
-                //     // height: MediaQuery.of(context).size.height,
-                //     color: Colors.green,
-                //   ),
+                  //   Container(
+                  // height: MediaQuery.of(context).size.height,
+                  //     width: MediaQuery.of(context).size.width,
+                  //     // height: MediaQuery.of(context).size.height,
+                  //     color: Colors.green,
+                  //   ),
                 ],
               ),
             ),
@@ -149,7 +197,7 @@ class MovieDetailMain extends StatelessWidget {
     return "${hours}g${minutes}p";
   }
 
-   // Widget để hiển thị phần comment
+  // Widget để hiển thị phần comment
   Widget _buildCommentSection(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -158,10 +206,7 @@ class MovieDetailMain extends StatelessWidget {
         const Text(
           'Bình luận',
           style: TextStyle(
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
-            color: Colors.white
-          ),
+              fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white),
         ),
         // Widget để hiển thị danh sách các comment
         _buildCommentList(context),
@@ -171,78 +216,88 @@ class MovieDetailMain extends StatelessWidget {
     );
   }
 
+  Widget _buildCommentList(BuildContext context) {
+    return StreamBuilder<QuerySnapshot>(
+      stream: FirebaseFirestore.instance
+          .collection('comments')
+          .where('movieId', isEqualTo: movie.id)
+          .orderBy('timestamp', descending: true)
+          .snapshots(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const CircularProgressIndicator();
+        }
 
-Widget _buildCommentList(BuildContext context) {
-  return StreamBuilder<QuerySnapshot>(
-    stream: FirebaseFirestore.instance
-        .collection('comments')
-        .where('movieId', isEqualTo: movie.id)
-        .orderBy('timestamp', descending: true)
-        .snapshots(),
-    builder: (context, snapshot) {
-      if (snapshot.connectionState == ConnectionState.waiting) {
-        return const CircularProgressIndicator();
-      }
+        if (snapshot.hasError) {
+          print("$snapshot.error");
+          return Text(
+            'Error: ${snapshot.error}',
+            style: const TextStyle(color: Colors.white),
+          );
+        }
 
-      if (snapshot.hasError) {
-        print("$snapshot.error");
-        return Text('Error: ${snapshot.error}', style: const TextStyle(color: Colors.white),);
-      }
+        if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+          return const Text('Hiện tại chưa có bình luận nào',
+              style: TextStyle(color: Colors.white));
+        }
 
-      if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-        return const Text('Hiện tại chưa có bình luận nào', style: TextStyle(color: Colors.white));
-      }
-
-      return Container(
-        height: 150, // Giới hạn chiều cao của danh sách bình luận
-        child: ListView.builder(
-          itemCount: snapshot.data!.docs.length,
-          itemBuilder: (context, index) {
-            final commentData = snapshot.data!.docs[index].data() as Map<String, dynamic>;
-            if (commentData['timestamp'] != null) {
-              String formattedDate = DateFormat('dd/MM/yyyy - HH:mm:ss').format(commentData['timestamp'].toDate());
-              return ListTile(
-                title: Text(Common.shortenStringChar(commentData['email'],18), style: const TextStyle(color: Color.fromARGB(255, 255, 123, 34), fontWeight: FontWeight.bold)),
-                subtitle: Text(commentData['text'].toString(), style: const TextStyle(color: Colors.white)),
-                trailing: Text(formattedDate, style: TextStyle(color: Colors.grey[500])),
-              );
-            } 
-            else {
-              return Container(); 
-            }
-          },
-        ),
-      );
-    },
-  );
-}
-
-
- // Widget để hiển thị form nhập comment
-  Widget _buildCommentForm(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Form(
-        key: _formKey,
-        child: TextFormField(
-          controller: _commentController,
-          decoration: InputDecoration(
-            hintText: "Nhập bình luận",
-            hintStyle: TextStyle(color: Colors.white54),
-            suffixIcon: IconButton(
-            icon: Icon(Icons.send, color: Colors.redAccent[700],),
-            onPressed: () {
-              _submitComment(_commentController.text, context);
-              _commentController.clear();
+        return Container(
+          height: 150, // Giới hạn chiều cao của danh sách bình luận
+          child: ListView.builder(
+            itemCount: snapshot.data!.docs.length,
+            itemBuilder: (context, index) {
+              final commentData =
+                  snapshot.data!.docs[index].data() as Map<String, dynamic>;
+              if (commentData['timestamp'] != null) {
+                String formattedDate = DateFormat('dd/MM/yyyy - HH:mm:ss')
+                    .format(commentData['timestamp'].toDate());
+                return ListTile(
+                  title: Text(
+                      Common.shortenStringChar(commentData['email'], 18),
+                      style: const TextStyle(
+                          color: Color.fromARGB(255, 255, 123, 34),
+                          fontWeight: FontWeight.bold)),
+                  subtitle: Text(commentData['text'].toString(),
+                      style: const TextStyle(color: Colors.white)),
+                  trailing: Text(formattedDate,
+                      style: TextStyle(color: Colors.grey[500])),
+                );
+              } else {
+                return Container();
+              }
             },
           ),
-          ),
-          onTap: () {
-            _scrollToBottom();
-          } ,
-        )
-      )
+        );
+      },
     );
+  }
+
+  // Widget để hiển thị form nhập comment
+  Widget _buildCommentForm(BuildContext context) {
+    return Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Form(
+            key: _formKey,
+            child: TextFormField(
+              controller: _commentController,
+              decoration: InputDecoration(
+                hintText: "Nhập bình luận",
+                hintStyle: TextStyle(color: Colors.white54),
+                suffixIcon: IconButton(
+                  icon: Icon(
+                    Icons.send,
+                    color: Colors.redAccent[700],
+                  ),
+                  onPressed: () {
+                    _submitComment(_commentController.text, context);
+                    _commentController.clear();
+                  },
+                ),
+              ),
+              onTap: () {
+                _scrollToBottom();
+              },
+            )));
   }
 
   void _scrollToBottom() {
@@ -255,7 +310,6 @@ Widget _buildCommentList(BuildContext context) {
 
   // Hàm để gửi comment lên Firestore
   void _submitComment(String commentText, BuildContext context) async {
-    
     User? user = FirebaseAuth.instance.currentUser;
 
     if (user != null) {
@@ -264,9 +318,9 @@ Widget _buildCommentList(BuildContext context) {
         'text': commentText,
         'userId': user.uid,
         'username': username,
-        'email' : user.email,
+        'email': user.email,
         'movieId': movie.id,
-        'movieName' : movie.title,
+        'movieName': movie.title,
         'timestamp': FieldValue.serverTimestamp(),
       };
       await FirebaseFirestore.instance.collection('comments').add(commentData);
@@ -281,5 +335,3 @@ Widget _buildCommentList(BuildContext context) {
     }
   }
 }
-
- 
