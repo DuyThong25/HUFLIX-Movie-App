@@ -1,8 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:huflix_movie_app/views/drawer/movie_drawer.dart';
 import 'package:huflix_movie_app/views/home/movie_carousel/carousel_animated.dart';
 import 'package:huflix_movie_app/views/home/movie_tab/Tab_Main.dart';
-import 'package:huflix_movie_app/views/drawer/movie_drawer.dart';
 import 'package:huflix_movie_app/views/search/search_main.dart';
 
 class HomePage extends StatelessWidget {
@@ -10,6 +10,7 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    double scrwidth = MediaQuery.of(context).size.width;
     return Scaffold(
         extendBodyBehindAppBar: true,
         backgroundColor: Colors.black,
@@ -52,12 +53,30 @@ class HomePage extends StatelessWidget {
           ],
         ),
         drawer: const MyDrawer(),
-        body: const Column(
+        body: scrwidth < 700
+        ? const Column(
           children: [
-            CarouselAnimated(),
+            Expanded(
+              child: CarouselAnimated(),
+            ),
             SizedBox(height: 20),
             Expanded(child: TabMain()),
           ],
-        ));
+        ) : Container(
+          padding: const EdgeInsets.only(top: 70),
+          child: const Row(
+          
+          children: [
+            SizedBox(width: 40),
+            Expanded(
+              child: CarouselAnimated(),
+            ),
+            SizedBox(width: 20),
+            Expanded(child: TabMain()),
+          ],
+        ),
+        )
+        
+        );
   }
 }

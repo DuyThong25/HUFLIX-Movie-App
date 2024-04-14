@@ -9,6 +9,7 @@ class CarouselCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    double scrwidth = MediaQuery.of(context).size.width;
     return Column(
       children: [
         Container(
@@ -18,7 +19,8 @@ class CarouselCard extends StatelessWidget {
                 BoxShadow(
                     blurRadius: 16, color: Colors.black54, offset: Offset(2, 2))
               ]),
-          child: ClipRRect(
+          child: scrwidth < 700
+          ? ClipRRect(
             borderRadius: BorderRadius.circular(28.0),
             child: Image.network(
               fit: BoxFit.fill,
@@ -26,7 +28,17 @@ class CarouselCard extends StatelessWidget {
               height: 300,
               src,
             ),
-          ),
+          ) : 
+          ClipRRect(
+            borderRadius: BorderRadius.circular(28.0),
+            child: Image.network(
+              fit: BoxFit.fill,
+              width: 180,
+              height: 240,
+              src,
+            ),
+          )
+          ,
         ),
 
         const SizedBox(
