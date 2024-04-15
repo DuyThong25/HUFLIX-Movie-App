@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:huflix_movie_app/common/common.dart';
 import 'package:huflix_movie_app/models/moviedetail.dart';
+import 'package:huflix_movie_app/views/detail/favorite_button.dart';
 import 'package:huflix_movie_app/views/detail/movie_detail_description.dart';
 import 'package:huflix_movie_app/views/detail/movie_detail_infor.dart';
 import 'package:huflix_movie_app/views/home/movie_carousel/carousel_backdrop.dart';
@@ -15,7 +16,7 @@ import '../../models/actor.dart';
 import 'movie_detail_actor.dart';
 import 'movie_statusbar.dart';
 
-class MovieDetailMain extends StatelessWidget {
+class MovieDetailMain extends StatelessWidget  {
   MovieDetailMain(
       {super.key,
       required this.movie,
@@ -52,11 +53,11 @@ class MovieDetailMain extends StatelessWidget {
         ),
         centerTitle: true,
         actions: [
-          IconButton(
-              onPressed: () {},
-              color: Colors.white,
-              iconSize: 38,
-              icon: const Icon(Icons.favorite_border))
+          FavoriteButton(
+            movieId: movie.id!,
+            backdropPath: movie.backdropPath!,
+            title: movie.title!,
+          ),
         ],
       ),
       body: SingleChildScrollView(
