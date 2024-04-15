@@ -151,8 +151,8 @@ class _SearchMainState extends State<SearchMain> {
             CupertinoPageRoute(
               builder: (context) => MovieDetailMain(
                 movie: movieDetail,
-                detailMovie: detailMovies,
-                actorOfMovieByID: actorOfMovie,
+                // detailMovie: detailMovies,
+                // actorOfMovieByID: actorOfMovie,
               ),
             ));
       },

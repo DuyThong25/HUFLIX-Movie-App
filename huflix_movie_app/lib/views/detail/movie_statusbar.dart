@@ -1,11 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:huflix_movie_app/api/api.dart';
+import 'package:huflix_movie_app/models/trailer.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 class StatusBarDetail extends StatefulWidget {
-  const StatusBarDetail({super.key, required this.idMovie});
+  const StatusBarDetail(
+      {super.key, required this.idMovie, required this.trailerResult});
+  final TrailerResult? trailerResult;
   final int idMovie; // Thêm trường dữ liệu idMovie
 
   @override
@@ -13,44 +15,36 @@ class StatusBarDetail extends StatefulWidget {
 }
 
 class _MyWidgetState extends State<StatusBarDetail> {
-  late YoutubePlayerController _youtubePlayerController;
-  late String _trailerVideoId;
 
+  bool _trailerFound = false; // Thêm biến boolean để kiểm tra xem có trailer được tìm thấy không
+  YoutubePlayerController? _youtubePlayerController;
   late String userId = "Đang tải...";
-
-  bool _trailerFound =
-      false; // Thêm biến boolean để kiểm tra xem có trailer được tìm thấy không
-  late bool _isliked ;
+  late bool _isliked;
   late bool _isdisliked;
 
   @override
   void initState() {
     super.initState();
     getUserInteract();
+
     // Gọi phương thức để lấy thông tin trailer và xử lý kết quả
-    Api().trailerMovieById(widget.idMovie).then((trailer) {
-      for (final result in trailer.results!) {
-        if (result.type == 'Trailer') {
-          setState(() {
-            _trailerFound = true;
-            _trailerVideoId = result.key;
-            _youtubePlayerController = YoutubePlayerController(
-              initialVideoId: _trailerVideoId,
-              flags: const YoutubePlayerFlags(
-                autoPlay: true,
-                mute: false,
-              ),
-            );
-          });
-          break; // Dừng vòng lặp khi tìm thấy trailer đầu tiên
-        }
-      }
-    });
+    if (widget.trailerResult != null) {
+      setState(() {
+        _trailerFound = true;
+        _youtubePlayerController = YoutubePlayerController(
+          initialVideoId: widget.trailerResult!.key,
+          flags: const YoutubePlayerFlags(
+            autoPlay: true,
+            mute: false,
+          ),
+        );
+      });
+    };
   }
 
   @override
   void dispose() {
-    _youtubePlayerController.dispose();
+    _youtubePlayerController!.dispose();
     super.dispose();
   }
 
@@ -63,75 +57,71 @@ class _MyWidgetState extends State<StatusBarDetail> {
           isScrollControlled: true,
           context: context,
           builder: scrwidth < 700
-          ? (BuildContext context) {
-            return Container(
-              // height: 500,
-              // color: Colors.black,
-              child: Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    YoutubePlayer(
-                      controller: _youtubePlayerController,
-                      showVideoProgressIndicator: true,
-                      onReady: () {},
-                    ),
-                    const SizedBox(
-                      height: 32,
-                    ),
-                    ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        foregroundColor: Colors.white,
-                        backgroundColor: Colors.black, // Màu chữ
-                        shape: RoundedRectangleBorder(
-                          side: const BorderSide(
-                              color: Colors.white), // Viền màu trắng
-                          borderRadius:
-                              BorderRadius.circular(8), // Độ cong viền
+              ? (BuildContext context) {
+                  return Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        YoutubePlayer(
+                          controller: _youtubePlayerController!,
+                          showVideoProgressIndicator: true,
+                          onReady: () {},
                         ),
+                        const SizedBox(
+                          height: 32,
+                        ),
+                        ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            foregroundColor: Colors.white,
+                            backgroundColor: Colors.black, // Màu chữ
+                            shape: RoundedRectangleBorder(
+                              side: const BorderSide(
+                                  color: Colors.white), // Viền màu trắng
+                              borderRadius:
+                                  BorderRadius.circular(8), // Độ cong viền
+                            ),
+                          ),
+                          onPressed: () => Navigator.pop(context),
+                          child: const Text('Đóng'),
+                        ),
+                      ],
+                    ),
+                  );
+                }
+              : (BuildContext context) {
+                  return SizedBox(
+                    height: 500,
+                    // color: Colors.black,
+                    child: Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          YoutubePlayer(
+                            controller: _youtubePlayerController!,
+                            showVideoProgressIndicator: true,
+                            onReady: () {},
+                          ),
+                          // ElevatedButton(
+                          //   style: ElevatedButton.styleFrom(
+                          //     foregroundColor: Colors.white,
+                          //     backgroundColor: Colors.black, // Màu chữ
+                          //     shape: RoundedRectangleBorder(
+                          //       side: const BorderSide(
+                          //           color: Colors.white), // Viền màu trắng
+                          //       borderRadius:
+                          //           BorderRadius.circular(8), // Độ cong viền
+                          //     ),
+                          //   ),
+                          //   onPressed: () => Navigator.pop(context),
+                          //   child: const Text('Đóng'),
+                          // ),
+                        ],
                       ),
-                      onPressed: () => Navigator.pop(context),
-                      child: const Text('Đóng'),
                     ),
-                  ],
-                ),
-              ),
-            );
-          } : (BuildContext context) {
-            return Container(
-              height: 500,
-              // color: Colors.black,
-              child: Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    YoutubePlayer(
-                      controller: _youtubePlayerController,
-                      showVideoProgressIndicator: true,
-                      onReady: () {},
-                    ),
-                    // ElevatedButton(
-                    //   style: ElevatedButton.styleFrom(
-                    //     foregroundColor: Colors.white,
-                    //     backgroundColor: Colors.black, // Màu chữ
-                    //     shape: RoundedRectangleBorder(
-                    //       side: const BorderSide(
-                    //           color: Colors.white), // Viền màu trắng
-                    //       borderRadius:
-                    //           BorderRadius.circular(8), // Độ cong viền
-                    //     ),
-                    //   ),
-                    //   onPressed: () => Navigator.pop(context),
-                    //   child: const Text('Đóng'),
-                    // ),
-                  ],
-                ),
-              ),
-            );
-          }
-          );
+                  );
+                });
     } else {
       // Hiển thị AlertDialog thông báo rằng không có trailer
       showDialog(
@@ -155,28 +145,23 @@ class _MyWidgetState extends State<StatusBarDetail> {
         userId = userData['uid'];
         print(userId);
       });
-        return userId;
-    }
-    else {
+      return userId;
+    } else {
       return "";
     }
   }
 
-    Future<void> getUserInteract() async {
+  Future<void> getUserInteract() async {
     var userId = await getCurentUserData();
     var collection = FirebaseFirestore.instance.collection('interact');
     var docSnapshot = await collection.doc("$userId-${widget.idMovie}").get();
 
     if (docSnapshot.exists) {
       Map<String, dynamic> data = docSnapshot.data()!;
-        _isliked = data['isLiked'];
-        _isdisliked = data['isDisliked'];
-    }else{
-      addInteractDetail(
-                                  userId,
-                                  widget.idMovie.toString(),
-                                  false,
-                                  false);
+      _isliked = data['isLiked'];
+      _isdisliked = data['isDisliked'];
+    } else {
+      addInteractDetail(userId, widget.idMovie.toString(), false, false);
       _isliked = false;
       _isdisliked = false;
     }
@@ -276,14 +261,13 @@ class _MyWidgetState extends State<StatusBarDetail> {
 
                             if (_isliked == false) {
                               if (_isliked == false && _isdisliked == true) {
-                                  setState(() {
-                                _isliked =! _isliked;
-                                _isdisliked = false;
-                              });
-                              }
-                              else {
-                                  setState(() {
-                                  _isliked =! _isliked;
+                                setState(() {
+                                  _isliked = !_isliked;
+                                  _isdisliked = false;
+                                });
+                              } else {
+                                setState(() {
+                                  _isliked = !_isliked;
                                 });
                               }
                               // setState(() {
@@ -301,13 +285,13 @@ class _MyWidgetState extends State<StatusBarDetail> {
                                   _isdisliked);
                             } else {
                               setState(() {
-                                _isliked =! _isliked;
+                                _isliked = !_isliked;
                               });
                               await FirebaseFirestore.instance
                                   .collection('movies')
                                   .doc(widget.idMovie.toString())
                                   .update({'likeCount': likeCount - 1});
-                                   addInteractDetail(
+                              addInteractDetail(
                                   userId,
                                   widget.idMovie.toString(),
                                   _isliked,
@@ -340,7 +324,6 @@ class _MyWidgetState extends State<StatusBarDetail> {
                                   color: Color.fromARGB(255, 150, 8, 8),
                                 ),
                           onPressed: () async {
-
                             var collection =
                                 FirebaseFirestore.instance.collection('movies');
                             var docSnapshot = await collection
@@ -358,14 +341,13 @@ class _MyWidgetState extends State<StatusBarDetail> {
                             }
                             if (_isdisliked == false) {
                               if (_isdisliked == false && _isliked == true) {
-                                  setState(() {
-                                _isdisliked =! _isdisliked;
-                                _isliked = false;
-                              });
-                              }
-                              else {
-                                  setState(() {
-                                _isdisliked =! _isdisliked;
+                                setState(() {
+                                  _isdisliked = !_isdisliked;
+                                  _isliked = false;
+                                });
+                              } else {
+                                setState(() {
+                                  _isdisliked = !_isdisliked;
                                 });
                               }
                               // setState(() {
@@ -375,20 +357,20 @@ class _MyWidgetState extends State<StatusBarDetail> {
                                   .collection('movies')
                                   .doc(widget.idMovie.toString())
                                   .update({'dislikeCount': dislikeCount + 1});
-                                   addInteractDetail(
+                              addInteractDetail(
                                   userId,
                                   widget.idMovie.toString(),
                                   _isliked,
                                   _isdisliked);
                             } else {
-                                 setState(() {
-                              _isdisliked =! _isdisliked;
+                              setState(() {
+                                _isdisliked = !_isdisliked;
                               });
                               await FirebaseFirestore.instance
                                   .collection('movies')
                                   .doc(widget.idMovie.toString())
                                   .update({'dislikeCount': dislikeCount - 1});
-                                   addInteractDetail(
+                              addInteractDetail(
                                   userId,
                                   widget.idMovie.toString(),
                                   _isliked,
@@ -414,9 +396,7 @@ class _MyWidgetState extends State<StatusBarDetail> {
                             Icons.download_outlined,
                             color: Colors.white,
                           ),
-                          onPressed: () async {
-                            
-                          },
+                          onPressed: () async {},
                         ),
                       )),
                 ],

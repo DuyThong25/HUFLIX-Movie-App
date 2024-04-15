@@ -9,22 +9,13 @@ import 'package:huflix_movie_app/views/detail/movie_detail_description.dart';
 import 'package:huflix_movie_app/views/detail/movie_detail_infor.dart';
 import 'package:huflix_movie_app/views/home/movie_carousel/carousel_backdrop.dart';
 import 'package:intl/intl.dart';
-
-import '../../api/api_constants.dart';
-import '../../models/actor.dart';
 import 'movie_detail_actor.dart';
 import 'movie_statusbar.dart';
 
 class MovieDetailMain extends StatelessWidget {
-  MovieDetailMain(
-      {super.key,
-      required this.movie,
-      required this.actorOfMovieByID,
-      required this.detailMovie});
+  MovieDetailMain({super.key, required this.movie});
 
   final Movie movie;
-  final Future<List<Actor>> actorOfMovieByID;
-  final Future<Movie> detailMovie;
 
   final ScrollController _scrollController = ScrollController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
@@ -66,7 +57,7 @@ class MovieDetailMain extends StatelessWidget {
             // Poster của phim
             scrwidth < 700
                 ? // giao diện màn hình dọc
-                 Stack(
+                Stack(
                     children: [
                       Container(
                           padding: const EdgeInsets.fromLTRB(0, 0, 0, 40),
@@ -76,8 +67,7 @@ class MovieDetailMain extends StatelessWidget {
                             borderRadius: BorderRadius.circular(30),
                             child: movie.posterPath != null
                                 ? Image.network(
-                                    Constants.BASE_IMAGE_URL +
-                                        movie.posterPath!,
+                                    movie.posterPath!,
                                     fit: BoxFit.fill,
                                     alignment: Alignment.topCenter,
                                   )
@@ -94,6 +84,7 @@ class MovieDetailMain extends StatelessWidget {
                           right: 65,
                           child: StatusBarDetail(
                             idMovie: movie.id!,
+                            trailerResult: movie.trailer
                           ))
                     ],
                   )
@@ -101,7 +92,7 @@ class MovieDetailMain extends StatelessWidget {
                 Stack(
                     children: [
                       CarouselBackdrop(
-                        src: Constants.BASE_IMAGE_URL + movie.backdropPath!,
+                        src: movie.backdropPath!,
                       ),
                       Center(
                         child: Container(
@@ -112,8 +103,7 @@ class MovieDetailMain extends StatelessWidget {
                             borderRadius: BorderRadius.circular(30),
                             child: movie.posterPath != null
                                 ? Image.network(
-                                    Constants.BASE_IMAGE_URL +
-                                        movie.posterPath!,
+                                    movie.posterPath!,
                                     fit: BoxFit.fill,
                                     alignment: Alignment.topCenter,
                                   )
@@ -130,7 +120,7 @@ class MovieDetailMain extends StatelessWidget {
                         bottom: 30,
                         left: 65,
                         right: 65,
-                        child: StatusBarDetail(idMovie: movie.id!),
+                        child: StatusBarDetail(idMovie: movie.id!, trailerResult: movie.trailer,),
                       ),
                     ],
                   ),
@@ -145,7 +135,6 @@ class MovieDetailMain extends StatelessWidget {
                   // Infor bar
                   InforMovie(
                     movie: movie,
-                    movieDetail: detailMovie,
                   ),
                   const SizedBox(
                     height: 14,
@@ -167,7 +156,7 @@ class MovieDetailMain extends StatelessWidget {
                   const SizedBox(
                     height: 6,
                   ),
-                  MovieDetailActor(actorOfMovieByID: actorOfMovieByID),
+                  MovieDetailActor(actorOfMovie: movie.actors!),
                   _buildCommentSection(context),
                   //   Container(
                   // height: MediaQuery.of(context).size.height,

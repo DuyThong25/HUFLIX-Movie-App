@@ -1,35 +1,18 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:huflix_movie_app/api/api.dart';
 import 'package:huflix_movie_app/models/actor.dart';
 import 'package:intl/intl.dart';
-import '../../api/api_constants.dart';
-import '../../models/actordetail.dart';
 
 class MovieDetailActor extends StatelessWidget {
-  const MovieDetailActor({super.key, required this.actorOfMovieByID});
-  final Future<List<Actor>> actorOfMovieByID;
+  const MovieDetailActor({super.key, required this.actorOfMovie});
+  final List<Actor> actorOfMovie;
   // late Future<List<ActorProfile>> profileActorByID;
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<List<Actor>>(
-      future: actorOfMovieByID,
-      builder: (context, snapshot) {
-        if (snapshot.hasData) {
-          return actorList(snapshot.data!);
-        } else if (snapshot.hasError) {
-          return Text("Error: ${snapshot.error}");
-        }
-        // By default, show a loading spinner
-        return const CircularProgressIndicator();
-      },
-    );
-  }
-
-  Widget actorList(List<Actor> allActors) {
-    List<Actor> actorList = allActors.where((item) => item.department == "Acting").toList();
-    List<Actor> crewList = allActors  .where((item) => item.profilePath != null && item.department != "Acting").toList();
+    List<Actor>? actorList =
+        actorOfMovie.where((item) => item.department == "Acting").toList();
+    List<Actor>? crewList =
+        actorOfMovie.where((item) => item.department != "Acting").toList();
     // Đưa direction lên đầu danh sách
     crewList.sort((a, b) {
       // So sánh tên công việc, đưa "Direction" lên đầu
@@ -46,9 +29,7 @@ class MovieDetailActor extends StatelessWidget {
         actorNames.add(actor.name!);
       }
     }
-    Future<List<ActorProfile>> profileActorByID = Api().actorInforFindByIdActor(uniqueCrewList);
-     double _heigtActorImage = 220;
-
+    double _heigtActorImage = 220;
 
     return Column(
       mainAxisSize: MainAxisSize.max,
@@ -56,14 +37,18 @@ class MovieDetailActor extends StatelessWidget {
         // list of Actor
         SizedBox(
           height: _heigtActorImage,
-          child: ListView.builder(
-            padding: EdgeInsets.zero,
-            scrollDirection: Axis.horizontal,
-            itemCount: actorList.length,
-            itemBuilder: (context, index) {
-              return itemActor(actorList[index]);
-            },
-          ),
+          child: actorList.isNotEmpty
+              ? ListView.builder(
+                  padding: EdgeInsets.zero,
+                  scrollDirection: Axis.horizontal,
+                  itemCount: actorList.length,
+                  itemBuilder: (context, index) {
+                    return itemActor(actorList[index]);
+                  },
+                )
+              : const Center(
+                  child: Text("Đang cập nhật..."),
+                ),
         ),
         const SizedBox(
           height: 30,
@@ -77,36 +62,25 @@ class MovieDetailActor extends StatelessWidget {
           child: const Text(
             "Nhà sản xuất",
             style: TextStyle(
-                fontSize: 26,
-                color: Colors.white,
-                fontWeight: FontWeight.bold),
+                fontSize: 26, color: Colors.white, fontWeight: FontWeight.bold),
           ),
         ),
-         const SizedBox(
+        const SizedBox(
           height: 10,
         ),
         // List of CREWS
         SizedBox(
             height: _heigtActorImage,
-            child: FutureBuilder<List<ActorProfile>>(
-              future: profileActorByID,
-              builder: (context, snapshot) {
-                if (snapshot.hasData) {
-                  return ListView.builder(
+            child: uniqueCrewList.isNotEmpty
+                ? ListView.builder(
                     padding: EdgeInsets.zero,
                     scrollDirection: Axis.horizontal,
-                    itemCount: snapshot.data?.length,
+                    itemCount: uniqueCrewList.length,
                     itemBuilder: (context, index) {
-                      return itemNotActor(snapshot.data![index], context);
+                      return itemNotActor(uniqueCrewList[index], context);
                     },
-                  );
-                } else if (snapshot.hasError) {
-                  return Text("Error: ${snapshot.error}");
-                }
-                // By default, show a loading spinner
-                return const CircularProgressIndicator();
-              },
-            )),
+                  )
+                : const Center(child: Text("Đang cập nhật...")))
       ],
     );
   }
@@ -123,11 +97,18 @@ class MovieDetailActor extends StatelessWidget {
                     topRight: Radius.circular(26)),
                 child: actor.profilePath != null
                     ? (Image.network(
-                        Constants.BASE_IMAGE_URL + actor.profilePath!,
+                        actor.profilePath!,
                         width: 165,
                         height: double.infinity,
                         fit: BoxFit.cover,
                         alignment: Alignment.topCenter,
+                        errorBuilder: (context, error, stackTrace) =>
+                            Image.asset(
+                          'assets/images/logo2.jpg',
+                          width: 165,
+                          height: double.infinity,
+                          fit: BoxFit.cover,
+                        ),
                       ))
                     : Image.asset(
                         'assets/images/logo2.jpg',
@@ -172,10 +153,12 @@ class MovieDetailActor extends StatelessWidget {
     );
   }
 
-  Widget itemNotActor(ActorProfile directionList, BuildContext context) {
-    return  SizedBox(
-            width: MediaQuery.of(context).size.width,
-            child: Row(
+  Widget itemNotActor(Actor crew, BuildContext context) {
+    return SizedBox(
+        width: MediaQuery.of(context).size.width,
+        child: Row(
+          children: [
+            Stack(
               children: [
                 Container(
                     margin: const EdgeInsets.fromLTRB(0, 6, 14, 6),
@@ -183,13 +166,20 @@ class MovieDetailActor extends StatelessWidget {
                         borderRadius: const BorderRadius.only(
                             topLeft: Radius.circular(26),
                             topRight: Radius.circular(26)),
-                        child: directionList.profilePath != null
+                        child: crew.profilePath != null
                             ? (Image.network(
-                                Constants.BASE_IMAGE_URL + directionList.profilePath!,
+                                crew.profilePath!,
                                 width: 165,
                                 height: double.infinity,
                                 fit: BoxFit.cover,
                                 alignment: Alignment.topCenter,
+                                errorBuilder: (context, error, stackTrace) =>
+                                    Image.asset(
+                                  'assets/images/logo2.jpg',
+                                  width: 165,
+                                  height: double.infinity,
+                                  fit: BoxFit.cover,
+                                ),
                               ))
                             : Image.asset(
                                 'assets/images/logo2.jpg',
@@ -197,31 +187,82 @@ class MovieDetailActor extends StatelessWidget {
                                 height: double.infinity,
                                 fit: BoxFit.cover,
                               ))),
-                Expanded(         
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      // const SizedBox(height: 26,),
-                      // Ngành
-                      Text(directionList.department ?? "Đang cập nhật", style: const TextStyle(fontSize: 40, color: Colors.white, fontWeight: FontWeight.bold),),
-                      const SizedBox(height: 4,),
-                      Text(directionList.name ?? "Đang cập nhật..", style: const TextStyle(fontSize: 20, color: Colors.white70, fontWeight: FontWeight.bold), overflow: TextOverflow.ellipsis, maxLines: 1,),
-                      const SizedBox(height: 4,),
-                      Text(
-                        directionList.birthday != null ? 
-                        DateFormat('dd-MM-yyyy').format(DateTime.parse(directionList.birthday!))
-                        : "Đang cập nhật..", 
-                        style: const TextStyle(fontSize: 16, color: Colors.white70, fontWeight: FontWeight.bold),
-                         overflow: TextOverflow.ellipsis, maxLines: 1,),
-                      const SizedBox(height: 4,),
-                      Text(directionList.placeOfBirth ?? "Đang cập nhật..", style: const TextStyle(fontSize: 14, color: Colors.white70, fontWeight: FontWeight.bold)),
-
-                    ],
-                  ) 
-                   )
+                Positioned(
+                  bottom: 0,
+                  left: 0,
+                  right: 0,
+                  child: Container(
+                      alignment: Alignment.center,
+                      padding: const EdgeInsets.only(
+                          left: 6, right: 6, top: 4, bottom: 24),
+                      color: Colors.black54,
+                      margin: const EdgeInsets.only(right: 10),
+                      child: Column(
+                        children: [
+                          Text(
+                            crew.job ?? 'Chưa cập nhật..',
+                            style: const TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                                overflow: TextOverflow.ellipsis,
+                                fontSize: 16),
+                            maxLines: 1,
+                          ),
+                        ],
+                      )),
+                )
               ],
-            )
-    );
+            ),
+            Expanded(
+                child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  crew.department ?? "Đang cập nhật",
+                  style: const TextStyle(
+                      fontSize: 40,
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold),
+                ),
+                const SizedBox(
+                  height: 4,
+                ),
+                Text(
+                  crew.name ?? "Đang cập nhật..",
+                  style: const TextStyle(
+                      fontSize: 20,
+                      color: Colors.white70,
+                      fontWeight: FontWeight.bold),
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 1,
+                ),
+                const SizedBox(
+                  height: 4,
+                ),
+                Text(
+                  crew.birthday != null
+                      ? DateFormat('dd-MM-yyyy')
+                          .format(DateTime.parse(crew.birthday!))
+                      : "Đang cập nhật..",
+                  style: const TextStyle(
+                      fontSize: 16,
+                      color: Colors.white70,
+                      fontWeight: FontWeight.bold),
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 1,
+                ),
+                const SizedBox(
+                  height: 4,
+                ),
+                Text(crew.placeOfBirth ?? "Đang cập nhật..",
+                    style: const TextStyle(
+                        fontSize: 14,
+                        color: Colors.white70,
+                        fontWeight: FontWeight.bold)),
+              ],
+            ))
+          ],
+        ));
   }
 }

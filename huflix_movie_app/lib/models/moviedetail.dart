@@ -66,6 +66,36 @@ class Movie {
     actors = json["actors"];
     trailer = json["trailer"];
   }
+  
+  Movie.fromFirestore(Map<String, dynamic> json) {
+    List<Genre>? genresList = json['genres'] != null
+      ? (json['genres'] as List).map((genre) => Genre.fromJson(genre)).toList()
+      : null;
+    List<Actor>? actorsList = json['actors'] != null
+      ? (json['actors'] as List).map((actor) => Actor.fromJsonForFirebase(actor)).toList()
+      : null;    
+    TrailerResult? trailerResultData = json['trailer'] != null
+      ? TrailerResult.fromJsonForFirebase(json['trailer'])
+      : null;
+
+    id = json["id"];
+    time = json["time"];
+    status = json["status"];
+    genres = genresList;
+    title = json["title"];
+    originalTitle = json["originalTitle"];
+    backdropPath = json["backdropPath"];
+    posterPath = json["posterPath"];
+    overview = json["overview"];
+    releaseDate = json["releaseDate"];
+    voteAverage = json["voteAverage"];
+    popularity = json["popularity"];
+    voteCount = json["voteCount"];
+    likeCount = json["likeCount"];
+    dislikeCount = json["dislikeCount"];
+    actors = actorsList;
+    trailer = trailerResultData;
+  }
 
   Movie.fromJsonNotGenres(Map<String, dynamic> json) {
     id = json["id"];

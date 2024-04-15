@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print
+
 import 'dart:async';
 
 import 'package:blur/blur.dart';
@@ -124,11 +126,7 @@ class _MovieGenreDetailState extends State<MovieGenreDetail> {
         Navigator.push(
             context,
             CupertinoPageRoute(
-              builder: (context) => MovieDetailMain(
-                movie: movie,
-                detailMovie: detailMovies,
-                actorOfMovieByID: actorOfMovie,
-              ),
+              builder: (context) => MovieDetailMain(movie: movie,),
             ));
       },
       child: ClipRRect(

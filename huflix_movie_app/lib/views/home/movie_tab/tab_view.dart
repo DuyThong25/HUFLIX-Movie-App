@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:huflix_movie_app/api/api.dart';
+import 'package:huflix_movie_app/firebase/firebase.dart';
 import 'package:huflix_movie_app/models/moviedetail.dart';
 import 'package:huflix_movie_app/views/home/movie_tab/tab_view_data.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
@@ -21,9 +21,9 @@ class _MyTabViewState extends State<MyTabView> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    nowMovies = Api().nowPlayingMovies();
-    upcomingMovies = Api().getUpcomingMovies();
-    popularMovies = Api().getPopularMovies();
+    nowMovies = MyFireStore().getTrendingMoviesFromFirestore();
+    upcomingMovies = MyFireStore().getTrendingMoviesFromFirestore();
+    popularMovies = MyFireStore().getTrendingMoviesFromFirestore();
   }
 
    @override

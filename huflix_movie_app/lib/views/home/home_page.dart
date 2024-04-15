@@ -57,9 +57,10 @@ class HomePage extends StatelessWidget {
         ? const Column(
           children: [
             Expanded(
+              flex: 2,
               child: CarouselAnimated(),
             ),
-            SizedBox(height: 20),
+            // SizedBox(height: 50),
             Expanded(child: TabMain()),
           ],
         ) : Container(
