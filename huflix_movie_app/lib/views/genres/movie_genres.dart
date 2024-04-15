@@ -7,7 +7,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:huflix_movie_app/api/api.dart';
 import 'package:huflix_movie_app/api/api_constants.dart';
-import 'package:huflix_movie_app/models/actor.dart';
 import 'package:huflix_movie_app/models/moviedetail.dart';
 import 'package:huflix_movie_app/views/detail/movie_detail.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
@@ -120,9 +119,9 @@ class _MovieGenreDetailState extends State<MovieGenreDetail> {
   Widget itemMovie(Movie movie) {
     return InkWell(
       onTap: () {
-        late Future<List<Actor>> actorOfMovie =
-            Api().actorFindByIdMovie(movie.id!);
-        late Future<Movie> detailMovies = Api().movieFindById(movie.id!);
+        // late Future<List<Actor>> actorOfMovie =
+        //     Api().actorFindByIdMovie(movie.id!);
+        // late Future<Movie> detailMovies = Api().movieFindById(movie.id!);
         Navigator.push(
             context,
             CupertinoPageRoute(

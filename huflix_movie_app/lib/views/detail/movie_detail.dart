@@ -83,9 +83,7 @@ class MovieDetailMain extends StatelessWidget {
                           left: 65,
                           right: 65,
                           child: StatusBarDetail(
-                            idMovie: movie.id!,
-                            trailerResult: movie.trailer
-                          ))
+                              idMovie: movie.id!, trailerResult: movie.trailer))
                     ],
                   )
                 : //giao diện màn hình ngang
@@ -120,7 +118,10 @@ class MovieDetailMain extends StatelessWidget {
                         bottom: 30,
                         left: 65,
                         right: 65,
-                        child: StatusBarDetail(idMovie: movie.id!, trailerResult: movie.trailer,),
+                        child: StatusBarDetail(
+                          idMovie: movie.id!,
+                          trailerResult: movie.trailer,
+                        ),
                       ),
                     ],
                   ),
@@ -190,6 +191,7 @@ class MovieDetailMain extends StatelessWidget {
   Widget _buildCommentSection(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
+      // mainAxisAlignment: MainAxisAlignment.center,
       children: [
         const SizedBox(height: 20),
         const Text(
@@ -231,8 +233,9 @@ class MovieDetailMain extends StatelessWidget {
         }
 
         return Container(
-          height: 150, // Giới hạn chiều cao của danh sách bình luận
+          height: 150,
           child: ListView.builder(
+            padding: EdgeInsets.zero,
             itemCount: snapshot.data!.docs.length,
             itemBuilder: (context, index) {
               final commentData =
@@ -271,7 +274,7 @@ class MovieDetailMain extends StatelessWidget {
               controller: _commentController,
               decoration: InputDecoration(
                 hintText: "Nhập bình luận",
-                hintStyle: TextStyle(color: Colors.white54),
+                hintStyle: const TextStyle(color: Colors.white54),
                 suffixIcon: IconButton(
                   icon: Icon(
                     Icons.send,
@@ -292,7 +295,7 @@ class MovieDetailMain extends StatelessWidget {
   void _scrollToBottom() {
     _scrollController.animateTo(
       _scrollController.position.maxScrollExtent,
-      duration: Duration(milliseconds: 100),
+      duration: const Duration(milliseconds: 100),
       curve: Curves.easeOut,
     );
   }

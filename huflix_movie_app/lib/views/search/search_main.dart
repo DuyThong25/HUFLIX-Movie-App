@@ -2,7 +2,6 @@ import 'package:blur/blur.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:huflix_movie_app/api/api_constants.dart';
-import 'package:huflix_movie_app/models/actor.dart';
 import 'package:huflix_movie_app/views/detail/movie_detail.dart';
 import 'package:intl/intl.dart';
 import '../../api/api.dart';
@@ -144,8 +143,8 @@ class _SearchMainState extends State<SearchMain> {
   Widget itemSearch(Movie movieDetail) {
     return InkWell(
       onTap: () {
-        late Future<List<Actor>> actorOfMovie = Api().actorFindByIdMovie(movieDetail.id!);
-        late Future<Movie> detailMovies =  Api().movieFindById(movieDetail.id!);
+        // late Future<List<Actor>> actorOfMovie = Api().actorFindByIdMovie(movieDetail.id!);
+        // late Future<Movie> detailMovies =  Api().movieFindById(movieDetail.id!);
         Navigator.push(
             context,
             CupertinoPageRoute(
