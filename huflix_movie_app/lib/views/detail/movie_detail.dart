@@ -70,6 +70,13 @@ class MovieDetailMain extends StatelessWidget {
                                     movie.posterPath!,
                                     fit: BoxFit.fill,
                                     alignment: Alignment.topCenter,
+                                    errorBuilder:
+                                        (context, error, stackTrace) =>
+                                            Image.asset(
+                                      "assets/images/logo1.jpg",
+                                      fit: BoxFit.fill,
+                                      alignment: Alignment.topCenter,
+                                    ),
                                   )
                                 : Image.asset(
                                     "assets/images/logo1.jpg",
@@ -104,7 +111,14 @@ class MovieDetailMain extends StatelessWidget {
                                     movie.posterPath!,
                                     fit: BoxFit.fill,
                                     alignment: Alignment.topCenter,
+                                    errorBuilder:
+                                        (context, error, stackTrace) =>
+                                            Image.asset(
+                                      "assets/images/logo1.jpg",
+                                      fit: BoxFit.fill,
+                                      alignment: Alignment.topCenter,
                                   )
+                                )
                                 : Image.asset(
                                     "assets/images/logo1.jpg",
                                     fit: BoxFit.fill,

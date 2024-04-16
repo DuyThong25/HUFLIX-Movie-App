@@ -20,25 +20,36 @@ class CarouselCard extends StatelessWidget {
                     blurRadius: 16, color: Colors.black54, offset: Offset(2, 2))
               ]),
           child: scrwidth < 700
-          ? ClipRRect(
-            borderRadius: BorderRadius.circular(28.0),
-            child: Image.network(
-              fit: BoxFit.fill,
-              width: 240,
-              height: 300,
-              src,
-            ),
-          ) : 
-          ClipRRect(
-            borderRadius: BorderRadius.circular(28.0),
-            child: Image.network(
-              fit: BoxFit.fill,
-              width: 180,
-              height: 240,
-              src,
-            ),
-          )
-          ,
+              ? ClipRRect(
+                  borderRadius: BorderRadius.circular(28.0),
+                  child: Image.network(
+                    fit: BoxFit.fill,
+                    width: 240,
+                    height: 300,
+                    src,
+                    errorBuilder: (context, error, stackTrace) => Image.asset(
+                      'assets/images/logo2.jpg',
+                      fit: BoxFit.fill,
+                      width: 240,
+                      height: 300,
+                    ),
+                  ),
+                )
+              : ClipRRect(
+                  borderRadius: BorderRadius.circular(28.0),
+                  child: Image.network(
+                    fit: BoxFit.fill,
+                    width: 180,
+                    height: 240,
+                    src,
+                    errorBuilder: (context, error, stackTrace) => Image.asset(
+                      'assets/images/logo2.jpg',
+                      fit: BoxFit.fill,
+                      width: 180,
+                      height: 240,
+                    ),
+                  ),
+                ),
         ),
 
         const SizedBox(
