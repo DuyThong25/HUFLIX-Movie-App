@@ -1,11 +1,14 @@
+// ignore_for_file: avoid_print
+
 import 'dart:async';
 
 import 'package:blur/blur.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:huflix_movie_app/api/api.dart';
-import 'package:huflix_movie_app/api/api_constants.dart';
-import 'package:huflix_movie_app/models/actor.dart';
+import 'package:flutter/widgets.dart';
+import 'package:huflix_movie_app/firebase/firebase.dart';
+import 'package:huflix_movie_app/models/genres.dart';
 import 'package:huflix_movie_app/models/moviedetail.dart';
 import 'package:huflix_movie_app/views/detail/movie_detail.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
@@ -26,8 +29,9 @@ class MovieGenreDetail extends StatefulWidget {
 }
 
 class _MovieGenreDetailState extends State<MovieGenreDetail> {
-  final _totalPage = 30;
+  final _totalPage = 20;
   int _currentPage = 1;
+  DocumentSnapshot? _lastDocument;
 
   final PagingController<int, Movie> _pagingController =
       PagingController(firstPageKey: 1);
@@ -49,7 +53,33 @@ class _MovieGenreDetailState extends State<MovieGenreDetail> {
 
   Future<void> _fetchPage(int current) async {
     try {
-      final newItems = await Api().categotyByIDGenres(widget.idGenres, current);
+      List<Movie> newItems = [];
+      // Nếu không phải trang đầu tiên, sử dụng lastDocument để xác định vị trí bắt đầu
+      Query query = FirebaseFirestore.instance
+          .collection("movies")
+          .orderBy("popularity", descending: true)
+          .orderBy("releaseDate", descending: true)
+          .limit(50);
+      if (_lastDocument != null) {
+        query = query.startAfterDocument(_lastDocument!);
+      }
+
+      QuerySnapshot querySnapshot = await query.get();
+      for (var snapshot in querySnapshot.docs) {
+        setState(() {
+          _lastDocument = querySnapshot.docs.last;
+        });
+        final data = snapshot.data() as Map<String, dynamic>;
+        var dataGenres = data['genres'] as List;
+        var listGenres =
+            dataGenres.map((genre) => Genre.fromJson(genre)).toList();
+
+        // Kiểm tra nếu trong listGenres có tồn tại idGenres
+        if (listGenres.any((genre) => genre.id == widget.idGenres)) {
+          newItems.add(Movie.fromFirestore(data));
+        }
+      }
+
       final isLastPage = _totalPage < _currentPage;
       if (isLastPage) {
         _pagingController.appendLastPage(newItems);
@@ -57,6 +87,7 @@ class _MovieGenreDetailState extends State<MovieGenreDetail> {
         _currentPage += 1;
         final nextPageKey = _currentPage;
         _pagingController.appendPage(newItems, nextPageKey);
+        
       }
       print("Trang hiện tại $_currentPage");
       print("Tổng trang $_totalPage");
@@ -88,7 +119,7 @@ class _MovieGenreDetailState extends State<MovieGenreDetail> {
                 onPressed: () {},
               ),
             ]),
-            // SizedBox(height: 10,),
+        // SizedBox(height: 10,),
         PagedSliverGrid<int, Movie>(
           showNewPageProgressIndicatorAsGridChild: false,
           showNewPageErrorIndicatorAsGridChild: true,
@@ -118,16 +149,11 @@ class _MovieGenreDetailState extends State<MovieGenreDetail> {
   Widget itemMovie(Movie movie) {
     return InkWell(
       onTap: () {
-        late Future<List<Actor>> actorOfMovie =
-            Api().actorFindByIdMovie(movie.id!);
-        late Future<Movie> detailMovies = Api().movieFindById(movie.id!);
         Navigator.push(
             context,
             CupertinoPageRoute(
               builder: (context) => MovieDetailMain(
                 movie: movie,
-                detailMovie: detailMovies,
-                actorOfMovieByID: actorOfMovie,
               ),
             ));
       },
@@ -141,9 +167,15 @@ class _MovieGenreDetailState extends State<MovieGenreDetail> {
                 borderRadius: BorderRadius.circular(16),
                 child: movie.posterPath != null
                     ? Image.network(
-                        Constants.BASE_IMAGE_URL + movie.posterPath!,
+                        movie.posterPath!,
                         fit: BoxFit.cover,
                         alignment: Alignment.center,
+                        errorBuilder: (context, error, stackTrace) =>
+                            Image.asset(
+                          'assets/images/logo2.jpg',
+                          fit: BoxFit.cover,
+                          alignment: Alignment.center,
+                        ),
                       )
                     : Image.asset(
                         'assets/images/logo2.jpg',
@@ -157,14 +189,15 @@ class _MovieGenreDetailState extends State<MovieGenreDetail> {
                 right: 10,
                 child: Container(
                   padding: const EdgeInsets.only(
-                      top: 10, bottom: 8, left: 6, right: 6),
+                      top: 10, bottom: 8, left: 8, right: 8),
                   height: MediaQuery.of(context).size.height,
                   color: Colors.black54,
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      SizedBox(
-                        height: 90,
+                    children: [            
+                      Container(
+                        alignment: Alignment.center,
+                        height: 100,
                         child: Text(
                           (movie.title != "" && movie.title != null)
                               ? movie.title!.toUpperCase()
@@ -176,6 +209,7 @@ class _MovieGenreDetailState extends State<MovieGenreDetail> {
                             overflow: TextOverflow.ellipsis,
                             letterSpacing: 2,
                           ),
+                          textAlign: TextAlign.center,
                           maxLines: 3,
                         ),
                       ),
@@ -215,7 +249,7 @@ class _MovieGenreDetailState extends State<MovieGenreDetail> {
                                     width: 40,
                                     alignment: Alignment.center,
                                     padding: const EdgeInsets.only(
-                                        left: 6, right: 6, top: 4, bottom: 4),
+                                        left: 6, right: 10, top: 4, bottom: 4),
                                     color: movie.voteAverage! > 6
                                         ? Colors.green.shade500
                                         : Colors.red.shade500,
@@ -241,12 +275,13 @@ class _MovieGenreDetailState extends State<MovieGenreDetail> {
                             : "Đang cập nhật..",
                         style: const TextStyle(
                           fontSize: 16,
-                          color: Colors.white54,
+                          color: Colors.white60,
                           fontWeight: FontWeight.bold,
                           overflow: TextOverflow.ellipsis,
-                          // letterSpacing: 2,
+                          letterSpacing: 1,
                         ),
-                        maxLines: 5,
+                        textAlign: TextAlign.justify,
+                        maxLines: 4,
                       )
                     ],
                   ),

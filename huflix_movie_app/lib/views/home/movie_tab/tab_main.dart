@@ -27,9 +27,9 @@ class TabMain extends StatelessWidget {
         indicatorWeight: 4,
         // Data title
         tabs: [
-          Tab(text: "Phổ biến"),
           Tab(text: "Đang chiếu"),
           Tab(text: "Sắp chiếu"),
+          Tab(text: "Yêu thích"),
         ],
       ),
     ),

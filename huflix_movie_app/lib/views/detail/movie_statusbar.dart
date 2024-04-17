@@ -1,11 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:huflix_movie_app/api/api.dart';
+import 'package:huflix_movie_app/models/trailer.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 class StatusBarDetail extends StatefulWidget {
-  const StatusBarDetail({Key? key, required this.idMovie}) : super(key: key);
+  const StatusBarDetail(
+      {super.key, required this.idMovie, required this.trailerResult});
+  final TrailerResult? trailerResult;
   final int idMovie; // Thêm trường dữ liệu idMovie
 
   @override
@@ -13,12 +15,11 @@ class StatusBarDetail extends StatefulWidget {
 }
 
 class _MyWidgetState extends State<StatusBarDetail> {
-  late YoutubePlayerController _youtubePlayerController;
-  late String _trailerVideoId;
-
-  late String userId = "Đang tải...";
 
   bool _trailerFound = false; // Thêm biến boolean để kiểm tra xem có trailer được tìm thấy không
+  YoutubePlayerController? _youtubePlayerController;
+  late String userId = "Đang tải...";
+
   late bool _isliked ;
   late bool _isdisliked;
 
@@ -28,29 +29,23 @@ class _MyWidgetState extends State<StatusBarDetail> {
     // getUserInteract();
     initializeInteractions();
     // Gọi phương thức để lấy thông tin trailer và xử lý kết quả
-    Api().trailerMovieById(widget.idMovie).then((trailer) {
-      for (final result in trailer.results!) {
-        if (result.type == 'Trailer') {
-          setState(() {
-            _trailerFound = true;
-            _trailerVideoId = result.key;
-            _youtubePlayerController = YoutubePlayerController(
-              initialVideoId: _trailerVideoId,
-              flags: const YoutubePlayerFlags(
-                autoPlay: true,
-                mute: false,
-              ),
-            );
-          });
-          break; // Dừng vòng lặp khi tìm thấy trailer đầu tiên
-        }
-      }
-    });
+    if (widget.trailerResult != null) {
+      setState(() {
+        _trailerFound = true;
+        _youtubePlayerController = YoutubePlayerController(
+          initialVideoId: widget.trailerResult!.key,
+          flags: const YoutubePlayerFlags(
+            autoPlay: true,
+            mute: false,
+          ),
+        );
+      });
+    };
   }
 
   @override
   void dispose() {
-    _youtubePlayerController.dispose();
+    _youtubePlayerController?.dispose();
     super.dispose();
   }
 
@@ -59,80 +54,75 @@ class _MyWidgetState extends State<StatusBarDetail> {
     if (_trailerFound) {
       // Chỉ hiển thị dialog nếu đã tìm thấy trailer
       showModalBottomSheet(
-        backgroundColor: Colors.black,
-        isScrollControlled: true,
-        context: context,
-        builder: scrwidth < 700
-          ? (BuildContext context) {
-              return Container(
-                // height: 500,
-                // color: Colors.black,
-                child: Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      YoutubePlayer(
-                        controller: _youtubePlayerController,
-                        showVideoProgressIndicator: true,
-                        onReady: () {},
-                      ),
-                      const SizedBox(
-                        height: 32,
-                      ),
-                      ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          foregroundColor: Colors.white,
-                          backgroundColor: Colors.black, // Màu chữ
-                          shape: RoundedRectangleBorder(
-                            side: const BorderSide(
-                              color: Colors.white,
-                            ), // Viền màu trắng
-                            borderRadius: BorderRadius.circular(8), // Độ cong viền
-                          ),
+          backgroundColor: Colors.black,
+          isScrollControlled: true,
+          context: context,
+          builder: scrwidth < 700
+              ? (BuildContext context) {
+                  return Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        YoutubePlayer(
+                          controller: _youtubePlayerController!,
+                          showVideoProgressIndicator: true,
+                          onReady: () {},
                         ),
-                        onPressed: () => Navigator.pop(context),
-                        child: const Text('Đóng'),
+                        const SizedBox(
+                          height: 32,
+                        ),
+                        ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            foregroundColor: Colors.white,
+                            backgroundColor: Colors.black, // Màu chữ
+                            shape: RoundedRectangleBorder(
+                              side: const BorderSide(
+                                  color: Colors.white), // Viền màu trắng
+                              borderRadius:
+                                  BorderRadius.circular(8), // Độ cong viền
+                            ),
+                          ),
+                          onPressed: () => Navigator.pop(context),
+                          child: const Text('Đóng'),
+                        ),
+                      ],
+                    ),
+                  );
+                }
+              : (BuildContext context) {
+                  return SizedBox(
+                    height: 500,
+                    // color: Colors.black,
+                    child: Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          YoutubePlayer(
+                            controller: _youtubePlayerController!,
+                            showVideoProgressIndicator: true,
+                            onReady: () {},
+                          ),
+                          // ElevatedButton(
+                          //   style: ElevatedButton.styleFrom(
+                          //     foregroundColor: Colors.white,
+                          //     backgroundColor: Colors.black, // Màu chữ
+                          //     shape: RoundedRectangleBorder(
+                          //       side: const BorderSide(
+                          //           color: Colors.white), // Viền màu trắng
+                          //       borderRadius:
+                          //           BorderRadius.circular(8), // Độ cong viền
+                          //     ),
+                          //   ),
+                          //   onPressed: () => Navigator.pop(context),
+                          //   child: const Text('Đóng'),
+                          // ),
+                        ],
                       ),
-                    ],
-                  ),
-                ),
-              );
-            }
-          : (BuildContext context) {
-              return Container(
-                height: 500,
-                // color: Colors.black,
-                child: Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      YoutubePlayer(
-                        controller: _youtubePlayerController,
-                        showVideoProgressIndicator: true,
-                        onReady: () {},
-                      ),
-                      // ElevatedButton(
-                      //   style: ElevatedButton.styleFrom(
-                      //     foregroundColor: Colors.white,
-                      //     backgroundColor: Colors.black, // Màu chữ
-                      //     shape: RoundedRectangleBorder(
-                      //       side: const BorderSide(
-                      //         color: Colors.white,
-                      //       ), // Viền màu trắng
-                      //       borderRadius: BorderRadius.circular(8), // Độ cong viền
-                      //     ),
-                      //   ),
-                      //   onPressed: () => Navigator.pop(context),
-                      //   child: const Text('Đóng'),
-                      // ),
-                    ],
-                  ),
-                ),
-              );
-            },
-      );
+                    ),
+                  );
+                });
     } else {
       // Hiển thị AlertDialog thông báo rằng không có trailer
       showDialog(

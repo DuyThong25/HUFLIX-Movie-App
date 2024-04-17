@@ -1,8 +1,8 @@
+// ignore_for_file: avoid_print
+
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:huflix_movie_app/api/api.dart';
-import 'package:huflix_movie_app/api/api_constants.dart';
-import 'package:huflix_movie_app/models/actor.dart';
+import 'package:huflix_movie_app/firebase/firebase.dart';
 import 'package:huflix_movie_app/models/moviedetail.dart';
 import 'package:huflix_movie_app/views/home/movie_carousel/carousel_card.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
@@ -19,13 +19,14 @@ class CarouselAnimated extends StatefulWidget {
 
 class _CarouselAnimatedState extends State<CarouselAnimated> {
   late Future<List<Movie>> trendingMovies;
-  late Future<List<Actor>> actorOfMovie;
-  late Future<Movie> detailMovies;
+  // late Future<List<Actor>> actorOfMovie;
+  // late Future<Movie> detailMovies;
 
   @override
   void initState() {
     super.initState();
-    trendingMovies = Api().getTrendingMovies();
+    // trendingMovies = Api().getTrendingMovies();
+    trendingMovies = MyFireStore().getTrendingMoviesFromFirestore();
   }
 
   @override
@@ -47,7 +48,7 @@ class _CarouselAnimatedState extends State<CarouselAnimated> {
     );
   }
 
-  Widget slide(List<Movie> trendingMovies) {
+  Widget slide(List<Movie> listMovies) {
     return CarouselSlider(
       options: CarouselOptions(
         autoPlay: true,
@@ -56,20 +57,20 @@ class _CarouselAnimatedState extends State<CarouselAnimated> {
         enlargeCenterPage: true,
         viewportFraction: 1,
       ),
-      items: trendingMovies.map((movie) {
+      items: listMovies.map((movie) {
         return GestureDetector(
           onTap: () {
             setState(() {
               print(movie.id);
-              actorOfMovie = Api().actorFindByIdMovie(movie.id!);
-              detailMovies = Api().movieFindById(movie.id!) ;
+              // actorOfMovie = Api().actorFindByIdMovie(movie.id!);
+              // detailMovies = Api().movieFindById(movie.id!) ;
               Navigator.push(
                 context,
                 CupertinoPageRoute(
                   builder: (context) => MovieDetailMain(
                     movie: movie,
-                    detailMovie: detailMovies,
-                    actorOfMovieByID: actorOfMovie,
+                    // detailMovie: detailMovies,
+                    // actorOfMovieByID: actorOfMovie,
                   ),
                 ));
             });      
@@ -77,15 +78,14 @@ class _CarouselAnimatedState extends State<CarouselAnimated> {
           child: Stack(
             children: <Widget>[
               // Backdrop Background
-              CarouselBackdrop(
-                  src: Constants.BASE_IMAGE_URL + movie.backdropPath!),
+              CarouselBackdrop(src: movie.backdropPath!),
               // image card data
               Positioned(
                 bottom: 0,
                 right: -50,
                 left: -50,
                 child: CarouselCard(
-                  src: Constants.BASE_IMAGE_URL + movie.posterPath!,
+                  src: movie.posterPath!,
                   movieTitle: movie.title!,
                 ),
               ),

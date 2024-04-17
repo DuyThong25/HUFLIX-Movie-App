@@ -1,10 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:huflix_movie_app/api/api.dart';
-import 'package:huflix_movie_app/api/api_constants.dart';
 import 'package:huflix_movie_app/common/common.dart';
 
-import '../../../models/actor.dart';
 import '../../../models/moviedetail.dart';
 import '../../detail/movie_detail.dart';
 
@@ -32,17 +29,11 @@ class TabViewData extends StatelessWidget {
   Widget itemListview(Movie movie, BuildContext context) {
     return InkWell(
         onTap: () {
-          late Future<List<Actor>> actorOfMovie =
-              Api().actorFindByIdMovie(movie.id!);
-          late Future<Movie> detailMovies =
-              Api().movieFindById(movie.id!);
           Navigator.push(
               context,
               CupertinoPageRoute(
                 builder: (context) => MovieDetailMain(
                   movie: movie,
-                  detailMovie: detailMovies,
-                  actorOfMovieByID: actorOfMovie,
                 ),
               ));
         },
@@ -54,11 +45,18 @@ class TabViewData extends StatelessWidget {
               ClipRRect(
                 borderRadius: BorderRadius.circular(26),
                 child: Image.network(
-                  Constants.BASE_IMAGE_URL + movie.posterPath!,
+                  movie.posterPath!,
                   width: 160,
                   height: 180,
                   fit: BoxFit.cover,
                   alignment: Alignment.topCenter,
+                  errorBuilder: (context, error, stackTrace) => Image.asset(
+                    "assets/images/logo1.jpg",
+                    width: 160,
+                    height: 180,
+                    fit: BoxFit.cover,
+                    alignment: Alignment.topCenter,
+                  ),
                 ),
               ),
               const SizedBox(
