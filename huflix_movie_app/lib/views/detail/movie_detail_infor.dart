@@ -13,7 +13,7 @@ class InforMovie extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Duration duration = Duration(minutes: movie.time!);
+    Duration duration = Duration(minutes: movie.time ?? 0);
     // Kiểm tra xem genres list có chứa phần tử không movie.voteCount
     // Nếu có rồi thì khi load lại thì không thêm vô nữa
     if (movie.genres!.isEmpty ||

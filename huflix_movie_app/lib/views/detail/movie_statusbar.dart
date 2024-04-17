@@ -45,7 +45,7 @@ class _MyWidgetState extends State<StatusBarDetail> {
 
   @override
   void dispose() {
-    _youtubePlayerController!.dispose();
+    _youtubePlayerController?.dispose();
     super.dispose();
   }
 

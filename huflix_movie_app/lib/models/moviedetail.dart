@@ -314,7 +314,10 @@ class Movie {
           movie.backdropPath = await _uploadImageAndGetDownloadUrl(
               _backdropImagePath, "ProductImage", "backdrop_path", movie.id);
         }
+      }else {
+        movie.backdropPath = data['backdropPath'];
       }
+
       if (data['posterPath'] == null ||
           data['posterPath'] == "" ||
           !data['posterPath'].toString().contains('https')) {
@@ -326,6 +329,8 @@ class Movie {
           movie.posterPath = await _uploadImageAndGetDownloadUrl(
               _posterImagePath, "ProductImage", "poster_path", movie.id);
         }
+      }else {
+        movie.posterPath = data['posterPath'];
       }
     } catch (e) {
       print("Lỗi: ${e.toString()}");

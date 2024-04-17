@@ -12,21 +12,21 @@ class MyTabView extends StatefulWidget {
 }
 
 class _MyTabViewState extends State<MyTabView> {
-
-  late Future<List<Movie>> popularMovies;
-  late Future<List<Movie>> upcomingMovies;
+  // Stream nó sẽ cập nhật ngay khi dữ liệu thay đổi trên firebase
   late Future<List<Movie>> nowMovies;
+  late Future<List<Movie>> upcomingMovies;
+  late Stream<List<Movie>> favoriteMovies; 
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    nowMovies = MyFireStore().getTrendingMoviesFromFirestore();
-    upcomingMovies = MyFireStore().getTrendingMoviesFromFirestore();
-    popularMovies = MyFireStore().getTrendingMoviesFromFirestore();
+    nowMovies = MyFireStore().getNowMoviesFromFirestore();
+    upcomingMovies = MyFireStore().getUpCommingMoviesFromFirestore();
+    favoriteMovies = MyFireStore().getFavoriteMoviesFromFirestore();
   }
 
-   @override
+  @override
   Widget build(BuildContext context) {
     return Flexible(
       child: Container(
@@ -39,7 +39,7 @@ class _MyTabViewState extends State<MyTabView> {
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return LoadingAnimationWidget.beat(
-                  color: const Color.fromARGB(255, 168, 2, 121), size: 50);
+                      color: const Color.fromARGB(255, 168, 2, 121), size: 50);
                 } else if (snapshot.hasError) {
                   return Text('Error: ${snapshot.error}');
                 } else {
@@ -53,7 +53,7 @@ class _MyTabViewState extends State<MyTabView> {
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return LoadingAnimationWidget.beat(
-                  color: const Color.fromARGB(255, 168, 2, 121), size: 50);
+                      color: const Color.fromARGB(255, 168, 2, 121), size: 50);
                 } else if (snapshot.hasError) {
                   return Text('Error: ${snapshot.error}');
                 } else {
@@ -61,17 +61,40 @@ class _MyTabViewState extends State<MyTabView> {
                 }
               },
             ),
-            // Popular
-            FutureBuilder<List<Movie>>(
-              future: popularMovies,
+            // Favorites
+            // FutureBuilder<List<Movie>>(
+            //   future: favoriteMovies,
+            //   builder: (context, snapshot) {
+            //     if (snapshot.connectionState == ConnectionState.waiting) {
+            //       return LoadingAnimationWidget.beat(
+            //       color: const Color.fromARGB(255, 168, 2, 121), size: 50);
+            //     } else if (snapshot.hasError) {
+            //       return Text('Error: ${snapshot.error}');
+            //     }else {
+            //       if(snapshot.data!.isEmpty) {
+            //         return const Center(child: Text("Chưa có phim yêu thích nào.."),);
+            //       }else {
+            //         return TabViewData(listData: snapshot.data!);
+            //       }
+            //     }
+            //   },
+            // ),
+            StreamBuilder<List<Movie>>(
+              stream: favoriteMovies,
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return LoadingAnimationWidget.beat(
-                  color: const Color.fromARGB(255, 168, 2, 121), size: 50);
+                      color: const Color.fromARGB(255, 168, 2, 121), size: 50);
                 } else if (snapshot.hasError) {
                   return Text('Error: ${snapshot.error}');
                 } else {
-                  return TabViewData(listData: snapshot.data!);
+                  if (snapshot.data!.isEmpty) {
+                    return const Center(
+                      child: Text("Chưa có phim yêu thích nào.."),
+                    );
+                  } else {
+                    return TabViewData(listData: snapshot.data!);
+                  }
                 }
               },
             ),
