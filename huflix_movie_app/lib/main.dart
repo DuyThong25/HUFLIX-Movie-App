@@ -29,7 +29,7 @@ Future main() async {
     callbackDispatcher,
     isInDebugMode: true,
   );
-  Workmanager().cancelAll();
+  // Workmanager().cancelAll();
   await Workmanager().registerPeriodicTask(
       "upload-newmovie-to-firestore", "upload-newmovie-to-firestore",
       frequency: const Duration(minutes: 1440),
