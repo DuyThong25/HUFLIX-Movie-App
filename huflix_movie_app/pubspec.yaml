@@ -30,6 +30,7 @@ dependencies:
   loading_animation_widget: ^1.2.1
   firebase_messaging: ^14.7.9
   workmanager: ^0.5.2
+  translator: ^1.0.0
 
 dev_dependencies:
   flutter_test:
