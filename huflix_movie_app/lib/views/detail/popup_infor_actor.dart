@@ -11,13 +11,14 @@ class ShowInfoActor extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    double scrwidth = MediaQuery.of(context).size.width;
     return FutureBuilder(
       future: _getVietnameseText(actor.biography ?? ''),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.done) {
           // Khi dữ liệu đã sẵn sàng, cập nhật biography và hiển thị AlertDialog
           String biography = snapshot.data ?? 'Đang cập nhật..';
-          return _buildAlertDialog(biography);
+          return _buildAlertDialog(biography, scrwidth);
         } else {
           // Hiển thị một spinner khi dữ liệu đang được tải
           return Center(
@@ -28,8 +29,12 @@ class ShowInfoActor extends StatelessWidget {
     );
   }
 
-  Widget _buildAlertDialog(biography) {
-    return AlertDialog(
+  Widget _buildAlertDialog(biography, srcWidth) {
+    return Container(
+      padding: srcWidth < 700
+      ? const EdgeInsets.only(top: 50, left: 5, right: 5, bottom: 50)
+      : const EdgeInsets.all(30),
+      child: AlertDialog(
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.all(
           Radius.circular(30.0),
@@ -68,7 +73,10 @@ class ShowInfoActor extends StatelessWidget {
           ],
         ),
       ),
+      
+    ),
     );
+    
   }
 
   Future<String> _getVietnameseText(String input) async {
