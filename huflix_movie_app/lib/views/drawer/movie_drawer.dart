@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:huflix_movie_app/views/drawer/about/about.dart';
+import 'package:huflix_movie_app/views/drawer/leaderboard/leaderboard.dart';
 import 'package:huflix_movie_app/views/genres/movie_genres_list_name.dart';
 import 'package:huflix_movie_app/views/login/login.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -92,6 +93,17 @@ class _MyDrawerState extends State<MyDrawer> {
                       context,
                       CupertinoPageRoute(
                           builder: (context) => ListNameGenres()));
+                },
+              ),
+               ListTile(
+                title: const Text('Bảng xếp hạng',
+                    style: TextStyle(
+                        color: Colors.white, fontWeight: FontWeight.bold)),
+                onTap: () {
+                  Navigator.push(
+                      context,
+                      CupertinoPageRoute(
+                          builder: (context) => const LeaderboadrMovie()));
                 },
               ),
               ListTile(

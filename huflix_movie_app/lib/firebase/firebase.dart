@@ -113,4 +113,22 @@ class MyFireStore {
     print("Successfully completed");
     return upcommingMovies;
   }
+
+   Future<List<Movie>> getTop10LikeFromFirestore() async {
+    List<Movie> mostLikeMovies = [];
+    QuerySnapshot querySnapshot = await db
+        .collection("movies")
+        .limit(10)
+        .orderBy("likeCount", descending: true)
+        .orderBy("dislikeCount")
+        .get();
+
+    for (var docSnapshot in querySnapshot.docs) {
+      final data = docSnapshot.data() as Map<String, dynamic>;
+      mostLikeMovies.add(Movie.fromFirestore(data));
+    }
+    print("Successfully completed");
+    return mostLikeMovies;
+  }
+
 }

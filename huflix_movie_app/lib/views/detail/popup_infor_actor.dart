@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:huflix_movie_app/models/actor.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:translator/translator.dart';
 
 class ShowInfoActor extends StatelessWidget {
@@ -11,20 +12,21 @@ class ShowInfoActor extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: _getVietnameseText(actor.biography ?? '') ,
+      future: _getVietnameseText(actor.biography ?? ''),
       builder: (context, snapshot) {
-         if (snapshot.connectionState == ConnectionState.done) {
+        if (snapshot.connectionState == ConnectionState.done) {
           // Khi dữ liệu đã sẵn sàng, cập nhật biography và hiển thị AlertDialog
           String biography = snapshot.data ?? 'Đang cập nhật..';
           return _buildAlertDialog(biography);
-        }else {
+        } else {
           // Hiển thị một spinner khi dữ liệu đang được tải
-          return const CircularProgressIndicator();
+          return Center(
+              child: LoadingAnimationWidget.beat(
+                  color: const Color.fromARGB(255, 168, 2, 121), size: 50));
         }
-      },);
-    
+      },
+    );
   }
-
 
   Widget _buildAlertDialog(biography) {
     return AlertDialog(
@@ -50,7 +52,6 @@ class ShowInfoActor extends StatelessWidget {
       title: Container(
         alignment: Alignment.center,
         child: Text(
-          
           actor.name!.toUpperCase() ?? "Đang cập nhật..",
           textAlign: TextAlign.center,
         ),
@@ -62,21 +63,19 @@ class ShowInfoActor extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
             Text(
-              actor.biography!.isNotEmpty
-                  ? biography
-
-                  : "Đang cập nhật..",
+              actor.biography!.isNotEmpty ? biography : "Đang cập nhật..",
             ),
           ],
         ),
       ),
     );
   }
+
   Future<String> _getVietnameseText(String input) async {
     final translator = GoogleTranslator();
     var vietnamText;
     // Passing the translation to a variable
-    if(input.isNotEmpty) {
+    if (input.isNotEmpty) {
       vietnamText = await translator.translate(input, from: 'en', to: 'vi');
     }
     print('Translated: $vietnamText');
