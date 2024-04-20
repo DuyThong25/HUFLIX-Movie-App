@@ -67,6 +67,39 @@ class ShowInfoActor extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
+            Container(
+              child: ClipRRect(
+                    borderRadius: const BorderRadius.only(
+                        topLeft: Radius.circular(26),
+                        topRight: Radius.circular(26),
+                        bottomLeft: Radius.circular(26),
+                        bottomRight: Radius.circular(26)),
+                        
+                    child:
+               actor.profilePath != null
+          ? (Image.network(
+                            actor.profilePath!,
+                            width: 165,
+                            height: 200,
+                            fit: BoxFit.cover,
+                            alignment: Alignment.topCenter,
+                            errorBuilder: (context, error, stackTrace) =>
+                                Image.asset(
+                              'assets/images/logo2.jpg',
+                              width: 165,
+                              height: 200,
+                              fit: BoxFit.cover,
+                              
+                            ),
+                          ))
+                        : Image.asset(
+                            'assets/images/logo2.jpg',
+                            width: 165,
+                            height: 200,
+                            fit: BoxFit.cover,
+                          ),
+            )),
+            const SizedBox(height: 10,),
             Text(
               actor.biography!.isNotEmpty ? biography : "Đang cập nhật..",
             ),
