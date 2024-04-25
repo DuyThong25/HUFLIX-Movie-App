@@ -14,7 +14,7 @@ class TabViewData extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(10),
-      alignment: Alignment.center,
+      // alignment: Alignment.center,
       child: ListView.builder(
         shrinkWrap: true,
         scrollDirection: Axis.horizontal,

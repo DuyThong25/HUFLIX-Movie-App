@@ -37,6 +37,7 @@ class MovieDetailMain extends StatelessWidget {
               icon: const Icon(Icons.keyboard_backspace_sharp),
               iconSize: 38,
               onPressed: () {
+                
                 Navigator.pop(context);
               },
             );

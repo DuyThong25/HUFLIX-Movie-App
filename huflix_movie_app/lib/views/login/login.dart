@@ -2,6 +2,7 @@
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -135,7 +136,8 @@ class _LoginPageState extends State<LoginPage> {
                   child: Center(
                     child: _isSigning
                         ? LoadingAnimationWidget.beat(
-                  color: const Color.fromARGB(255, 168, 2, 121), size: 50)
+                            color: const Color.fromARGB(255, 168, 2, 121),
+                            size: 50)
                         : const Text(
                             "Đăng nhập",
                             style: TextStyle(
@@ -154,14 +156,15 @@ class _LoginPageState extends State<LoginPage> {
                 onTap: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => const SignUpPage()),                
+                    CupertinoPageRoute(
+                        builder: (context) => const SignUpPage()),
                   );
                 },
                 child: Container(
                   width: double.infinity,
                   height: 45,
                   decoration: BoxDecoration(
-                    color: const Color.fromARGB(195, 245, 152, 2),
+                    color: Colors.grey,
                     borderRadius: BorderRadius.circular(10),
                   ),
                   child: const Center(
@@ -212,9 +215,9 @@ class _LoginPageState extends State<LoginPage> {
                         Text(
                           "Đăng nhập với Google",
                           style: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                          ),
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16),
                         ),
                       ],
                     ),
@@ -245,14 +248,18 @@ class _LoginPageState extends State<LoginPage> {
 
     if (user != null) {
       showToast(message: "Đăng nhập thành công!!");
-      
+
       // Nếu có user thì kiểm tra user có check lưu đăng nhập không và lưu vào Shared Referenced
       _checkRememberLogin(_isRememberLogin, email, password);
       // ignore: use_build_context_synchronously
-      Navigator.push(
-          context, MaterialPageRoute(builder: (context) => const HomePage()));
+      Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(builder: (context) => const HomePage()),
+        (route) => false,
+      );
     } else {
-      showToast(message: "Sai email hoặc mật khẩu, vui lòng thử lại");
+      Navigator.pop(context);
+      // showToast(message: "Sai email hoặc mật khẩu, vui lòng thử lại");
     }
   }
 
@@ -312,9 +319,11 @@ class _LoginPageState extends State<LoginPage> {
       prefs.setBool('rememberLogin', isRememberLogin);
       prefs.setString('emailUser', email);
       prefs.setString('passwordUser', password);
-      print("Dữ liệu Preference 1 ${prefs.getBool('rememberLogin').toString()} ");
+      print(
+          "Dữ liệu Preference 1 ${prefs.getBool('rememberLogin').toString()} ");
       print("Dữ liệu Preference 2 ${prefs.getString('emailUser').toString()} ");
-      print("Dữ liệu Preference 3 ${prefs.getString('passwordUser').toString()} ");
+      print(
+          "Dữ liệu Preference 3 ${prefs.getString('passwordUser').toString()} ");
     }
   }
 
@@ -331,18 +340,17 @@ class _LoginPageState extends State<LoginPage> {
       }
     }
   }
-  
+
   _loading() {
 //loading
     showDialog(
         context: context,
         builder: (context) {
           return Container(
-              color: Colors.black,
-              child: LoadingAnimationWidget.beat(
-                  color: const Color.fromARGB(255, 168, 2, 121), size: 50),
-              );
+            color: Colors.black,
+            child: LoadingAnimationWidget.beat(
+                color: const Color.fromARGB(255, 168, 2, 121), size: 50),
+          );
         });
-
   }
 }

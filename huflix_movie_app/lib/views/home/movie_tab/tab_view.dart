@@ -15,7 +15,7 @@ class _MyTabViewState extends State<MyTabView> {
   // Stream nó sẽ cập nhật ngay khi dữ liệu thay đổi trên firebase
   late Future<List<Movie>> nowMovies;
   late Future<List<Movie>> upcomingMovies;
-  late Stream<List<Movie>> favoriteMovies; 
+  late Stream<List<Movie>> favoriteMovies;
 
   @override
   void initState() {
@@ -43,6 +43,14 @@ class _MyTabViewState extends State<MyTabView> {
                 } else if (snapshot.hasError) {
                   return Text('Error: ${snapshot.error}');
                 } else {
+                  // snapshot.data!.reversed;
+                  snapshot.data!.sort(
+                    (a, b) {
+                      return b.releaseDate
+                          .toString()
+                          .compareTo(a.releaseDate.toString());
+                    },
+                  );
                   return TabViewData(listData: snapshot.data!);
                 }
               },

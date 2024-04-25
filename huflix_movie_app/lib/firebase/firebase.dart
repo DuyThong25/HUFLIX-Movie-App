@@ -88,8 +88,35 @@ class MyFireStore {
     });
   }
 
-  Future<List<Movie>> getMoviesByNameFromFirestore(String input) async {
-    List<Movie> upcommingMovies = [];
+  Future<List<Movie>> getFavoriteMoviesFromFirestore_FutureBuilder() async {
+    final currentUser = User().getCurrentUser();
+    List<Movie> favoriteMovies = [];
+    QuerySnapshot querySnapshot = await db
+        .collection("favorites")
+        .where("userId", isEqualTo: currentUser.uid)
+        .get();
+
+    for (var docSnapshot in querySnapshot.docs) {
+      final dataFavorite = docSnapshot.data() as Map<String, dynamic>;
+      // Lấy ra movie id
+      var movieId = dataFavorite['movieId'];
+      // Query thông tin chi tiết của phim từ collection "movies"
+      var movieSnapshot =
+          await db.collection("movies").where("id", isEqualTo: movieId).get();
+      // Thêm phim vào danh sách yêu thích
+      if (movieSnapshot.docs.isNotEmpty) {
+        final dataMovie =
+            movieSnapshot.docs.first.data() as Map<String, dynamic>;
+        favoriteMovies.add(Movie.fromFirestore(dataMovie));
+      }
+    }
+    print("Successfully completed");
+    return favoriteMovies;
+  }
+
+  Future<List<Movie>> getMoviesByNameFromFirestore(
+      String input, bool isFavorite) async {
+    List<Movie> searchMovies = [];
     // format input
     String formatInput = input.split(' ').map((str) {
       // Kiểm tra nếu từ rỗng
@@ -99,22 +126,52 @@ class MyFireStore {
       // Chỉ viết hoa chữ cái đầu nếu từ không rỗng
       return str[0].toUpperCase() + str.substring(1).toLowerCase();
     }).join(' ');
+    QuerySnapshot querySnapshot;
 
-    QuerySnapshot querySnapshot = await db
-        .collection("movies")
-        .where("title",isGreaterThanOrEqualTo: formatInput,)
-        .limit(10)
-        .get();
-
-    for (var docSnapshot in querySnapshot.docs) {
-      final data = docSnapshot.data() as Map<String, dynamic>;
-      upcommingMovies.add(Movie.fromFirestore(data));
+    if (isFavorite == false) {
+      querySnapshot = await db
+          .collection("movies")
+          .where(
+            "title",
+            isGreaterThanOrEqualTo: formatInput,
+          )
+          .limit(10)
+          .get();
+      for (var docSnapshot in querySnapshot.docs) {
+        final data = docSnapshot.data() as Map<String, dynamic>;
+        searchMovies.add(Movie.fromFirestore(data));
+      }
+    } else {
+      final currentUser = User().getCurrentUser();
+      querySnapshot = await db
+          .collection("favorites")
+          .where("userId", isEqualTo: currentUser.uid)
+          .where(
+            "movieTitle",
+            isGreaterThanOrEqualTo: formatInput,
+          )
+          .get();
+      for (var docSnapshot in querySnapshot.docs) {
+        final dataFavorite = docSnapshot.data() as Map<String, dynamic>;
+        // Lấy ra movie id
+        var movieId = dataFavorite['movieId'];
+        // Query thông tin chi tiết của phim từ collection "movies"
+        var movieSnapshot =
+            await db.collection("movies").where("id", isEqualTo: movieId).get();
+        // Thêm phim vào danh sách yêu thích
+        if (movieSnapshot.docs.isNotEmpty) {
+          final dataMovie =
+              movieSnapshot.docs.first.data() as Map<String, dynamic>;
+          searchMovies.add(Movie.fromFirestore(dataMovie));
+        }
+      }
     }
+
     print("Successfully completed");
-    return upcommingMovies;
+    return searchMovies;
   }
 
-   Future<List<Movie>> getTop10LikeFromFirestore() async {
+  Future<List<Movie>> getTop10LikeFromFirestore() async {
     List<Movie> mostLikeMovies = [];
     QuerySnapshot querySnapshot = await db
         .collection("movies")
@@ -130,5 +187,4 @@ class MyFireStore {
     print("Successfully completed");
     return mostLikeMovies;
   }
-
 }

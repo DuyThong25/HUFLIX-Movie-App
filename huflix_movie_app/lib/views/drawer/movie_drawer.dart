@@ -6,6 +6,7 @@ import 'package:huflix_movie_app/views/drawer/about/about.dart';
 import 'package:huflix_movie_app/views/drawer/leaderboard/leaderboard.dart';
 import 'package:huflix_movie_app/views/genres/movie_genres_list_name.dart';
 import 'package:huflix_movie_app/views/login/login.dart';
+import 'package:huflix_movie_app/views/search/search_main.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class MyDrawer extends StatefulWidget {
@@ -81,7 +82,11 @@ class _MyDrawerState extends State<MyDrawer> {
                     style: TextStyle(
                         color: Colors.white, fontWeight: FontWeight.bold)),
                 onTap: () {
-                  Navigator.of(context).pop();
+                  Navigator.push(context, CupertinoPageRoute(
+                    builder: (context) {
+                      return  const SearchMain(isFavoriteWidget: true,);
+                    },
+                  ));
                 },
               ),
               ListTile(
@@ -95,7 +100,7 @@ class _MyDrawerState extends State<MyDrawer> {
                           builder: (context) => ListNameGenres()));
                 },
               ),
-               ListTile(
+              ListTile(
                 title: const Text('Bảng xếp hạng',
                     style: TextStyle(
                         color: Colors.white, fontWeight: FontWeight.bold)),
@@ -120,7 +125,8 @@ class _MyDrawerState extends State<MyDrawer> {
                         color: Colors.white, fontWeight: FontWeight.bold)),
                 onTap: () {
                   Navigator.push(
-                    context, CupertinoPageRoute(
+                      context,
+                      CupertinoPageRoute(
                           builder: (context) => const AboutUs()));
                 },
               ),
