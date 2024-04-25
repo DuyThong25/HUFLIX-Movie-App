@@ -16,6 +16,9 @@ class LeaderboadrMovie extends StatefulWidget {
 
 class _LeaderboadrMovieState extends State<LeaderboadrMovie> {
   late Future<List<Movie>> mostLikeMovies;
+  String currentYear = DateFormat('yyyy').format(DateTime.now());
+  String currentDay = DateFormat('dd').format(DateTime.now());
+  String currentMonth = DateFormat('MM').format(DateTime.now());
 
   @override
   void initState() {
@@ -27,6 +30,22 @@ class _LeaderboadrMovieState extends State<LeaderboadrMovie> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        extendBodyBehindAppBar: true,
+        appBar: AppBar(
+          actions: [
+            Text(
+              "Ngày $currentDay tháng $currentMonth, $currentYear",
+              style: const TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                  letterSpacing: 1),
+              softWrap: true,
+            ),
+            SizedBox(width: 10,)
+          ],
+          backgroundColor: Colors.transparent,
+        ),
         backgroundColor: Colors.black,
         body: FutureBuilder(
           future: mostLikeMovies,
@@ -64,9 +83,6 @@ class _LeaderboadrMovieState extends State<LeaderboadrMovie> {
   Widget itemLeaderboardMovie(Movie movie, int index) {
     var srcWidth = MediaQuery.of(context).size.width;
     var srcHeightImageTop1 = MediaQuery.of(context).size.height - 500;
-    String currentYear = DateFormat('yyyy').format(DateTime.now());
-    String currentDay = DateFormat('dd').format(DateTime.now());
-    String currentMonth = DateFormat('MM').format(DateTime.now());
 
     if (index == 0) {
       return InkWell(
@@ -95,37 +111,6 @@ class _LeaderboadrMovieState extends State<LeaderboadrMovie> {
                     width: srcWidth,
                     fit: BoxFit.cover,
                     alignment: Alignment.topCenter,
-                  ),
-                ),
-              ),
-              Positioned(
-                left: 10,
-                top: 35,
-                child: Container(
-                  width: srcWidth,
-                  padding: EdgeInsets.only(right: 16),
-                  child: Row(
-                    children: [
-                      const Text(
-                        "Top-10",
-                        style: TextStyle(
-                            fontSize: 30,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
-                            letterSpacing: 2),
-                        softWrap: true,
-                      ),
-                      Spacer(),
-                      Text(
-                        "Ngày $currentDay tháng $currentMonth, $currentYear",
-                        style: const TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
-                            letterSpacing: 1),
-                        softWrap: true,
-                      ),
-                    ],
                   ),
                 ),
               ),
@@ -214,10 +199,9 @@ class _LeaderboadrMovieState extends State<LeaderboadrMovie> {
                             ),
                           ),
                           Positioned(
-                            top: -3, 
+                            top: -3,
                             right: 0,
                             child: Container(
-                              
                               child: const Icon(
                                 Icons.star, // Star icon
                                 color: Colors.yellow,

@@ -16,7 +16,8 @@ class _SignUpPageState extends State<SignUpPage> {
   final FirebaseAuthService _auth = FirebaseAuthService();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  final TextEditingController _passwordConfirmController = TextEditingController();
+  final TextEditingController _passwordConfirmController =
+      TextEditingController();
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _addressController = TextEditingController();
 
@@ -32,66 +33,58 @@ class _SignUpPageState extends State<SignUpPage> {
     super.dispose();
   }
 
-  
   bool passwordConfirmed() {
-    if (_passwordController.text.trim() == _passwordConfirmController.text.trim()) {
+    if (_passwordController.text.trim() ==
+        _passwordConfirmController.text.trim()) {
       return true;
-    }
-    else {
+    } else {
       return false;
     }
   }
 
-  Future addUserDetail(String uid,String hoVaTen, String email, String address) async {
+  Future addUserDetail(
+      String uid, String hoVaTen, String email, String address) async {
     // thêm vào bảng users
-    await FirebaseFirestore.instance.collection("users").doc(uid).set({
-      'uid' : uid,
-      'name': hoVaTen,
-      'email' : email,
-      'address': address
-    });
+    await FirebaseFirestore.instance
+        .collection("users")
+        .doc(uid)
+        .set({'uid': uid, 'name': hoVaTen, 'email': email, 'address': address});
   }
 
   Future _signUp() async {
     try {
       if (passwordConfirmed()) {
-        if (_nameController.text.trim() != '' && _addressController.text.trim() != '' && _emailController.text.trim() != '' ) {
+        if (_nameController.text.trim() != '' &&
+            _addressController.text.trim() != '' &&
+            _emailController.text.trim() != '') {
           // Tạo tài khoản đăng nhập
-          UserCredential userCredential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
-            email: _emailController.text.trim(), 
-            password: _passwordConfirmController.text.trim()
-          );
+          UserCredential userCredential = await FirebaseAuth.instance
+              .createUserWithEmailAndPassword(
+                  email: _emailController.text.trim(),
+                  password: _passwordConfirmController.text.trim());
           final user = userCredential.user;
-          if (user != null ) {
+          if (user != null) {
             // Lấy id của người dùng được tạo
             String userId = user.uid;
             // Tạo thông tin người dùng
-            addUserDetail(
-              userId,
-              _nameController.text.trim(), 
-              _emailController.text.trim(), 
-              _addressController.text.trim()
-            );
+            addUserDetail(userId, _nameController.text.trim(),
+                _emailController.text.trim(), _addressController.text.trim());
           }
           // Nếu đăng ký thành công, quay lại trang LoginPage
           Navigator.pop(
             context,
           );
-        }
-        else {
+        } else {
           showToast(message: "Vui lòng nhập đầy đủ thông tin");
         }
-      }
-      else {
+      } else {
         showToast(message: "Nhập lại mật khẩu không khớp");
       }
-    }
-    on FirebaseAuthException catch (e) {
+    } on FirebaseAuthException catch (e) {
       if (e.code == 'email-already-in-use') {
         // Nếu email đã tồn tại, hiển thị thông báo
-       showToast(message: "Email đã tồn tại");
-      } 
-      else {
+        showToast(message: "Email đã tồn tại");
+      } else {
         // Xử lý các trường hợp lỗi khác (nếu có)
         showToast(message: "Lỗi${e.message}");
       }
@@ -101,10 +94,7 @@ class _SignUpPageState extends State<SignUpPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        
-      ),
+      appBar: AppBar(),
       body: Center(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 15),
@@ -147,7 +137,6 @@ class _SignUpPageState extends State<SignUpPage> {
                 hintText: "Mật khẩu",
                 isPasswordField: true,
               ),
-
               const SizedBox(
                 height: 10,
               ),
@@ -156,14 +145,12 @@ class _SignUpPageState extends State<SignUpPage> {
                 hintText: "Nhập lại Mật khẩu",
                 isPasswordField: true,
               ),
-
               const SizedBox(
                 height: 30,
               ),
               GestureDetector(
-                onTap:  (){
+                onTap: () {
                   _signUp();
-
                 },
                 child: Container(
                   width: double.infinity,
@@ -173,11 +160,16 @@ class _SignUpPageState extends State<SignUpPage> {
                     borderRadius: BorderRadius.circular(10),
                   ),
                   child: Center(
-                      child: isSigningUp ? const CircularProgressIndicator(color: Colors.white,):const Text(
-                    "Đăng ký",
-                    style: TextStyle(
-                        color: Colors.white, fontWeight: FontWeight.bold),
-                  )),
+                      child: isSigningUp
+                          ? const CircularProgressIndicator(
+                              color: Colors.white,
+                            )
+                          : const Text(
+                              "Đăng ký",
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold),
+                            )),
                 ),
               ),
               const SizedBox(
@@ -207,5 +199,4 @@ class _SignUpPageState extends State<SignUpPage> {
       ),
     );
   }
-
 }

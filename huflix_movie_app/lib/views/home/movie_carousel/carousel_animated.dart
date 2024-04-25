@@ -52,8 +52,8 @@ class _CarouselAnimatedState extends State<CarouselAnimated> {
     return CarouselSlider(
       options: CarouselOptions(
         autoPlay: true,
-        height: 500,
-        disableCenter: false,
+        // height: 520,
+        disableCenter: true,
         enlargeCenterPage: true,
         viewportFraction: 1,
       ),
@@ -69,8 +69,6 @@ class _CarouselAnimatedState extends State<CarouselAnimated> {
                 CupertinoPageRoute(
                   builder: (context) => MovieDetailMain(
                     movie: movie,
-                    // detailMovie: detailMovies,
-                    // actorOfMovieByID: actorOfMovie,
                   ),
                 ));
             });      
@@ -78,10 +76,10 @@ class _CarouselAnimatedState extends State<CarouselAnimated> {
           child: Stack(
             children: <Widget>[
               // Backdrop Background
-              CarouselBackdrop(src: movie.backdropPath!),
+              CarouselBackdrop(src: movie.backdropPath ?? ""),
               // image card data
               Positioned(
-                bottom: 0,
+                bottom: 40,
                 right: -50,
                 left: -50,
                 child: CarouselCard(
