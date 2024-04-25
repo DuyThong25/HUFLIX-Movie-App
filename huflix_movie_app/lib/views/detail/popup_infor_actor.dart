@@ -11,13 +11,14 @@ class ShowInfoActor extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    double scrwidth = MediaQuery.of(context).size.width;
     return FutureBuilder(
       future: _getVietnameseText(actor.biography ?? ''),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.done) {
           // Khi dữ liệu đã sẵn sàng, cập nhật biography và hiển thị AlertDialog
           String biography = snapshot.data ?? 'Đang cập nhật..';
-          return _buildAlertDialog(biography);
+          return _buildAlertDialog(biography, scrwidth);
         } else {
           // Hiển thị một spinner khi dữ liệu đang được tải
           return Center(
@@ -28,8 +29,12 @@ class ShowInfoActor extends StatelessWidget {
     );
   }
 
-  Widget _buildAlertDialog(biography) {
-    return AlertDialog(
+  Widget _buildAlertDialog(biography, srcWidth) {
+    return Container(
+      padding: srcWidth < 700
+      ? const EdgeInsets.only(top: 50, left: 5, right: 5, bottom: 50)
+      : const EdgeInsets.all(30),
+      child: AlertDialog(
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.all(
           Radius.circular(30.0),
@@ -62,13 +67,49 @@ class ShowInfoActor extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
+            Container(
+              child: ClipRRect(
+                    borderRadius: const BorderRadius.only(
+                        topLeft: Radius.circular(26),
+                        topRight: Radius.circular(26),
+                        bottomLeft: Radius.circular(26),
+                        bottomRight: Radius.circular(26)),
+                        
+                    child:
+               actor.profilePath != null
+          ? (Image.network(
+                            actor.profilePath!,
+                            width: 165,
+                            height: 200,
+                            fit: BoxFit.cover,
+                            alignment: Alignment.topCenter,
+                            errorBuilder: (context, error, stackTrace) =>
+                                Image.asset(
+                              'assets/images/logo2.jpg',
+                              width: 165,
+                              height: 200,
+                              fit: BoxFit.cover,
+                              
+                            ),
+                          ))
+                        : Image.asset(
+                            'assets/images/logo2.jpg',
+                            width: 165,
+                            height: 200,
+                            fit: BoxFit.cover,
+                          ),
+            )),
+            const SizedBox(height: 10,),
             Text(
               actor.biography!.isNotEmpty ? biography : "Đang cập nhật..",
             ),
           ],
         ),
       ),
+      
+    ),
     );
+    
   }
 
   Future<String> _getVietnameseText(String input) async {
